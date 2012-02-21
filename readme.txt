@@ -25,7 +25,7 @@ You call the function by using a shortcode.
 The plugin can be seen in use on a students site for the Marshall School of Business where the RSS feeds come from campusgroups.com.
 http://students.marshall.usc.edu/undergrad/student-organizations/calendar-of-events/
 = Credit = 
-Allen Weiss, extending the plugin (WP RSS Aggregator) developed by Jean Galea.  http://www.allenweiss/com/wp_plugin
+Allen Weiss, extending the plugin (WP RSS Aggregator) developed by Jean Galea.  http://www.allenweiss.com/wp_plugin
 
 == Installation ==
 
