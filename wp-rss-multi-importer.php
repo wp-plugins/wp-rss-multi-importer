@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Import
   Plugin URI: http://www.allenweiss/com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 0.1 (the current version of the plugin)
+  Version: 0.5
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss/com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -11,14 +11,14 @@
 
 function wp_rss_multi_importer_start () {
 register_setting('wp_rss_multi_importer_options', 'rss_import_items');
-add_settings_section( 'wp_rss_multi_importer_main', 'WP RSS Multi Importer Settings', 'wp_section_text', 'wprssimport' );  
+add_settings_section( 'wp_rss_multi_importer_main', 'RSS Multi-Importer Settings', 'wp_section_text', 'wprssimport' );  
 }
 
 add_action('admin_init','wp_rss_multi_importer_start');
   
 
 function wp_section_text() {
-    echo '<p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (Attribution Label).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
+    echo '<p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
 }
 
 
@@ -103,7 +103,7 @@ function wprssmi_head_output() {
 
 
 function wp_rss_multi_importer_menu () {
-add_options_page('WP RSS Multi Importer','RSS Multi Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_options_page');
+add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_options_page');
 }
 
 add_action('admin_menu','wp_rss_multi_importer_menu');
@@ -150,7 +150,7 @@ function wp_rss_multi_importer_options_page() {
 
         
 
-       <h2>RSS Multi Importer Admin</h2>
+       <h2>RSS Multi-Importer Admin</h2>
 
        <div id="options">
 
@@ -234,7 +234,7 @@ function wp_rss_multi_importer_options_page() {
 
 <p><label class='o_textinput' for='maxfeed'>Number of Entries per Feed</label>
 <SELECT NAME="rss_import_items[maxfeed]">
-<OPTION VALUE="2" <?php if($options['maxfeed']==5){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
 <OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
 <OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
@@ -251,8 +251,20 @@ function wp_rss_multi_importer_options_page() {
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
 </SELECT></p>
 
-
-
+<p><label class='o_textinput' for='showdesc'>Show Excerpt</label>
+<SELECT NAME="rss_import_items[showdesc]" id="showdesc">
+<OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
+<OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
+</SELECT></p>
+<span id="secret">
+<p><label class='o_textinput' for='descnum'>Excerpt length (number of characters)</label>
+<SELECT NAME="rss_import_items[descnum]" id="descnum">
+<OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
+<OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
+<OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
+</SELECT></p>
+</span>
 
        <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 
@@ -285,6 +297,30 @@ function wp_rss_multi_importer_options_page() {
    }
    
    
+
+
+
+function showexcerpt($content, $maxchars) {
+
+	if (strlen($content) > $maxchars) {
+
+	$content= substr($content, 0, $maxchars);
+	$pos = strrpos($content, " ");
+
+	if ($pos>0) {
+	$content = substr($content, 0, $pos);
+	}
+		return $content . "...";
+
+	} else {
+		return $content;
+	}
+	}
+
+
+
+
+
    
    function wp_rss_multi_importer($atts=array()){
    
@@ -296,6 +332,8 @@ function wp_rss_multi_importer_options_page() {
 //GET PARAMETERS  
 $size = count($options);
 $sortDir=$options['sortbydate'];  //1 is ascending
+$showDesc=$options['showdesc'];  //1 is show
+$descNum=$options['descnum'];
 $maxposts=$options['maxfeed'];
 if(empty($options['sourcename'])){
 	$attribution='';
@@ -347,7 +385,7 @@ function wprssmi_hourly_feed() { return 3600; }
 
 
 	if (is_wp_error( $feed ) ) {
-	//	echo $feed->get_error_message();
+		echo $feed->get_error_message();
 		continue;
 	
 	}
@@ -362,7 +400,8 @@ function wprssmi_hourly_feed() { return 3600; }
 		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+			//	$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
 			}
 
 		}else{	
@@ -370,7 +409,9 @@ function wprssmi_hourly_feed() { return 3600; }
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
 				if (empty($item))	continue;	
-					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+					//$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+					
+					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
 				}	
 		}
 
@@ -399,6 +440,11 @@ if($sortDir==1){
 foreach($myarray as $items) {
 
 	echo '<p class="rss-output"><a class="colorbox" href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+	if (!empty($items["mydesc"]) & 	$showDesc==1){
+	echo showexcerpt($items["mydesc"],$descNum).'<br />';
+}
+
+
 	
 	if (!empty($items["mystrdate"])){
 	echo date("D, M d, Y",$items["mystrdate"]).'<br />';
