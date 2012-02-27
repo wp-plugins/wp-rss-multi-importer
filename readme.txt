@@ -3,12 +3,12 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.3.1
-Stable tag: 0.1
+Stable tag: 0.5
 Imports and merges multiple RSS Feeds using SimplePie. Outputs feeds sorted by date (increasing or decreasing), limit feeds, and optionally outputs a feed name that you can customize.
 
 == Description ==
 
-WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin extends WP RSS Aggregator, and allows more flexibility by adding and deleting specific feeds, sorting by date, limiting posts per feed.  This works well for news items as well as events (which are sorted differently than news items). You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed.
+WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin extends WP RSS Aggregator, and allows more flexibility by adding and deleting specific feeds, sorting by date, limiting posts per feed.  This works well for news items as well as events (which are sorted differently than news items). You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.
 
 The output will be organized like this:
 
@@ -54,9 +54,6 @@ Use the shortcode in your posts and pages:
 2. Admin administration panel.
 
 == Changelog ==
-
-= Version 0.1 =
-* Initial release.
 
 = Version 0.5 =
 * Added ability to include excerpts from news feeds or other feeds that has a description tag..
