@@ -58,3 +58,6 @@ Use the shortcode in your posts and pages:
 = Version 0.1 =
 * Initial release.
 
+= Version 0.5 =
+* Added ability to include excerpts from news feeds or other feeds that has a description tag..
+
