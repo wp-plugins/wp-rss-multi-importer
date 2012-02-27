@@ -56,5 +56,5 @@ Use the shortcode in your posts and pages:
 == Changelog ==
 
 = Version 0.5 =
-* Added ability to include excerpts from news feeds or other feeds that has a description tag..
+* Added ability to include excerpts from news feeds or other feeds that have a description tag..
 
