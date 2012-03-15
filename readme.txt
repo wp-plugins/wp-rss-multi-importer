@@ -53,8 +53,9 @@ Use the shortcode in your posts and pages:
 
 2. Admin administration panel.
 
-== Changelog ==
+== Change Log ==
 
 = Version 0.6 =
 * Fixed bugs in lightbox and eliminated error message
-
+= Version 0.5 =
+* Added ability to include short descriptions (if they exist in the RSS feed)
