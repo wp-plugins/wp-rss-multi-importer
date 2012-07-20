@@ -2,7 +2,7 @@
 Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
-Tested up to: 3.3.1
+Tested up to: 3.4.1
 Stable tag: 0.6
 Imports and merges multiple RSS Feeds using SimplePie. Options including sorting feeds by date, limit feeds, include feed name and excerpts.
 
@@ -12,9 +12,10 @@ WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  Th
 
 The output will be organized like this:
 
-Title
-Date
-Source
+* Title
+* Excerpt (if selected)
+* Date
+* Source (if selected)
 
 and sorted by date ascending or descending.  The Source attribution can be changed to Club, Sponsor or no attribution (e.g., Source: LA Times, or Club: Consulting Club).
 
@@ -25,7 +26,7 @@ You call the function by using a shortcode.
 The plugin can be seen in use on a students site for the Marshall School of Business where the RSS feeds come from campusgroups.com.
 http://students.marshall.usc.edu/undergrad/student-organizations/calendar-of-events/
 = Credit = 
-Allen Weiss, extending the plugin (WP RSS Aggregator) developed by Jean Galea.  http://www.allenweiss.com/wp_plugin
+Allen Weiss  http://www.allenweiss.com/wp_plugin
 
 == Installation ==
 
@@ -39,6 +40,7 @@ The parameters are all set in the setting tab and are:
 * number of posts per feed 
 * sort by date (ascending or descending) 
 * output feed name as (Source, Sponsor, or Club)
+* excerpt (if yes, number of characters to show - 50, 100, 200, 300)
 
 
 == Frequently Asked Questions ==
@@ -58,4 +60,4 @@ Use the shortcode in your posts and pages:
 = Version 0.6 =
 * Fixed bugs in lightbox and eliminated error message
 = Version 0.5 =
-* Added ability to include short descriptions (if they exist in the RSS feed)
+* Added ability to include short descriptions - excerpts (if they exist in the RSS feed)
