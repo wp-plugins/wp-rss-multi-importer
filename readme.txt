@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 0.6
+Stable tag: 0.7
 Imports and merges multiple RSS Feeds using SimplePie. Options including sorting feeds by date, limit feeds, include feed name and excerpts.
 
 == Description ==
@@ -57,6 +57,8 @@ Use the shortcode in your posts and pages:
 
 == Change Log ==
 
+= Version 0.7 =
+* Fixed problem with showing excerpts withe foreign characters
 = Version 0.6 =
 * Fixed bugs in lightbox and eliminated error message
 = Version 0.5 =

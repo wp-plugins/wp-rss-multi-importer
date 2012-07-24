@@ -300,21 +300,13 @@ function wp_rss_multi_importer_options_page() {
 
 
 
-function showexcerpt($content, $maxchars) {
 
-	if (strlen($content) > $maxchars) {
-
-	$content= substr($content, 0, $maxchars);
-	$pos = strrpos($content, " ");
-
-	if ($pos>0) {
-	$content = substr($content, 0, $pos);
-	}
-		return $content . "...";
-
-	} else {
-		return $content;
-	}
+	function showexcerpt($content, $maxchars)
+	{
+	  $words = explode(' ', $content, ($maxchars + 1));
+	  if(count($words) > $maxchars)
+	  array_pop($words);
+	  return implode(' ', $words);
 	}
 
 
