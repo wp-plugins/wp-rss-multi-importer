@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Import
   Plugin URI: http://www.allenweiss/com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 0.6
+  Version: 0.7
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss/com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
