@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Import
   Plugin URI: http://www.allenweiss/com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 0.7
+  Version: 1.0
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss/com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -285,19 +285,7 @@ function wp_rss_multi_importer_options_page() {
    */
    
    add_shortcode('wp_rss_multi_importer','wp_rss_multi_importer_shortcode');
-   
-   function wp_rss_multi_importer_shortcode($atts){
-   
-   if (!empty($atts)){
-   	foreach ($atts as $key => &$val){
-   		$val=html_entity_decode($val);
-   		}
-   	}
-   wp_rss_multi_importer($atts);
-   }
-   
-   
-
+ 
 
 
 
@@ -314,11 +302,11 @@ function wp_rss_multi_importer_options_page() {
 
 
    
-   function wp_rss_multi_importer($atts=array()){
+   function wp_rss_multi_importer_shortcode($atts=array()){
    
-   
+   $readable = '';
    $options = get_option('rss_import_items','option not found');
-    //var_dump ($options);
+    
    if(!empty($options)){
 	
 //GET PARAMETERS  
@@ -340,7 +328,7 @@ if(empty($options['sourcename'])){
 	
 	
 	
-   //if($i % 2 ==0) continue;
+
 
     
 
@@ -358,7 +346,7 @@ if(empty($options['sourcename'])){
    
    $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
    
-   //echo $rssName." and  ".$rssURL."<br>";
+  
   next($options);
    }
  
@@ -373,11 +361,11 @@ function wprssmi_hourly_feed() { return 3600; }
 	   add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$feed = fetch_feed($url);
 	 remove_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
-	//var_dump ($feed);
+
 
 
 	if (is_wp_error( $feed ) ) {
-		//echo $feed->get_error_message();  //For testing
+	
 		continue;
 	
 	}
@@ -392,7 +380,7 @@ function wprssmi_hourly_feed() { return 3600; }
 		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
-			//	$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+		
 				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
 			}
 
@@ -401,7 +389,7 @@ function wprssmi_hourly_feed() { return 3600; }
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
 				if (empty($item))	continue;	
-					//$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"]);
+				
 					
 					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
 				}	
@@ -431,24 +419,27 @@ if($sortDir==1){
 
 foreach($myarray as $items) {
 
-	echo '<p class="rss-output"><a class="colorbox" href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+	$readable .=  '<p class="rss-output"><a class="colorbox" href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
-	echo showexcerpt($items["mydesc"],$descNum).'<br />';
+	 $readable .=  showexcerpt($items["mydesc"],$descNum).'<br />';
 }
 
 
 	
 	if (!empty($items["mystrdate"])){
-	echo date("D, M d, Y",$items["mystrdate"]).'<br />';
+	 $readable .=  date("D, M d, Y",$items["mystrdate"]).'<br />';
 	}
 		if (!empty($items["myGroup"])){
-	echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
+     $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
-	echo '</p>';
+	 $readable .=  '</p>';
+	
+
 }
- 
+    
    }
-   
+return $readable;
+
    }
    
 
