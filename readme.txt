@@ -56,7 +56,7 @@ Use the shortcode in your posts and pages:
 == Change Log ==
 
 = Version 1.1 =
-* Added ability determine where the links should open (Lightbox, new window, current window)
+* Added ability to determine where the links should open (Lightbox, new window, current window)
 = Version 1.0 =
 * Fixed problem where showing text before the shortcode rendered after the shortcode
 = Version 0.7 =
