@@ -8,7 +8,7 @@ Imports and merges multiple RSS Feeds using SimplePie. Options including sorting
 
 == Description ==
 
-WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin give you flexibility by adding and deleting specific feeds, sorting by date, limiting posts per feed.  This works well for news items as well as events (which are sorted differently than news items). You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.
+WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you flexibility by adding and deleting specific feeds, sorting by date, limiting posts per feed.  This works well for news items as well as events (which are sorted differently than news items). You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.
 
 The output will be organized like this:
 
@@ -38,7 +38,7 @@ The parameters are all set in the setting tab and are:
 * sort by date (ascending or descending) 
 * output feed name as (Source, Sponsor, or Club)
 * excerpt (if yes, number of characters to show - 50, 100, 200, 300)
-* where the links should open (in a Lightbox, a new window, the current window)
+* where the links should open (in a Lightbox, a new window, or the current window)
 
 
 == Frequently Asked Questions ==
@@ -46,6 +46,7 @@ The parameters are all set in the setting tab and are:
 
 Use the shortcode in your posts and pages:
 [wp_rss_multi_importer]
+Make sure the shortcode is entered when the input is set to HTML (versus Visual)
 
 == Screenshots ==
 
