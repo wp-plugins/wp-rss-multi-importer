@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Import
   Plugin URI: http://www.allenweiss/com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 1.0
+  Version: 1.1
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss/com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -241,7 +241,13 @@ function wp_rss_multi_importer_options_page() {
 <OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
 </SELECT></p>
 
-
+<p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open)</label>
+	<SELECT NAME="rss_import_items[targetWindow]" id="targetWindow">
+	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
+	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>>Open in Same Window</OPTION>
+	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>>Open in New Window</OPTION>
+	</SELECT>	
+</p>
 
 <p><label class='o_textinput' for='sourcename'>Attribution Label</label>
 <SELECT NAME="rss_import_items[sourcename]">
@@ -265,6 +271,7 @@ function wp_rss_multi_importer_options_page() {
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 </SELECT></p>
 </span>
+
 
        <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 
@@ -315,11 +322,13 @@ $sortDir=$options['sortbydate'];  //1 is ascending
 $showDesc=$options['showdesc'];  //1 is show
 $descNum=$options['descnum'];
 $maxposts=$options['maxfeed'];
+$targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
 	$attribution=$options['sourcename'].': ';
 }
+
 
 
 
@@ -415,11 +424,21 @@ if($sortDir==1){
 }else{
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
+
+
+if($targetWindow==0){
+	$openWindow='class="colorbox"';
+}elseif ($targetWindow==1){
+	$openWindow='target=_self';		
+}else{
+	$openWindow='target=_blank';	
+}
 	
 
 foreach($myarray as $items) {
 
-	$readable .=  '<p class="rss-output"><a class="colorbox" href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+	$readable .=  '<p class="rss-output"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
 	 $readable .=  showexcerpt($items["mydesc"],$descNum).'<br />';
 }
