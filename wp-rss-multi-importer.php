@@ -1,26 +1,113 @@
 <?php
-/*  Plugin Name: RSS Multi Import
-  Plugin URI: http://www.allenweiss/com/wp_plugin
-  Description: This plugin helps you import multiple RSS feeds and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 1.1
+/*  Plugin Name: RSS Multi Importer
+  Plugin URI: http://www.allenweiss.com/wp_plugin
+  Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
+  Version: 2.0
 	Author: Allen Weiss
-	Author URI: http://www.allenweiss/com/wp_plugin
+	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 
 function wp_rss_multi_importer_start () {
+	
+	
+
 register_setting('wp_rss_multi_importer_options', 'rss_import_items');
-add_settings_section( 'wp_rss_multi_importer_main', 'RSS Multi-Importer Settings', 'wp_section_text', 'wprssimport' );  
+register_setting('wp_rss_multi_importer_categories', 'rss_import_categories');	
+add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprssimport' );  
+
+
+
 }
 
 add_action('admin_init','wp_rss_multi_importer_start');
   
 
-function wp_section_text() {
-    echo '<p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
+
+add_action('admin_menu','wp_rss_multi_importer_menu');
+
+function wp_rss_multi_importer_menu () {
+
+add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_display');
 }
 
+
+
+
+
+
+
+
+
+
+
+function wp_rss_multi_importer_display( $active_tab = '' ) {
+?>
+	
+	<div class="wrap">
+	
+		<div id="icon-themes" class="icon32"></div>
+		<h2>RSS Feed Options</h2>
+		<?php settings_errors(); ?>
+		
+		<?php if( isset( $_GET[ 'tab' ] ) ) {
+			$active_tab = $_GET[ 'tab' ];
+		} else if( $active_tab == 'category_options' ) {
+			$active_tab = 'category_options';
+		} else if( $active_tab == 'more_options' ){
+			$active_tab = 'more_options';
+		} else { $active_tab = 'main_options';	
+			
+		} // end if/else ?>
+		
+		<h2 class="nav-tab-wrapper">
+			<a href="?page=wp_rss_multi_importer_admin&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>">RSS Feeds & Options</a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>">Category Options</a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>">More</a>
+		</h2>
+		
+		<form method="post" action="options.php">
+			<?php
+			
+				if( $active_tab == 'main_options' ) {
+						
+			wp_rss_multi_importer_options_page();
+			
+		} else if ( $active_tab == 'category_options' ) {
+			
+			wp_rss_multi_importer_category_page();
+				
+				} else {
+						wp_rss_multi_importer_more_page();
+				
+				} // end if/else
+				
+				//submit_button();
+			
+			?>
+		</form>
+		
+	</div><!-- /.wrap -->
+<?php
+} 
+
+
+
+
+
+
+
+
+
+
+
+function wp_section_text() {
+    echo '<div class="postbox"><h3><label for="title">Usage Details</label></h3><div class="inside"><p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
+    echo '<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode,  like [wp_rss_multi_importer category="2"], on the page you wish to have only show feeds from that category.</p></div></div>';
+
+}
+ 
 
 
 // Only load scripts and CSS if we are on this plugin's options page (admin)
@@ -54,39 +141,40 @@ if ( version_compare($wp_version, "3.3.1", "<" ) ) {
     wp_enqueue_script( 'jquery' );	
 }
     wp_enqueue_script( 'add-remove', plugins_url( 'scripts/add-remove.js', __FILE__) );
+
+  
 }
 
 
 
-/**
-    * Include Colorbox-related script and CSS in WordPress head on frontend
-    */      
+ 
    
-   add_action( 'wp_enqueue_scripts', 'wprssmi_frontend_scripts' );
+  add_action( 'wp_enqueue_scripts', 'wprssmi_frontend_scripts' );
    
    function wprssmi_frontend_scripts() {
 		wp_enqueue_script( 'jquery' );
-        wp_enqueue_style( 'styles', plugins_url( 'css/colorbox.css', __FILE__) );
-        wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );         
+      
    }
 
 
 
-
-	
-   /**
-    * Output JQuery command to trigger Colorbox for links in the <head>
+/**
+    * Include Colorbox-related scripts and CSS in WordPress in footer
     */
 
 
 
-add_action ( 'wp_head', 'wprssmi_head_output' );
+function footer_scripts(){
+	
+	  wp_enqueue_style( 'styles', plugins_url( 'css/colorbox.css', __FILE__) );
+      wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );  
 
-function wprssmi_head_output() {
-	   
-    echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
- 
+echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
+	
 }
+
+
+
 
 
 /**
@@ -102,14 +190,23 @@ function wprssmi_head_output() {
 
 
 
-function wp_rss_multi_importer_menu () {
-add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_options_page');
-}
-
-add_action('admin_menu','wp_rss_multi_importer_menu');
 
 
-	
+
+	function wp_rss_multi_importer_more_page(){
+	   ?>	
+		   <div class="wrap">
+		<div id="poststuff">
+
+
+	<?php    echo '<div class="postbox"><h3><label for="title">Help Us Help You</label></h3><div class="inside"><p>Hi All<br>In an attempt to increase the functionality of this plugin, let me know if you have any feature requests by <a href="http://www.allenweiss.com/wp_plugin" target="_blank">going here.</a></p>';
+	    echo '<p>One thing you might notice in this release is an attempt to give you more control over what gets shown on the RSS feeds.  For example, many RSS feeds come from Feedburner who puts little chicklets (links to Twitter, Digg, etc.) after each post.  Now you have an option to suppress those chicklets if you want.  It\'s not perfect, but will work.  If you find other things that comes in your RSS feed that you would like to suppress, let me know and I\'ll see if that is an option I can provide.</p>';
+	echo '<p>If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.<br>Allen</p></div></div></div></div>';	
+
+	}
+
+
+
 	
 	
 	function wprssmi_convert_key( $key ) { 
@@ -123,6 +220,18 @@ add_action('admin_menu','wp_rss_multi_importer_menu');
 
             $label = str_replace( 'feed_url_', 'Feed URL ', $key );
         }
+
+		else if ( strpos( $key, 'feed_cat_' ) === 0 ) { 
+
+            $label = str_replace( 'feed_url_', 'Feed Category ', $key );
+        }
+
+		else if ( strpos( $key, 'cat_name_' ) === 0 ) { 
+
+            $label = str_replace( 'cat_name_', 'Category ID # ', $key );
+        }
+
+
         return $label;
     }
 
@@ -137,22 +246,35 @@ add_action('admin_menu','wp_rss_multi_importer_menu');
     }
 
 
+   function cat_get_id_number($key){
+
+	if ( strpos( $key, 'cat_name_' ) === 0 ) { 
+
+        $j = str_replace( 'cat_name_', '', $key );
+    }
+	return $j;
+
+    }
+
+
 
 function wp_rss_multi_importer_options_page() {
 
        ?>
 
        <div class="wrap">
+	<div id="poststuff">
+  <h2>RSS Multi-Importer Admin</h2>
+       <?php screen_icon(); 
 
-       <?php screen_icon(); ?>
+do_settings_sections( 'wprssimport' );
 
-       
+?>
 
-        
-
-       <h2>RSS Multi-Importer Admin</h2>
+    
 
        <div id="options">
+	
 
        <form action="options.php" method="post"  >            
 
@@ -160,12 +282,27 @@ function wp_rss_multi_importer_options_page() {
 		$siteurl= get_site_url();
         $images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';
 
-       settings_fields( 'wp_rss_multi_importer_options' );
+      settings_fields( 'wp_rss_multi_importer_options' );
 
-       do_settings_sections( 'wprssimport' );
 
        $options = get_option( 'rss_import_items' ); 
+
+
     	
+//this included for backward compatibility
+  if ( !empty($options) ) {
+$cat_array = preg_grep("^feed_cat_^", array_keys($options));
+
+	if (count($cat_array)==0) {
+	   //echo "category was not found\n";
+		$catExists=0;
+		$modnumber=2;
+	}else{
+		$catExists=1;
+		$modnumber=3;	
+	}
+}
+
 
        if ( !empty($options) ) {
 
@@ -173,7 +310,7 @@ function wp_rss_multi_importer_options_page() {
 
            for ( $i=1; $i<=$size; $i++ ) {            
 
-               if( $i % 2 == 0 ) continue;
+               if( $i % $modnumber == 0 ) continue;
 
 
                $key = key( $options );
@@ -188,7 +325,7 @@ function wp_rss_multi_importer_options_page() {
 
                echo "<p><label class='textinput' for='$key'>" . wprssmi_convert_key( $key ) . "</label>
 
-               <input  class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' /></p>";
+               <input  class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />  <a href='#' class='btnDelete' id='$j'><img src='$images_url/remove.png'/></a></p>";
                
 
                next( $options );
@@ -199,8 +336,62 @@ function wp_rss_multi_importer_options_page() {
 
                echo "<p><label class='textinput' for='$key'>" . wprssmi_convert_key( $key ) . "</label>
 
-               <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />  
-               <a href='#' class='btnDelete' id='$j'><img src='$images_url/remove.png'/></a></p>";
+               <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />" ; 
+
+
+
+
+
+
+	if ($catExists==1){
+		    next( $options );
+            $key = key( $options );	
+			$selectName="rss_import_items[feed_cat_$j]";
+	}else{
+		$selectName="rss_import_items[feed_cat_$j]";		
+	}
+
+
+$catOptions= get_option( 'rss_import_categories' ); 
+
+	if ( !empty($catOptions) ) {
+		echo "Category ";
+echo "<SELECT NAME=".$selectName." id='feed_cat'>";
+echo "<OPTION VALUE='0'>NONE</OPTION>";
+	$catsize = count($catOptions);
+
+echo $options[$key];
+
+	for ( $i=1; $i<=$catsize; $i++ ) {   
+		   
+if( $i % 2== 0 ) continue;
+
+ 	$catkey = key( $catOptions );
+ 	$nameValue=$catOptions[$catkey];
+next( $catOptions );
+ 	$catkey = key( $catOptions );
+	$IDValue=$catOptions[$catkey];
+
+
+	 if($options[$key]==$IDValue){
+		$sel='selected  ';
+	
+		} else {
+		$sel='';
+		
+		}
+
+echo "<OPTION " .$sel.  "VALUE=".$IDValue.">".$nameValue."</OPTION>";
+next( $catOptions );
+
+}
+echo "</SELECT>";
+}
+
+
+              echo " </p>";
+
+
 
                next( $options );
 
@@ -214,7 +405,7 @@ function wp_rss_multi_importer_options_page() {
 
        
 
-       $siteurl = get_option('siteurl');
+  
 
     
 
@@ -222,8 +413,14 @@ function wp_rss_multi_importer_options_page() {
 
        <div id="buttons"><a href="#" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
       
-   <h3>Option Settings</H3>   
-      <p><label class='o_textinput' for='sortbydate'>Sort Output by Date (Ascending = Closest Date First)</label>
+
+<div class="postbox"><h3><label for="title">Options Settings</label></h3><div class="inside">
+
+
+
+
+ 
+      <p><label class='o_textinput' for='sortbydate'>Sort Output by Date (Descending = Closest Date First)</label>
 	
 		<SELECT NAME="rss_import_items[sortbydate]">
 		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>>Ascending</OPTION>
@@ -241,7 +438,18 @@ function wp_rss_multi_importer_options_page() {
 <OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
 </SELECT></p>
 
-<p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open)</label>
+
+<p><label class='o_textinput' for='maxperPage'>Number of Entries per Page of Output</label>
+<SELECT NAME="rss_import_items[maxperPage]">
+<OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if($options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if($options['maxperPage']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="50" <?php if($options['maxperPage']==50){echo 'selected';} ?>>50</OPTION>
+</SELECT></p>
+
+
+<p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open?)</label>
 	<SELECT NAME="rss_import_items[targetWindow]" id="targetWindow">
 	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
 	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>>Open in Same Window</OPTION>
@@ -263,64 +471,263 @@ function wp_rss_multi_importer_options_page() {
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
 </SELECT></p>
 <span id="secret">
-<p><label class='o_textinput' for='descnum'>Excerpt length (number of characters)</label>
+<p style="padding-left:15px"><label class='o_textinput' for='descnum'>Excerpt length (number of words)</label>
 <SELECT NAME="rss_import_items[descnum]" id="descnum">
 <OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
 <OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
 <OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
+<OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
 </SELECT></p>
-</span>
+<p style="padding-left:15px"><label class='o_textinput' for='descnum'>Check to suppress Feedburner chicklets (like these:)<img src='<?php echo $images_url; ?>/chicklets.png'/>  <input type="checkbox" Name="rss_import_items[delChicks]" Value="1" <?php if ($options['delChicks']==1){echo 'checked="checked"';} ?></label>
 
+
+</p>
+</span>
+</div></div>
 
        <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 
-       
+
 
        </form>
 
-       </div>
+      <div class="postbox"><h3><label for="title">   Help Others</label></h3><div class="inside">If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.</div></div> 
 
+       </div>
+</div>
        </div>
 
        <?php 
 
-   }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  Categories Page
+
+function wp_rss_multi_importer_category_page() {
+	
+		$siteurl= get_site_url();
+        $images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';
+
+       ?>
+      <div class="wrap">
+	<div id="poststuff">
+  
+  <h2>RSS Multi-Importer Categories (and their shortcodes)</h2>
+
+     <form action="options.php" method="post"  >  
+	
+	<?php
+	
+	settings_fields( 'wp_rss_multi_importer_categories' );
+
+	$options = get_option('rss_import_categories' ); 
+	
+	
+	if ( !empty($options) ) {
+		$size = count($options);
+
+
+		for ( $i=1; $i<=$size; $i++ ) {   
+			   
+if( $i % 2== 0 ) continue;
+
+  
+					
+				   $key = key( $options );
+
+	$j = cat_get_id_number($key);
+		$textUpper=strtoupper($options[$key]);
+ 			echo "<div class='cat-input' id='$j'>";
+	echo "<p><label class='textinput' for='Category ID'>" . wprssmi_convert_key( $key ) . "</label>
+	
+
+
+       <input id='5'  size='20' name='rss_import_categories[$key]' type='text' value='$textUpper' />  [wp_rss_multi_importer category=\"".$j."\"]";
+next( $options );
+   $key = key( $options );
+
+     echo"  <input id='5'  size='20' name='rss_import_categories[$key]' type='hidden' value='$options[$key]' />" ; 
+	echo "</div>";
+	next( $options );	
+}
+
+		 
+
+}
+	?>
+  <div id="category"><a href="#" id="addCat" class="addCategory"><img src="<?php echo $images_url; ?>/addCat.png"></a>  	
+<p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
+	          
+</form>
+</div></div>
+
+<?php
+
+}
+
+
+
+
+
+
+
+
+
+
+
    
    /**
-   *  Shortcode setup and call (shortcode is [wp_rss_multi_importer])
+   *  Shortcode setup and call (shortcode is [wp_rss_multi_importer]) with options
    */
    
    add_shortcode('wp_rss_multi_importer','wp_rss_multi_importer_shortcode');
  
 
 
-
-	function showexcerpt($content, $maxchars)
+	function showexcerpt($content, $maxchars,$openWindow,$delChicks)  //show excerpt function
 	{
-	  $words = explode(' ', $content, ($maxchars + 1));
-	  if(count($words) > $maxchars)
-	  array_pop($words);
-	  return implode(' ', $words);
-	}
+		
 
+    $content=CleanHTML($content);
+
+
+	$content=strip_tags(html_entity_decode($content),'<a><img>');
+
+				if($maxchars !=99){
+		
+		
+		
+	  $words = explode(' ', $content, ($maxchars + 1));
+  if(count($words) > $maxchars)
+	  array_pop($words);
+ $thisStr = implode(' ', $words)."";
+	
+	
+	}else{
+		
+		$thisStr=$content;
+	}
+	if ($delChicks==1){
+		
+		$thisStr=DeleteFeedTags($thisStr);
+	}
+	
+	return str_replace("<a ", "<a " .$openWindow, $thisStr);
+	}
+	
+	
+	
+	function CleanHTML($content){
+		
+	$content=str_replace("&nbsp;&raquo;", "", $content);
+	$content=str_replace("&nbsp;", " ", $content);	
+		
+	return 	$content;
+	}
+	
+	
+	
+	
+	
+
+	function DeleteFeedTags($content){  
+		
+	if (strpos($content, 'src="http://feeds.feedburner')>0) {	
+
+		$starttag="'<a";
+		$endtag="</a>'";		
+	}else if (strpos($content, 'src="http://res3.feedsportal')>0) {
+			$starttag="'<a";
+			$endtag="</a>'";
+	}else{
+			$starttag="'<a";
+			$endtag="</a>'";		
+	}
+			
+		$mycontent=$content;
+
+		 preg_match_all ($starttag."(.*?)".$endtag,$content,$match);
+
+	    foreach($match[1] as $val)
+	    {
+		$thisStr=$starttag.$val.$endtag;
+		$pos=strpos($thisStr, 'src="http://feeds.feedburner');  //suppress feedburner chicklets
+		$pos2=strpos($thisStr, 'src="http://res3.feedsportal');  //suppress feedsportal chicklets
+
+		if ($pos>0 || $pos2>0){
+			$mycontent=str_replace(trim($thisStr,"'"), '', $mycontent);
+			$mycontent=str_replace("<div></div>", '', $mycontent);  //cleaning up junk in the feed
+			$mycontent=str_replace("<br><br>", '', $mycontent);  //cleaning up junk in the feed
+	}
+	    }
+	return $mycontent;
+
+	}
 
 
 
 
    
    function wp_rss_multi_importer_shortcode($atts=array()){
+	
+add_action('wp_footer','footer_scripts');
+	
+		$siteurl= get_site_url();
+       $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
+	
+
+	
+	$category= $atts['category'];
+	if (isset($category)){
+		$thisCat=$category;
+	}else{
+		$thisCat=0;
+	}
    
    $readable = '';
    $options = get_option('rss_import_items','option not found');
+
+
+$cat_array = preg_grep("^feed_cat_^", array_keys($options));
+
+	if (count($cat_array)==0) {  //for backward compatibility
+		$noExistCat=1;
+	}else{
+		$noExistCat=0;	
+	}
+
+
+
     
    if(!empty($options)){
 	
 //GET PARAMETERS  
 $size = count($options);
+$delChicks=$options['delChicks'];
 $sortDir=$options['sortbydate'];  //1 is ascending
 $showDesc=$options['showdesc'];  //1 is show
 $descNum=$options['descnum'];
+$maxperPage=$options['maxperPage'];
 $maxposts=$options['maxfeed'];
 $targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
 if(empty($options['sourcename'])){
@@ -333,33 +740,56 @@ if(empty($options['sourcename'])){
 
 
    
-   for ($i=1;$i<=$size;$i=$i+2){
-	
-	
-	
+   for ($i=1;$i<=$size;$i=$i+1){
 
-
-    
-
+	
 
    			$key =key($options);
 				if ( !strpos( $key, '_' ) > 0 ) continue; //this makes sure only feeds are included here...everything else are options
 				
    			$rssName= $options[$key];
+
    
    			next($options);
    			
    			$key =key($options);
    			
    			$rssURL=$options[$key];
-   
+
+
+
+  	next($options);
+	$key =key($options);
+	
+
+
+
+if ((($thisCat>0 && $options[$key]==$thisCat))|| $thisCat==0 || $noExistCat==1) {
+
    $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
+	
+}
    
-  
-  next($options);
+$cat_array = preg_grep("^feed_cat_^", array_keys($options));  // for backward compatibility
+
+	if (count($cat_array)>0) {
+
+  next($options); //skip feed category
+}
+
    }
  
- 
+
+if (empty($myfeeds)){
+	
+	echo "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
+	exit;
+}
+
+
+
+
+
 
 function wprssmi_hourly_feed() { return 3600; }
  
@@ -374,7 +804,7 @@ function wprssmi_hourly_feed() { return 3600; }
 
 
 	if (is_wp_error( $feed ) ) {
-	
+
 		continue;
 	
 	}
@@ -425,6 +855,7 @@ if($sortDir==1){
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
 
+// HOW THE LINK OPENS
 
 if($targetWindow==0){
 	$openWindow='class="colorbox"';
@@ -434,13 +865,19 @@ if($targetWindow==0){
 	$openWindow='target=_blank';	
 }
 	
-
+$total = -1;
 foreach($myarray as $items) {
+	
+$total = $total +1;
+if ($maxperPage>0 && $total>=$maxperPage) break;
+
+
 
 	$readable .=  '<p class="rss-output"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
-	 $readable .=  showexcerpt($items["mydesc"],$descNum).'<br />';
+
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$delChicks).'<br />';
 }
 
 
