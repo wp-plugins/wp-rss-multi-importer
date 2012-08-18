@@ -41,7 +41,7 @@ The parameters are all set in the setting tab and are:
 * number of posts on a page
 * sort by date (ascending or descending) 
 * output feed name as (Source, Sponsor, or Club)
-* excerpt (if yes, number of characters to show - 50, 100, 200, 300)
+* excerpt (if yes, number of words to show - 50, 100, 200, 300)
 * where the links should open (in a Lightbox, a new window, or the current window)
 
 
