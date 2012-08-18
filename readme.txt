@@ -3,12 +3,14 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 1.1
-Imports and merges multiple RSS Feeds using SimplePie. Options including sorting feeds by date, limit feeds, include feed name and excerpts.
+Stable tag: 2.0
+Imports and merges multiple RSS Feeds using SimplePie. Options including sorting feeds by date, limit feeds, limit by category, include feed name and excerpts.
 
 == Description ==
 
-WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, limiting posts per feed.  This works well for news items as well as events (which are sorted differently than news items). You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.
+WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, limiting posts per feed and more.  This works well for news items as well as events (which are sorted differently than news items).
+
+You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.  Finally, you can add a bunch of feeds, assign them to categories and then output only feeds you want based on the category.  This allows you to have one input of RSS feeds, and yet put them on different pages of your web site.
 
 The output will be organized like this:
 
@@ -31,10 +33,12 @@ Allen Weiss  http://www.allenweiss.com/wp_plugin
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]`
+4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#"]
 
 The parameters are all set in the setting tab and are:
 
 * number of posts per feed 
+* number of posts on a page
 * sort by date (ascending or descending) 
 * output feed name as (Source, Sponsor, or Club)
 * excerpt (if yes, number of characters to show - 50, 100, 200, 300)
@@ -48,6 +52,10 @@ Use the shortcode in your posts and pages:
 [wp_rss_multi_importer]
 Make sure the shortcode is entered when the input is set to HTML (versus Visual)
 
+If you want to limit the feeds to those in a given category, make sure to first
+assign the feed to a category, then use this shortcode on your page or post:
+[wp_rss_multi_importer category="#"]
+
 == Screenshots ==
 
 1. The output of this plugin on the frontend.
@@ -56,6 +64,8 @@ Make sure the shortcode is entered when the input is set to HTML (versus Visual)
 
 == Change Log ==
 
+= Version 2.0 =
+* Added ability to assign feeds to a category and output feeds from a given a given category.  Limit posts on a page.  Uninstall now works for multiuser sites.  Solved problem for some users where the LightBox option was conflicting with other plugins that also relied on Lightbox or Colorbox.
 = Version 1.1 =
 * Added ability to determine where the links should open (Lightbox, new window, current window)
 = Version 1.0 =
