@@ -28,7 +28,11 @@ jQuery(function() { // when document has loaded
 
 			"<p><label class='textinput' for='feed_url_" + i + "'>Feed URL " + i + "</label>" +
 			
-			"<input id='urlid' class='url-item' size='100' name='rss_import_items[feed_url_" + i + "]' type='text' value='' /><span id='errormsg'></span></p></div>")
+			"<input id='urlid' class='url-item' size='100' name='rss_import_items[feed_url_" + i + "]' type='text' value='' />"+
+			
+			"<input id=''feed_cat_" + i + "' class='url-item' size='100' name='rss_import_items[feed_cat_" + i + "]' type='hidden' value='0' />"+			
+			
+			"<span id='errormsg'></span></p></div>")
 
 			.fadeIn('slow').insertBefore('div#buttons');
 
@@ -37,7 +41,37 @@ jQuery(function() { // when document has loaded
 		i++; //after the click i will increment up		
 
 	});
+	
+	
+	jQuery('a#addCat').click(function() { 
+		
+		
+		var z=jQuery('div.cat-input').size();
+			if (z==0){
+				var  i=0;
+			}else{
+				var i = (jQuery('div.cat-input').get(-1).id);
+			}
+		i=parseInt(i)+1;
+		
+		
+		
+		jQuery( "<div class='cat-input'"+i+"'  id="+i+"><p><label class='textinput' for='cat_name_" + i + "'>Category Name</label>" +
 
+		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this Category</a></p>" +
+
+
+			
+			"</div>")
+
+			.fadeIn('slow').insertBefore('div#category');
+
+		// append (add) a new input to the document.
+
+		i++; //after the click i will increment up
+		
+	
+	});
 	
 	
 	jQuery(".btnDelete").click(function() {
@@ -89,4 +123,6 @@ jQuery(function() { // when document has loaded
     });
 
 
-
+   jQuery(document).on('change', '.cat-input', function() {
+	 this.value = this.value.toUpperCase();
+	    });
