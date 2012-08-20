@@ -64,6 +64,8 @@ assign the feed to a category, then use this shortcode on your page or post:
 
 == Change Log ==
 
+= Version 2.01 =
+* Fixed bug that caused some users to have problems when they haven't added any categories.
 = Version 2.0 =
 * Added ability to assign feeds to a category and output feeds from a given a given category.  Limit posts on a page.  Uninstall now works for multiuser sites.  Solved problem for some users where the LightBox option was conflicting with other plugins that also relied on Lightbox or Colorbox.
 = Version 1.1 =
