@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.0
+  Version: 2.01
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -294,10 +294,11 @@ do_settings_sections( 'wprssimport' );
 $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
 	if (count($cat_array)==0) {
-	   //echo "category was not found\n";
+	  // echo "category was not found\n";
 		$catExists=0;
 		$modnumber=2;
 	}else{
+		 //echo "category was  found\n";
 		$catExists=1;
 		$modnumber=3;	
 	}
@@ -338,6 +339,10 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
                <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />" ; 
 
+if (empty($catOptions)){
+	echo " <input id='$j' class='wprss-input' size='75' name='rss_import_items[feed_cat_$j]' type='hidden' value='0' />" ; 	
+	
+}
 
 
 
@@ -411,7 +416,7 @@ echo "</SELECT>";
 
        ?>
 
-       <div id="buttons"><a href="#" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
+       <div id="buttons"><a href="javascript:void(0)" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
       
 
 <div class="postbox"><h3><label for="title">Options Settings</label></h3><div class="inside">
