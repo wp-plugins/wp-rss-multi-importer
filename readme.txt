@@ -3,8 +3,8 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 2.0
-Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds, limit by category, include feed name and excerpts.
+Stable tag: 2.1
+Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds, limit by category, include feed name and excerpts.  Output using a shortcode or widget.
 
 == Description ==
 
@@ -22,7 +22,7 @@ The output will be organized like this:
 and sorted by date ascending or descending.  The Source attribution can be changed to Club, Sponsor or no attribution (e.g., Source: LA Times, or Club: Consulting Club).
 
 The plugin uses SimplePie for the feed operations. The actual feeds are not stored in your databases but only cached for faster response times.
-You call the function by using a shortcode.
+You call the function by using a shortcode or output the results using a widget.
 
 = Credit = 
 Allen Weiss  http://www.allenweiss.com/wp_plugin
@@ -32,17 +32,25 @@ Allen Weiss  http://www.allenweiss.com/wp_plugin
 1. Upload the `wp-rss-multi-importer` folder to the `/wp-content/plugins/` directory
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
-3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]`
-4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#"]
+3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
+4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#"] or choose the category in the widget.
 
 The parameters are all set in the setting tab and are:
 
 * number of posts per feed 
 * number of posts on a page
+* separate out Today from Earlier posts
 * sort by date (ascending or descending) 
 * output feed name as (Source, Sponsor, or Club)
 * excerpt (if yes, number of words to show - 50, 100, 200, 300)
 * where the links should open (in a Lightbox, a new window, or the current window)
+
+Other parameters can be customized in the shortcode..right now this includes:
+
+* Headline font size
+* Headline bold weight
+* Style of the Today and Earlier tags
+* If using excerpt, symbol or word you want to indicate More..
 
 
 == Frequently Asked Questions ==
@@ -56,6 +64,10 @@ If you want to limit the feeds to those in a given category, make sure to first
 assign the feed to a category, then use this shortcode on your page or post:
 [wp_rss_multi_importer category="#"]
 
+Use the widget.  If your theme allows for widgets, you'll find the RSS Multi Importer Widget there.
+Configure your feeds in the administration panel, then choose the category, number of posts, sorting method
+in the widget admin.
+
 == Screenshots ==
 
 1. The output of this plugin on the frontend.
@@ -64,6 +76,8 @@ assign the feed to a category, then use this shortcode on your page or post:
 
 == Change Log ==
 
+= Version 2.1 =
+* Added a widget option for displaying feeds, better image formatting, separate Today from Earlier posts.
 = Version 2.01 =
 * Fixed bug that caused some users to have problems when they haven't added any categories.
 = Version 2.0 =
