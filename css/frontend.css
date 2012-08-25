@@ -1,0 +1,30 @@
+/*
+    Front end CSS
+   
+*/
+
+
+
+
+
+
+.imagefix img {
+    float: left;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+
+div.rss-output {
+	
+	padding: 1.025em;
+	
+/* border-bottom: 1px dotted #ccc !important;  */ 	/* Uncomment to put a dotted line between each post */  
+}
+
+span.headline {  /* headline css */
+
+font-size:16px;	
+font-weight:400;
+	
+}
