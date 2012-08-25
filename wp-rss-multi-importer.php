@@ -2,15 +2,16 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.01
+  Version: 2.1
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
+ define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ), true );
 
+ require_once 'inc/rss_multi_importer_widget.php' ;
 
 function wp_rss_multi_importer_start () {
-	
 	
 
 register_setting('wp_rss_multi_importer_options', 'rss_import_items');
@@ -36,9 +37,11 @@ add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','
 
 
 
+add_action( 'widgets_init', 'src_load_widgets');  //load widget
 
-
-
+function src_load_widgets() {
+register_widget('WP_Multi_Importer_Widget');
+}
 
 
 
@@ -55,6 +58,8 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			$active_tab = $_GET[ 'tab' ];
 		} else if( $active_tab == 'category_options' ) {
 			$active_tab = 'category_options';
+		} else if( $active_tab == 'style_options' ) {
+			$active_tab = 'style_options';
 		} else if( $active_tab == 'more_options' ){
 			$active_tab = 'more_options';
 		} else { $active_tab = 'main_options';	
@@ -64,9 +69,10 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		<h2 class="nav-tab-wrapper">
 			<a href="?page=wp_rss_multi_importer_admin&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>">RSS Feeds & Options</a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>">Category Options</a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>">Style Options</a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>">More</a>
 		</h2>
-		
+	
 		<form method="post" action="options.php">
 			<?php
 			
@@ -77,11 +83,15 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		} else if ( $active_tab == 'category_options' ) {
 			
 			wp_rss_multi_importer_category_page();
+			
+		} else if ( $active_tab == 'style_options' ) {
+			
+			wp_rss_multi_importer_style_tags();
 				
 				} else {
 						wp_rss_multi_importer_more_page();
 				
-				} // end if/else
+				} // end if/else  	
 				
 				//submit_button();
 			
@@ -153,28 +163,28 @@ if ( version_compare($wp_version, "3.3.1", "<" ) ) {
    
    function wprssmi_frontend_scripts() {
 		wp_enqueue_script( 'jquery' );
-      
+     
    }
 
 
 
 /**
-    * Include Colorbox-related scripts and CSS in WordPress in footer
+    * Include Colorbox-related script and CSS in WordPress in footer
     */
 
 
 
 function footer_scripts(){
-	
-	  wp_enqueue_style( 'styles', plugins_url( 'css/colorbox.css', __FILE__) );
+
+	  wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
       wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );  
+	  wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
 
 echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
 	
 }
 
-
-
+ 
 
 
 /**
@@ -190,9 +200,6 @@ echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('
 
 
 
-
-
-
 	function wp_rss_multi_importer_more_page(){
 	   ?>	
 		   <div class="wrap">
@@ -200,11 +207,34 @@ echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('
 
 
 	<?php    echo '<div class="postbox"><h3><label for="title">Help Us Help You</label></h3><div class="inside"><p>Hi All<br>In an attempt to increase the functionality of this plugin, let me know if you have any feature requests by <a href="http://www.allenweiss.com/wp_plugin" target="_blank">going here.</a></p>';
-	    echo '<p>One thing you might notice in this release is an attempt to give you more control over what gets shown on the RSS feeds.  For example, many RSS feeds come from Feedburner who puts little chicklets (links to Twitter, Digg, etc.) after each post.  Now you have an option to suppress those chicklets if you want.  It\'s not perfect, but will work.  If you find other things that comes in your RSS feed that you would like to suppress, let me know and I\'ll see if that is an option I can provide.</p>';
+
 	echo '<p>If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.<br>Allen</p></div></div></div></div>';	
 
 	}
 
+
+	function wp_rss_multi_importer_style_tags(){
+	   ?>	
+		   <div class="wrap">
+		<div id="poststuff">
+
+
+	<?php    echo '<div class="postbox"><h3><label for="title">Shortcode Parameters</label></h3><div class="inside"><h2>You can now customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:</h2>';
+	?>
+	<p>
+<ul><li>Headline font size - the parameter is hdsize (set at 16px by default)</li>
+	<li>Headline bold weight - the parameter is hdweight (set at 400 by default)</li>
+	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em) </li>
+	<li>If using excerpt, symbol or word you want to indicate More..- the parameter is morestyle (set by default to [...])</li>
+	<ul>
+		</p>
+<p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
+<p>If setting the style of the Today and Earlier tags, you need to enter the entire inline css - so be careful.</p>
+		
+<?php
+	echo '</div></div></div></div>';	
+
+	}
 
 
 	
@@ -294,11 +324,10 @@ do_settings_sections( 'wprssimport' );
 $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
 	if (count($cat_array)==0) {
-	  // echo "category was not found\n";
+	   //echo "category was not found\n";
 		$catExists=0;
 		$modnumber=2;
 	}else{
-		 //echo "category was  found\n";
 		$catExists=1;
 		$modnumber=3;	
 	}
@@ -339,12 +368,11 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
                <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />" ; 
 
-if (empty($catOptions)){
-	echo " <input id='$j' class='wprss-input' size='75' name='rss_import_items[feed_cat_$j]' type='hidden' value='0' />" ; 	
-	
-}
 
+			if (empty($catOptions)){
+				echo " <input id='$j' class='wprss-input' size='10' name='rss_import_items[feed_cat_$j]' type='hidden' value='0' />" ; 	
 
+			}
 
 
 
@@ -416,7 +444,7 @@ echo "</SELECT>";
 
        ?>
 
-       <div id="buttons"><a href="javascript:void(0)" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
+       <div id="buttons"><a href="#" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
       
 
 <div class="postbox"><h3><label for="title">Options Settings</label></h3><div class="inside">
@@ -432,10 +460,20 @@ echo "</SELECT>";
 		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>>Descending</OPTION>
 		
 		</SELECT></p>  
+		
+		
+		<p><label class='o_textinput' for='todaybefore'>Separate Today and Earlier Posts</label>
+
+		<SELECT NAME="rss_import_items[todaybefore]">
+		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>>Yes</OPTION>
+		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>>No</OPTION>
+
+		</SELECT></p>
 	
 
 <p><label class='o_textinput' for='maxfeed'>Number of Entries per Feed</label>
 <SELECT NAME="rss_import_items[maxfeed]">
+<OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
 <OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
@@ -484,7 +522,7 @@ echo "</SELECT>";
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 <OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
 </SELECT></p>
-<p style="padding-left:15px"><label class='o_textinput' for='descnum'>Check to suppress Feedburner chicklets (like these:)<img src='<?php echo $images_url; ?>/chicklets.png'/>  <input type="checkbox" Name="rss_import_items[delChicks]" Value="1" <?php if ($options['delChicks']==1){echo 'checked="checked"';} ?></label>
+<p style="padding-left:15px"><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
 
 
 </p>
@@ -609,85 +647,89 @@ next( $options );
  
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$delChicks)  //show excerpt function
-	{
-		
 
+
+
+
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink)  //show excerpt function
+	{
+global $morestyle;
     $content=CleanHTML($content);
 
-
-	$content=strip_tags(html_entity_decode($content),'<a><img>');
-
-				if($maxchars !=99){
-		
-		
-		
-	  $words = explode(' ', $content, ($maxchars + 1));
-  if(count($words) > $maxchars)
-	  array_pop($words);
- $thisStr = implode(' ', $words)."";
-	
-	
+	if ($stripAll==1){
+			$content=strip_tags(html_entity_decode($content));	
+			$content= limitwords($maxchars,$content);	
 	}else{
-		
-		$thisStr=$content;
-	}
-	if ($delChicks==1){
-		
-		$thisStr=DeleteFeedTags($thisStr);
+		$content=strip_tags(html_entity_decode($content),'<a><img>');
+		$content=findalignImage($maxchars,$content);	
+}
+	
+	$content=str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
+	return str_replace("<a ", "<a " .$openWindow, $content);
 	}
 	
-	return str_replace("<a ", "<a " .$openWindow, $thisStr);
+	
+
+	
+	function limitwords($maxchars,$content){
+	
+global $morestyle;
+		if($maxchars !=99){
+
+
+		  $words = explode(' ', $content, ($maxchars + 1));
+	  			if(count($words) > $maxchars)
+		  				array_pop($words);
+	 					//$content = implode(' ', $words)." [...]";
+						$content = implode(' ', $words)." ". $morestyle;
+						
+	
+		}else{
+						$content=$content."";
+		}
+		return $content;
 	}
+	
+	
 	
 	
 	
 	function CleanHTML($content){
 		
-	$content=str_replace("&nbsp;&raquo;", "", $content);
-	$content=str_replace("&nbsp;", " ", $content);	
+		$content=str_replace("&nbsp;&raquo;", "", $content);
+		$content=str_replace("&nbsp;", " ", $content);	
 		
 	return 	$content;
 	}
 	
 	
 	
+
 	
+	function findalignImage($maxchars,$content){
 	
 
-	function DeleteFeedTags($content){  
+		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; ///match leading image
+
+		if (preg_match("/$strmatch/sU", $content, $matches)){
+
+
+				$tabledImage= "<div class=\"imagefix\">".$matches[2]."</div>";
 		
-	if (strpos($content, 'src="http://feeds.feedburner')>0) {	
+				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
+				
+				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
+				
 
-		$starttag="'<a";
-		$endtag="</a>'";		
-	}else if (strpos($content, 'src="http://res3.feedsportal')>0) {
-			$starttag="'<a";
-			$endtag="</a>'";
-	}else{
-			$starttag="'<a";
-			$endtag="</a>'";		
-	}
+		}else{
+		
 			
-		$mycontent=$content;
-
-		 preg_match_all ($starttag."(.*?)".$endtag,$content,$match);
-
-	    foreach($match[1] as $val)
-	    {
-		$thisStr=$starttag.$val.$endtag;
-		$pos=strpos($thisStr, 'src="http://feeds.feedburner');  //suppress feedburner chicklets
-		$pos2=strpos($thisStr, 'src="http://res3.feedsportal');  //suppress feedsportal chicklets
-
-		if ($pos>0 || $pos2>0){
-			$mycontent=str_replace(trim($thisStr,"'"), '', $mycontent);
-			$mycontent=str_replace("<div></div>", '', $mycontent);  //cleaning up junk in the feed
-			$mycontent=str_replace("<br><br>", '', $mycontent);  //cleaning up junk in the feed
+			$content = limitwords($maxchars,strip_tags($content));
+		}
+	return $content;	
 	}
-	    }
-	return $mycontent;
-
-	}
+	
+	
 
 
 
@@ -696,19 +738,30 @@ next( $options );
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
 add_action('wp_footer','footer_scripts');
+function wprssmi_hourly_feed() { return 3600; }
+add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+
 	
 		$siteurl= get_site_url();
        $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
+		
 	
+	$parms = shortcode_atts(array(  //Get shortcode parameters
+		'category' => 0, 
+		'hdsize' => '16px', 
+		'hdweight'=>400, 
+		'testyle'=>'color: #000000; font-weight: bold;margin: 0 0 0.8125em',
+		'morestyle' =>'[...]'
+		), $atts);
+	
+	$hdsize = $parms['hdsize'];
+    $thisCat = $parms['category'];
+	$hdweight = $parms['hdweight'];
+	$testyle = $parms['testyle'];
+	global $morestyle;
+    $morestyle = $parms['morestyle'];
 
-	
-	$category= $atts['category'];
-	if (isset($category)){
-		$thisCat=$category;
-	}else{
-		$thisCat=0;
-	}
-   
+
    $readable = '';
    $options = get_option('rss_import_items','option not found');
 
@@ -728,8 +781,9 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 	
 //GET PARAMETERS  
 $size = count($options);
-$delChicks=$options['delChicks'];
 $sortDir=$options['sortbydate'];  //1 is ascending
+$stripAll=$options['stripAll'];
+$todaybefore=$options['todaybefore'];
 $showDesc=$options['showdesc'];  //1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
@@ -796,17 +850,14 @@ if (empty($myfeeds)){
 
 
 
-function wprssmi_hourly_feed() { return 3600; }
+
  
  foreach($myfeeds as $feeditem){
 
-	
+
 	$url=(string)($feeditem["FeedURL"]);
-	   add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+	
 	$feed = fetch_feed($url);
-	 remove_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
-
-
 
 	if (is_wp_error( $feed ) ) {
 
@@ -871,6 +922,12 @@ if($targetWindow==0){
 }
 	
 $total = -1;
+$todayStamp=0;
+
+
+
+
+
 foreach($myarray as $items) {
 	
 $total = $total +1;
@@ -878,11 +935,53 @@ if ($maxperPage>0 && $total>=$maxperPage) break;
 
 
 
-	$readable .=  '<p class="rss-output"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+
+
+
+
+//  Today and Earlier Script
+
+
+if ($sortDir==0 && $todaybefore==1){
+	
+	$from=date("d-m-Y",strtotime('now'));
+	$to=date("d-m-Y",$items["mystrdate"]);
+	$nodays=(strtotime($to) - strtotime($from))/ (60 * 60 * 24); 
+
+
+if ($nodays==0){
+	
+
+	if ($todayStamp==0){
+		$readable.='<span style="'.$testyle.'">Today</span>';
+		$todayStamp=1;
+		} 
+	}
+
+  elseif ($nodays!=0) {
+	
+
+		if ($todayStamp==1 || $total==0){
+
+	
+		$readable.= '<span style="'.$testyle.'">Earlier</span>';
+			
+		$todayStamp=2;
+		}
+	}
+	
+}
+	
+
+	
+	
+		$readable .=  '<div class="rss-output"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a></span><br>';
+	
+
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$delChicks).'<br />';
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"]).'<br />';
 }
 
 
@@ -893,8 +992,8 @@ if ($maxperPage>0 && $total>=$maxperPage) break;
 		if (!empty($items["myGroup"])){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
-	 $readable .=  '</p>';
-	
+	 $readable .=  '</div>';
+
 
 }
     
