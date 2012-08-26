@@ -4,7 +4,7 @@ Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
 Stable tag: 2.1
-Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds, limit by category, option to include excerpts with images. 
+Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
 
