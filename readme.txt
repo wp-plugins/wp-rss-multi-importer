@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 2.1
+Stable tag: 2.11
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -76,6 +76,8 @@ in the widget admin.
 
 == Change Log ==
 
+Version 2.11 =
+* Fixed bug that kept new window and same window links to not be live
 = Version 2.1 =
 * Added a widget option for displaying feeds, better image formatting, separate Today from Earlier posts.
 = Version 2.01 =
