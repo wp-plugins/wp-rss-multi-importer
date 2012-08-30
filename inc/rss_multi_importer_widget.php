@@ -25,11 +25,43 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 		add_action('wp_footer','footer_scripts');
 		extract( $args );
-		$title = apply_filters( 'widget_title', $instance['title'] );
 		
+		$siteurl= get_site_url();
+
+			$widget_images_url = $siteurl . '/wp-content/plugins/wp-rss-multi-importer/images';
+			
+			
+		$title = apply_filters( 'widget_title', $instance['title'] );
 		$count = $instance['numoption'];
-		$categoryID = $instance['category'];
+
+	(array) $catArray = $instance['category'];
+	
 		$sortDir = $instance['checkbox'];
+		$showdate = $instance['showdate'];
+		$showicon = $instance['showicon'];
+		$linktitle = $instance['linktitle'];
+		
+		if (!empty($linktitle)){
+			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
+		}
+		
+		
+		if ($showicon==1){
+			$title=	'<img src="'.$widget_images_url.'/rss.png" width="14" height="14" style="border:0;margin-right:5px;">'.$title;
+		}
+		
+		$addmotion = $instance['addmotion'];
+		$background = $instance['background'];
+		
+		if($addmotion==1){
+			add_action('wp_footer','widget_footer_scripts');		
+		}
+		
+		if(!function_exists("wprssmi_hourly_feed")) {
+		function wprssmi_hourly_feed() { return 3600; }
+		}
+	    add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+		
 		if (empty( $sortDir ) ){$sortDir=0;}
 	
 		echo $before_widget;
@@ -82,7 +114,10 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 
 
-		if ((($categoryID>0 && $options[$key]==$categoryID))|| $categoryID==0 || $noExistCat==1) {
+
+	
+	if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
+
 
 		   $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
 
@@ -107,9 +142,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 
 
-		if(!function_exists("wprssmi_hourly_feed")) {
-		function wprssmi_hourly_feed() { return 3600; }
-		}
+
 
 
 	
@@ -118,9 +151,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 
 			$url=(string)($feeditem["FeedURL"]);
-			   add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+		
 			$feed = fetch_feed($url);
-			 remove_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+		
 
 
 
@@ -191,7 +224,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 $total = -1;
 
-
+echo ' <div class="news-wrapper" id="newsticker" style="10px;background-color:'.$background.';">';
+echo '	<div class="news-contents">';
 
 		foreach($myarray as $items) {
 
@@ -203,22 +237,22 @@ $total = -1;
 
 
 
+			echo '<div style="top: 101px;margin-left:5px;" class="news">';
+			echo '<p class="rss-output" style="margin-right:5px"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
 
-			echo '<p class="rss-output"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
 
-
-			if (!empty($items["mystrdate"])){
+			if (!empty($items["mystrdate"])  && $showdate==1){
 			 echo  date("D, M d, Y",$items["mystrdate"]).'<br />';
 			}
 				if (!empty($items["myGroup"])){
-		     echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
+		    echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 			}
 			 echo '</p>';
-
+			echo '</div>';
 
 		}
 
-	
+	echo '</div></div>';
 		
 		
 		
@@ -237,11 +271,17 @@ $total = -1;
 	 * @return array Updated safe values to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = array();
+		//$instance = array();
+			$instance = $new_instance;
+		
 		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['category'] = strip_tags($new_instance['category']);
 		$instance['checkbox'] = strip_tags($new_instance['checkbox']);
 		$instance['numoption'] = strip_tags($new_instance['numoption']);
+		$instance['addmotion'] = strip_tags($new_instance['addmotion']);
+		$instance['background'] = strip_tags($new_instance['background']);
+		$instance['showdate'] = strip_tags($new_instance['showdate']);
+		$instance['showicon'] = strip_tags($new_instance['showicon']);
+		$instance['linktitle'] = strip_tags($new_instance['linktitle']);
 		return $instance;
 	}
 
@@ -254,10 +294,35 @@ $total = -1;
 	 */
 	public function form( $instance ) {
 		
+		
+		//Defaults
+		$defaults = array(
+			'title' => __( 'RSS Feeds', $this->textdomain),
+			'checkbox' => 0,
+			'category' => array(),
+			'exclude' => array(),
+			'numoption' => 2,
+			'addmotion' => 0,
+			'showdate' => 1,
+			'showicon' => 0,
+			'linktitle' => '',
+			'background' => '#ffffff',
+		);
+		
+
+			$instance = wp_parse_args( (array) $instance, $defaults );
+		
+
 	    $title = esc_attr($instance['title']);
 		$checkbox = esc_attr($instance['checkbox']);
-		$category = esc_attr($instance['category']);
 		$numoption = esc_attr($instance['numoption']);	
+		$addmotion = esc_attr($instance['addmotion']);	
+		$background = esc_attr($instance['background']);
+		$showdate = esc_attr($instance['showdate']);
+		$showicon = esc_attr($instance['showicon']);
+		$linktitle = esc_attr($instance['linktitle']);
+	
+		
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
 		
@@ -267,20 +332,41 @@ $total = -1;
 	      	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Widget Title'); ?></label>
 	      	<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 	    </p>
-
 	
+			<p>
+		      	<input id="<?php echo $this->get_field_id('showicon'); ?>" name="<?php echo $this->get_field_name('showicon'); ?>" type="checkbox" value="1" <?php checked( '1', $showicon ); ?>/>
+		    	<label for="<?php echo $this->get_field_id('showicon'); ?>"><?php _e('Show RSS icon'); ?></label>
+		    </p>
+
+			 <p>
+		      	<label for="<?php echo $this->get_field_id('linktitle'); ?>"><?php _e('URL to link title to another page (optional)'); ?></label>
+		      	<input class="widefat" id="<?php echo $this->get_field_id('linktitle'); ?>" name="<?php echo $this->get_field_name('linktitle'); ?>" type="text" value="<?php echo $linktitle; ?>" />
+		    </p>
+		
 
 		<p>
 	      	<input id="<?php echo $this->get_field_id('checkbox'); ?>" name="<?php echo $this->get_field_name('checkbox'); ?>" type="checkbox" value="1" <?php checked( '1', $checkbox ); ?>/>
 	    	<label for="<?php echo $this->get_field_id('checkbox'); ?>"><?php _e('Check to sort ascending'); ?></label>
 	    </p>
+	
+		<p>
+	      	<input id="<?php echo $this->get_field_id('showdate'); ?>" name="<?php echo $this->get_field_name('showdate'); ?>" type="checkbox" value="1" <?php checked( '1', $showdate ); ?>/>
+	    	<label for="<?php echo $this->get_field_id('showdate'); ?>"><?php _e('Show date'); ?></label>
+	    </p>
+
+		
 
 	
-
 		<p>
-			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which categories do you want displayed?'); ?></label>
-			<select name="<?php echo $this->get_field_name('category'); ?>" id="<?php echo $this->get_field_id('category'); ?>" class="widefat">
-				<option id="All" value="0">ALL CATEGORIES</option>
+	      	<input id="<?php echo $this->get_field_id('addmotion'); ?>" name="<?php echo $this->get_field_name('addmotion'); ?>" type="checkbox" value="1" <?php checked( '1', $addmotion ); ?>/>
+	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add motion'); ?></label>
+	    </p>
+	
+			
+		<p>
+			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which category do you want displayed?'); ?></label>
+			<select name="<?php echo $this->get_field_name('category'); ?>[]" id="<?php echo $this->get_field_id('category'); ?>" class="widefat" multiple="multiple">
+				<option id="All" value="0" <?echo in_array(0, (array) $instance['category'] ) ? ' selected="selected"' : ''?>>ALL CATEGORIES</option>
 				<?php
 					if ( !empty($options) ) {
 						$size = count($options);
@@ -293,10 +379,12 @@ $total = -1;
 				$optionName=$options[$key];
 				next( $options );
 				 $key = key( $options );
-				$optionValue=$options[$key];
-
-				
-					echo '<option value="' . $optionValue . '" id="' . $optionName . '"', $category == $optionValue ? ' selected="selected"' : '', '>', $optionName, '</option>';
+				$optionValue=$options[$key];				
+					
+					echo '<option value="' . $optionValue . '" id="' . $optionName . '"', in_array( $optionValue, (array) $instance['category'] ) ? ' selected="selected"' : '', '>', $optionName, '</option>';
+					
+					
+					
 						next( $options );
 				}
 			}
@@ -306,14 +394,38 @@ $total = -1;
 					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many results displayed?'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
-						$myoptions = array('2','5', '8', '10');
+						$myoptions = array('2','5', '8', '10', '15','20');
 						foreach ($myoptions as $myoption) {
 							echo '<option value="' . $myoption . '" id="' . $myoption . '"', $numoption == $myoption ? ' selected="selected"' : '', '>', $myoption, '</option>';
 						}
 						?>
 					</select>
 				</p>
-		</p>
+					<script type="text/javascript">
+								//<![CDATA[
+									jQuery(document).ready(function()
+									{
+										// colorpicker field
+										jQuery('.cw-color-picker').each(function(){
+											var $this = jQuery(this),
+												id = $this.attr('rel');
+
+											$this.farbtastic('#' + id);
+										});
+
+									});
+								//]]>   
+							  </script>
+				<p>
+					 <label for="<?php echo $this->get_field_id('background'); ?>"><?php _e('Background Color:'); ?></label> 
+					 <input class="widefat" id="<?php echo $this->get_field_id('background'); ?>" name="<?php echo $this->get_field_name('background'); ?>" type="text" value="<?php if($background) { echo $background; } else { echo '#cccccc'; } ?>" />
+					<div class="cw-color-picker" rel="<?php echo $this->get_field_id('background'); ?>"></div>
+							
+					        </p>
+					  
+			
+				
+			
 		<?php 
 	}
 

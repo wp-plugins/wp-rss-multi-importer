@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.11
+  Version: 2.15
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -22,6 +22,13 @@ add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprs
 
 }
 
+add_action('init', 'ilc_farbtastic_script');
+function ilc_farbtastic_script() {
+  wp_enqueue_style( 'farbtastic' );
+  wp_enqueue_script( 'farbtastic' );
+}
+
+
 add_action('admin_init','wp_rss_multi_importer_start');
   
 
@@ -32,7 +39,6 @@ function wp_rss_multi_importer_menu () {
 
 add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_display');
 }
-
 
 
 
@@ -114,7 +120,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 
 function wp_section_text() {
     echo '<div class="postbox"><h3><label for="title">Usage Details</label></h3><div class="inside"><p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
-    echo '<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode,  like [wp_rss_multi_importer category="2"], on the page you wish to have only show feeds from that category.</p></div></div>';
+    echo '<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category="2"] (or [wp_rss_multi_importer category="1,2"] to have two categories) on the page you wish to have only show feeds from those categories.</p></div></div>';
 
 }
  
@@ -180,8 +186,14 @@ function footer_scripts(){
       wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );  
 	  wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
 
-echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
-	
+	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
+
+}
+
+function widget_footer_scripts(){
+	wp_enqueue_style( 'newstickercss', plugins_url( 'css/newsticker.css', __FILE__) );
+	wp_enqueue_script( 'newsticker', plugins_url( 'scripts/newsticker.js', __FILE__) );  //  Testing	
+	echo "<script type='text/javascript'>jQuery(document).ready(function () {jQuery('#newsticker').vscroller();});</script>";  //Testing
 }
 
  
@@ -224,8 +236,10 @@ echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('
 	<p>
 <ul><li>Headline font size - the parameter is hdsize (set at 16px by default)</li>
 	<li>Headline bold weight - the parameter is hdweight (set at 400 by default)</li>
-	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em) </li>
+	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em;) </li>
 	<li>If using excerpt, symbol or word you want to indicate More..- the parameter is morestyle (set by default to [...])</li>
+	<li>Change the width of the maximum image size using the parameter maximgwidth (set by default to 150)</li>
+	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )
 	<ul>
 		</p>
 <p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
@@ -523,9 +537,9 @@ echo "</SELECT>";
 <OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
 </SELECT></p>
 <p style="padding-left:15px"><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
-
-
 </p>
+<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label>
+
 </span>
 </div></div>
 
@@ -651,9 +665,9 @@ next( $options );
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink)  //show excerpt function
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize)  //show excerpt function
 	{
-global $morestyle;
+		global $morestyle;
     $content=CleanHTML($content);
 
 	if ($stripAll==1){
@@ -661,11 +675,11 @@ global $morestyle;
 			$content= limitwords($maxchars,$content);	
 	}else{
 		$content=strip_tags(html_entity_decode($content),'<a><img>');
-		$content=findalignImage($maxchars,$content);	
+		$content=findalignImage($maxchars,$content,$adjustImageSize);	
 }
 	
-	return  str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
-	//return str_replace("<a ", "<a " .$openWindow, $content);
+	return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
+
 	}
 	
 	
@@ -673,7 +687,7 @@ global $morestyle;
 	
 	function limitwords($maxchars,$content){
 	
-global $morestyle;
+		global $morestyle;
 		if($maxchars !=99){
 
 
@@ -706,15 +720,19 @@ global $morestyle;
 	
 
 	
-	function findalignImage($maxchars,$content){
+	function findalignImage($maxchars,$content,$adjustImageSize){
 	
 
 		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; ///match leading image
 
 		if (preg_match("/$strmatch/sU", $content, $matches)){
 
-
+			if ($adjustImageSize==1){
+				$tabledImage= "<div class=\"imagefix\">".resize_image($matches[2])."</div>";
+			}else{
 				$tabledImage= "<div class=\"imagefix\">".$matches[2]."</div>";
+			}	
+			
 		
 				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
 				
@@ -730,7 +748,21 @@ global $morestyle;
 	}
 	
 	
-
+	function remove_img_hw( $imghtml ) {
+	 $imghtml = preg_replace( '/(width|height)=\"\d*\"\s?/', "", $imghtml );
+	    return $imghtml;
+	}
+	
+	function resize_image($imghtml){
+		global $maximgwidth;
+		preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches);
+		$thisWidth=getimagesize($matches[1]);
+		if ($thisWidth > $maxImgWidth){
+		return str_replace("<img", "<img width=".$maximgwidth, remove_img_hw($imghtml));
+			}else{
+		return str_replace("<img", "<img width=".$thisWidth, remove_img_hw($imghtml));		
+	}
+}
 
 
 
@@ -738,32 +770,43 @@ global $morestyle;
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
 add_action('wp_footer','footer_scripts');
+if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 3600; }
+}
 add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 
 	
-		$siteurl= get_site_url();
-       $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
+	$siteurl= get_site_url();
+    $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
 		
 	
 	$parms = shortcode_atts(array(  //Get shortcode parameters
 		'category' => 0, 
 		'hdsize' => '16px', 
 		'hdweight'=>400, 
-		'testyle'=>'color: #000000; font-weight: bold;margin: 0 0 0.8125em',
+		'testyle'=>'color: #000000; font-weight: bold;margin: 0 0 0.8125em;',
+		'maximgwidth'=> 150,
+		'datestyle'=>'font-style:italic;',
 		'morestyle' =>'[...]'
 		), $atts);
 	
+	
+	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
     $thisCat = $parms['category'];
+
+	$catArray=explode(",",$thisCat);
+
+
 	$hdweight = $parms['hdweight'];
 	$testyle = $parms['testyle'];
 	global $morestyle;
     $morestyle = $parms['morestyle'];
+	global $maximgwidth;
+	$maximgwidth = $parms['maximgwidth'];
 
-
-   $readable = '';
-   $options = get_option('rss_import_items','option not found');
+   	$readable = '';
+   	$options = get_option('rss_import_items','option not found');
 
 
 $cat_array = preg_grep("^feed_cat_^", array_keys($options));
@@ -784,6 +827,7 @@ $size = count($options);
 $sortDir=$options['sortbydate'];  //1 is ascending
 $stripAll=$options['stripAll'];
 $todaybefore=$options['todaybefore'];
+$adjustImageSize=$options['adjustImageSize'];
 $showDesc=$options['showdesc'];  //1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
@@ -823,7 +867,10 @@ if(empty($options['sourcename'])){
 
 
 
-if ((($thisCat>0 && $options[$key]==$thisCat))|| $thisCat==0 || $noExistCat==1) {
+
+if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
+
+//if ((($thisCat>0 && $options[$key]==$thisCat))|| $thisCat==0 || $noExistCat==1) {
 
    $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
 	
@@ -844,10 +891,6 @@ if (empty($myfeeds)){
 	echo "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
 	exit;
 }
-
-
-
-
 
 
 
@@ -963,7 +1006,7 @@ if ($nodays==0){
 
 		if ($todayStamp==1 || $total==0){
 
-	
+		//$readable.='<H2>Earlier</H2>';
 		$readable.= '<span style="'.$testyle.'">Earlier</span>';
 			
 		$todayStamp=2;
@@ -981,13 +1024,13 @@ if ($nodays==0){
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"]).'<br />';
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize).'<br />';
 }
 
 
 	
 	if (!empty($items["mystrdate"])){
-	 $readable .=  date("D, M d, Y",$items["mystrdate"]).'<br />';
+	 $readable .=  '<span style="'.$datestyle.'">'. date("D, M d, Y",$items["mystrdate"]).'</span><br />';
 	}
 		if (!empty($items["myGroup"])){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';

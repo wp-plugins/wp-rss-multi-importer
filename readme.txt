@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 2.11
+Stable tag: 2.15
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -33,7 +33,7 @@ Allen Weiss  http://www.allenweiss.com/wp_plugin
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
-4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#"] or choose the category in the widget.
+4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categorie in the widget.
 
 The parameters are all set in the setting tab and are:
 
@@ -44,6 +44,8 @@ The parameters are all set in the setting tab and are:
 * output feed name as (Source, Sponsor, or Club)
 * excerpt (if yes, number of words to show - 50, 100, 200, 300)
 * where the links should open (in a Lightbox, a new window, or the current window)
+* suppress images in excerpts
+* resize images in excerpts (may show down how quickly the page loads)
 
 Other parameters can be customized in the shortcode..right now this includes:
 
@@ -51,6 +53,7 @@ Other parameters can be customized in the shortcode..right now this includes:
 * Headline bold weight
 * Style of the Today and Earlier tags
 * If using excerpt, symbol or word you want to indicate More..
+* Width of leading image in the excerpt
 
 
 == Frequently Asked Questions ==
@@ -63,10 +66,11 @@ Make sure the shortcode is entered when the input is set to HTML (versus Visual)
 If you want to limit the feeds to those in a given category, make sure to first
 assign the feed to a category, then use this shortcode on your page or post:
 [wp_rss_multi_importer category="#"]
+Assign multiple categories using a comma delimited list:
+[wp_rss_multi_importer category="#,#,#"]
 
 Use the widget.  If your theme allows for widgets, you'll find the RSS Multi Importer Widget there.
-Configure your feeds in the administration panel, then choose the category, number of posts, sorting method
-in the widget admin.
+Configure your feeds in the administration panel, then choose the categories, number of posts, sorting method, optional scrolling, and more in the widget admin.
 
 == Screenshots ==
 
@@ -76,6 +80,8 @@ in the widget admin.
 
 == Change Log ==
 
+Version 2.15 =
+* Multiple categories can now be used in the shortcode and widget.  Widget now has small footprint option with motion.  Excerpt images can be sized to a certain width. Additional customized parameters added.
 Version 2.11 =
 * Fixed bug that kept new window and same window links to not be live
 = Version 2.1 =
