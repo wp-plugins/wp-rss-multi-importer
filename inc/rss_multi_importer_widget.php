@@ -40,7 +40,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$showdate = $instance['showdate'];
 		$showicon = $instance['showicon'];
 		$linktitle = $instance['linktitle'];
-		
+		$showdesc = $instance['showdesc'];
+		$maxposts = $instance['maxposts'];
+
 		if (!empty($linktitle)){
 			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
 		}
@@ -170,7 +172,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 			if($sortDir==1){
 
-				for ($i=$maxfeed;$i>=$maxfeed-$count;$i--){
+				for ($i=$maxfeed;$i>=$maxfeed-$maxposts;$i--){
 					$item = $feed->get_item($i);
 					 if (empty($item))	continue;
 
@@ -179,7 +181,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 				}else{	
 
-				for ($i=0;$i<=$count-1;$i++){
+				for ($i=0;$i<=$maxposts-1;$i++){
 						$item = $feed->get_item($i);
 						if (empty($item))	continue;	
 
@@ -239,10 +241,21 @@ echo '	<div class="news-contents">';
 
 			echo '<div style="top: 101px;margin-left:5px;" class="news">';
 			echo '<p class="rss-output" style="margin-right:5px"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
-
+			
+			if ($showdesc==1 && $addmotion!=1){
+			
+						$desc= esc_attr(strip_tags(@html_entity_decode($items["mydesc"], ENT_QUOTES, get_option('blog_charset'))));
+						$desc = wp_html_excerpt( $desc, 360 );
+						if ( '[...]' == substr( $desc, -5 ) )
+							$desc = substr( $desc, 0, -5 ) . '[&hellip;]';
+							elseif ( '[&hellip;]' != substr( $desc, -10 ) )
+								$desc .= ' [&hellip;]';
+							$desc = esc_html( $desc );
+			echo $desc.'<br/>';
+			}
 
 			if (!empty($items["mystrdate"])  && $showdate==1){
-			 echo  date("D, M d, Y",$items["mystrdate"]).'<br />';
+			 echo  date_i18n("D, M d, Y",$items["mystrdate"]).'<br />';
 			}
 				if (!empty($items["myGroup"])){
 		    echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
@@ -282,6 +295,9 @@ echo '	<div class="news-contents">';
 		$instance['showdate'] = strip_tags($new_instance['showdate']);
 		$instance['showicon'] = strip_tags($new_instance['showicon']);
 		$instance['linktitle'] = strip_tags($new_instance['linktitle']);
+		$instance['showdesc'] = strip_tags($new_instance['showdesc']);		
+		$instance['maxposts'] = strip_tags($new_instance['maxposts']);	
+		
 		return $instance;
 	}
 
@@ -302,10 +318,12 @@ echo '	<div class="news-contents">';
 			'category' => array(),
 			'exclude' => array(),
 			'numoption' => 2,
+			'maxposts' =>1,
 			'addmotion' => 0,
 			'showdate' => 1,
 			'showicon' => 0,
 			'linktitle' => '',
+			'showdesc' => 0,
 			'background' => '#ffffff',
 		);
 		
@@ -321,7 +339,8 @@ echo '	<div class="news-contents">';
 		$showdate = esc_attr($instance['showdate']);
 		$showicon = esc_attr($instance['showicon']);
 		$linktitle = esc_attr($instance['linktitle']);
-	
+		$showdesc = esc_attr($instance['showdesc']);
+		$maxposts = esc_attr($instance['maxposts']);
 		
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
@@ -354,12 +373,16 @@ echo '	<div class="news-contents">';
 	    	<label for="<?php echo $this->get_field_id('showdate'); ?>"><?php _e('Show date'); ?></label>
 	    </p>
 
+		<p>
+	      	<input id="<?php echo $this->get_field_id('showdesc'); ?>" name="<?php echo $this->get_field_name('showdesc'); ?>" type="checkbox" value="1" <?php checked( '1', $showdesc ); ?>/>
+	    	<label for="<?php echo $this->get_field_id('showdesc'); ?>"><?php _e('Show excerpt (will not show if scrolling)'); ?></label>
+	    </p>
 		
 
 	
 		<p>
 	      	<input id="<?php echo $this->get_field_id('addmotion'); ?>" name="<?php echo $this->get_field_name('addmotion'); ?>" type="checkbox" value="1" <?php checked( '1', $addmotion ); ?>/>
-	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add motion'); ?></label>
+	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add scrolling motion'); ?></label>
 	    </p>
 	
 			
@@ -391,7 +414,7 @@ echo '	<div class="news-contents">';
 				?>
 			</select>
 			<p>
-					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many results displayed?'); ?></label>
+					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
 						$myoptions = array('2','5', '8', '10', '15','20');
@@ -401,6 +424,20 @@ echo '	<div class="news-contents">';
 						?>
 					</select>
 				</p>
+				
+				
+				
+				<p>
+						<label for="<?php echo $this->get_field_id('maxposts'); ?>"><?php _e('How many posts per feed?'); ?></label>
+						<select name="<?php echo $this->get_field_name('maxposts'); ?>" id="<?php echo $this->get_field_id('maxposts'); ?>" class="widefat">
+							<?php
+							$postoptions = array('1','2', '3', '4', '5','6');
+							foreach ($postoptions as $postoption) {
+								echo '<option value="' . $postoption . '" id="' . $postoption . '"', $maxposts == $postoption ? ' selected="selected"' : '', '>', $postoption, '</option>';
+							}
+							?>
+						</select>
+					</p>
 					<script type="text/javascript">
 								//<![CDATA[
 									jQuery(document).ready(function()

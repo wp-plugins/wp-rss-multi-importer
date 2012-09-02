@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.15
+  Version: 2.16
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -239,7 +239,8 @@ function widget_footer_scripts(){
 	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em;) </li>
 	<li>If using excerpt, symbol or word you want to indicate More..- the parameter is morestyle (set by default to [...])</li>
 	<li>Change the width of the maximum image size using the parameter maximgwidth (set by default to 150)</li>
-	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )
+	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )</li>
+	<li>Change how images float on a page - the parameter is floattype (set by default to whatever is set in the admin options)</li>
 	<ul>
 		</p>
 <p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
@@ -538,8 +539,10 @@ echo "</SELECT>";
 </SELECT></p>
 <p style="padding-left:15px"><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
 </p>
+<p>Here you can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
 <p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label>
-
+	
+<p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label>
 </span>
 </div></div>
 
@@ -665,7 +668,7 @@ next( $options );
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize)  //show excerpt function
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float)  //show excerpt function
 	{
 		global $morestyle;
     $content=CleanHTML($content);
@@ -675,7 +678,7 @@ next( $options );
 			$content= limitwords($maxchars,$content);	
 	}else{
 		$content=strip_tags(html_entity_decode($content),'<a><img>');
-		$content=findalignImage($maxchars,$content,$adjustImageSize);	
+		$content=findalignImage($maxchars,$content,$adjustImageSize,$float);	
 }
 	
 	return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
@@ -694,7 +697,7 @@ next( $options );
 		  $words = explode(' ', $content, ($maxchars + 1));
 	  			if(count($words) > $maxchars)
 		  				array_pop($words);
-	 					//$content = implode(' ', $words)." [...]";
+	 				
 						$content = implode(' ', $words)." ". $morestyle;
 						
 	
@@ -720,17 +723,20 @@ next( $options );
 	
 
 	
-	function findalignImage($maxchars,$content,$adjustImageSize){
+	function findalignImage($maxchars,$content,$adjustImageSize,$float){
 	
 
-		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; ///match leading image
+		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; ///match leading hyperlinked image
+		
+		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image
+		
+			if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){
 
-		if (preg_match("/$strmatch/sU", $content, $matches)){
 
 			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\">".resize_image($matches[2])."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($matches[2])."</div>";
 			}else{
-				$tabledImage= "<div class=\"imagefix\">".$matches[2]."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$matches[2]."</div>";
 			}	
 			
 		
@@ -787,6 +793,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'testyle'=>'color: #000000; font-weight: bold;margin: 0 0 0.8125em;',
 		'maximgwidth'=> 150,
 		'datestyle'=>'font-style:italic;',
+		'floattype'=>'',
 		'morestyle' =>'[...]'
 		), $atts);
 	
@@ -794,7 +801,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
     $thisCat = $parms['category'];
-
+	$parmfloat=$parms['floattype'];
 	$catArray=explode(",",$thisCat);
 
 
@@ -833,14 +840,20 @@ $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
 $maxposts=$options['maxfeed'];
 $targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
+$floatType=$options['floatType'];
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
 	$attribution=$options['sourcename'].': ';
 }
 
+if ($floatType==1){
+	$float="left";
+}else{
+	$float="none";	
+}
 
-
+if ($parmfloat!='') $float=$parmfloat;
 
    
    for ($i=1;$i<=$size;$i=$i+1){
@@ -870,7 +883,7 @@ if(empty($options['sourcename'])){
 
 if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
 
-//if ((($thisCat>0 && $options[$key]==$thisCat))|| $thisCat==0 || $noExistCat==1) {
+
 
    $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
 	
@@ -1006,7 +1019,6 @@ if ($nodays==0){
 
 		if ($todayStamp==1 || $total==0){
 
-		//$readable.='<H2>Earlier</H2>';
 		$readable.= '<span style="'.$testyle.'">Earlier</span>';
 			
 		$todayStamp=2;
@@ -1024,13 +1036,13 @@ if ($nodays==0){
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize).'<br />';
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float).'<br />';
 }
 
 
 	
 	if (!empty($items["mystrdate"])){
-	 $readable .=  '<span style="'.$datestyle.'">'. date("D, M d, Y",$items["mystrdate"]).'</span><br />';
+	 $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
 	}
 		if (!empty($items["myGroup"])){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
