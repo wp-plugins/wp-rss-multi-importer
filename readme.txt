@@ -10,6 +10,8 @@ Imports and merges multiple RSS Feeds. Options including sorting feeds by date, 
 
 WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, limiting posts per feed and more.  This works well for news items as well as events (which are sorted differently than news items).
 
+[youtube http://www.youtube.com/watch?v=BPvjMMxjWWQ]
+
 You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.  Finally, you can add a bunch of feeds, assign them to categories and then output only feeds you want based on the category.  This allows you to have one input of RSS feeds, and yet put them on different pages of your web site.
 
 The output will be organized like this:
