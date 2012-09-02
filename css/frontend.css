@@ -9,7 +9,7 @@
 
 
 .imagefix img {
-    float: left;
+    /*float: left;*/
     margin-right: 10px;
     margin-top: 5px;
 }
