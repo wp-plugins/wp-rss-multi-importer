@@ -80,11 +80,11 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 == Change Log ==
 
-Version 2.16
+= Version 2.16
 * Date formats are now consistent with international formats. Added ability to optionally float images to the left.  Options to show excerpts in widget and number of post/feed added.
-Version 2.15 =
+= Version 2.15 =
 * Multiple categories can now be used in the shortcode and widget.  Widget now has small footprint option with motion.  Excerpt images can be sized to a certain width. Additional customized parameters added.
-Version 2.11 =
+= Version 2.11 =
 * Fixed bug that kept new window and same window links to not be live
 = Version 2.1 =
 * Added a widget option for displaying feeds, better image formatting, separate Today from Earlier posts.
