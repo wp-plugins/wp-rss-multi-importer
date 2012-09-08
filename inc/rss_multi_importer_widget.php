@@ -36,6 +36,10 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 	(array) $catArray = $instance['category'];
 	
+		if (empty($catArray)) {
+			$catArray=array("0");	
+		}
+	
 		$sortDir = $instance['checkbox'];
 		$showdate = $instance['showdate'];
 		$showicon = $instance['showicon'];

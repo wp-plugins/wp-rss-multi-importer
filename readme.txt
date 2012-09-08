@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.1
-Stable tag: 2.16
+Stable tag: 2.17
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -46,6 +46,7 @@ The parameters are all set in the setting tab and are:
 * output feed name as (Source, Sponsor, or Club)
 * excerpt (if yes, number of words to show - 50, 100, 200, 300)
 * where the links should open (in a Lightbox, a new window, or the current window)
+* set links as no follow or not
 * suppress images in excerpts
 * resize images in excerpts (may show down how quickly the page loads)
 
@@ -82,6 +83,8 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 == Change Log ==
 
+= Version 2.17 =
+* No follow option added to all links.  Fixed bug with widget when no category selection is made.
 = Version 2.16 =
 * Date formats are now consistent with international formats. Added ability to optionally float images to the left.  Options to show excerpts in widget and number of post/feed added.
 = Version 2.15 =

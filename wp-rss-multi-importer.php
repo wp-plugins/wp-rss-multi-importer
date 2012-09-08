@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.16
+  Version: 2.17
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -514,6 +514,7 @@ echo "</SELECT>";
 	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>>Open in New Window</OPTION>
 	</SELECT>	
 </p>
+<p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_items[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
 
 <p><label class='o_textinput' for='sourcename'>Attribution Label</label>
 <SELECT NAME="rss_import_items[sourcename]">
@@ -540,9 +541,9 @@ echo "</SELECT>";
 <p style="padding-left:15px"><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
 </p>
 <p>Here you can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
-<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label>
+<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
 	
-<p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label>
+<p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
 </span>
 </div></div>
 
@@ -668,7 +669,7 @@ next( $options );
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float)  //show excerpt function
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow)  //show excerpt function
 	{
 		global $morestyle;
     $content=CleanHTML($content);
@@ -681,11 +682,12 @@ next( $options );
 		$content=findalignImage($maxchars,$content,$adjustImageSize,$float);	
 }
 	
-	return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
+	
+		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 
 	}
 	
-	
+
 
 	
 	function limitwords($maxchars,$content){
@@ -841,6 +843,7 @@ $maxperPage=$options['maxperPage'];
 $maxposts=$options['maxfeed'];
 $targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
+$noFollow=$options['noFollow'];
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
@@ -1028,15 +1031,14 @@ if ($nodays==0){
 }
 	
 
-	
-	
-		$readable .=  '<div class="rss-output"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a></span><br>';
-	
 
+	
+		$readable .=  '<div class="rss-output"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span><br>';
+	
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float).'<br />';
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow).'<br />';
 }
 
 
