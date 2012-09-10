@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.17
+  Version: 2.18
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -185,7 +185,7 @@ function footer_scripts(){
 	  wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
       wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );  
 	  wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
-
+	wp_enqueue_script( 'showexcerpt', plugins_url( 'scripts/show-excerpt.js', __FILE__) );  
 	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
 
 }
@@ -523,13 +523,17 @@ echo "</SELECT>";
 <OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>>Sponsor</OPTION>
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
 </SELECT></p>
-
+<h3>Excerpts</h3>
 <p><label class='o_textinput' for='showdesc'>Show Excerpt</label>
 <SELECT NAME="rss_import_items[showdesc]" id="showdesc">
 <OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
 </SELECT></p>
 <span id="secret">
+	<p style="padding-left:15px"><label class='o_textinput' for='showmore'>Let your readers determine if they want to see the excerpt with a show-hide option. <input type="checkbox" Name="rss_import_items[showmore]" Value="1" <?php if ($options['showmore']==1){echo 'checked="checked"';} ?></label>
+	</p>	
+	
+	
 <p style="padding-left:15px"><label class='o_textinput' for='descnum'>Excerpt length (number of words)</label>
 <SELECT NAME="rss_import_items[descnum]" id="descnum">
 <OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
@@ -682,6 +686,7 @@ next( $options );
 		$content=findalignImage($maxchars,$content,$adjustImageSize,$float);	
 }
 	
+
 	
 		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 
@@ -786,7 +791,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	
 	$siteurl= get_site_url();
     $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
-		
+	$images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';	
 	
 	$parms = shortcode_atts(array(  //Get shortcode parameters
 		'category' => 0, 
@@ -844,6 +849,7 @@ $maxposts=$options['maxfeed'];
 $targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
 $noFollow=$options['noFollow'];
+$showmore=$options['showmore'];
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
@@ -985,14 +991,14 @@ $todayStamp=0;
 
 
 
-
+$idnum=0;
 
 foreach($myarray as $items) {
 	
 $total = $total +1;
 if ($maxperPage>0 && $total>=$maxperPage) break;
 
-
+$idnum=$idnum +1;
 
 
 
@@ -1033,12 +1039,30 @@ if ($nodays==0){
 
 
 	
-		$readable .=  '<div class="rss-output"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span><br>';
-	
+		$readable .=  '<div class="rss-output"><div><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span>';
+		
+		if ($showmore==1){
+			$readable .=  '  <img src="'.$images_url.'/arrow_down.png"/  id="#'.$idnum.'" class="nav-toggle"></div>';		
+		} else{
+			$readable .=  '</div>';	
+		}
 			
 	if (!empty($items["mydesc"]) & 	$showDesc==1){
+		
+		
+		
+		if ($showmore==1){
+			$readable .=  '<div id="'.$idnum.'" style="display:none">';
+		}else{
+			$readable .=  '<div>';		
+		}
+		
+		
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow);
+	
+	$readable .=  '</div>';	
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow).'<br />';
+	
 }
 
 

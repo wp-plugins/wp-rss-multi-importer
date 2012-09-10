@@ -2,8 +2,8 @@
 Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
-Tested up to: 3.4.1
-Stable tag: 2.17
+Tested up to: 3.4.2
+Stable tag: 2.18
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -11,6 +11,11 @@ Imports and merges multiple RSS Feeds. Options including sorting feeds by date, 
 WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, limiting posts per feed and more.  This works well for news items as well as events (which are sorted differently than news items).
 
 [youtube http://www.youtube.com/watch?v=BPvjMMxjWWQ]
+
+
+The newest feature (let your users determine if they want to see the description from an RSS feed):
+
+[youtube http://www.youtube.com/watch?v=m0eEKEEhcyc]
 
 You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.  Finally, you can add a bunch of feeds, assign them to categories and then output only feeds you want based on the category.  This allows you to have one input of RSS feeds, and yet put them on different pages of your web site.
 
@@ -49,6 +54,7 @@ The parameters are all set in the setting tab and are:
 * set links as no follow or not
 * suppress images in excerpts
 * resize images in excerpts (may show down how quickly the page loads)
+* allow users to determine whether to show-hide excerpts
 
 Other parameters can be customized in the shortcode..right now this includes:
 
@@ -83,6 +89,8 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 == Change Log ==
 
+= Version 2.18 =
+* Show-hide option added to excerpts.
 = Version 2.17 =
 * No follow option added to all links.  Fixed bug with widget when no category selection is made.
 = Version 2.16 =
