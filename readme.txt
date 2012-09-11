@@ -19,8 +19,7 @@ The newest feature (let your users determine if they want to see the description
 [youtube http://www.youtube.com/watch?v=m0eEKEEhcyc]
 
 
-Features:
---------
+= Features =
 
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site
