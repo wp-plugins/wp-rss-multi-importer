@@ -10,29 +10,35 @@ Imports and merges multiple RSS Feeds. Options including sorting feeds by date, 
 
 WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, limiting posts per feed and more.  This works well for news items as well as events (which are sorted differently than news items).
 
+= See How It Works =
+
 [youtube http://www.youtube.com/watch?v=BPvjMMxjWWQ]
 
-
-The newest feature (let your users determine if they want to see the description from an RSS feed):
+The newest feature (let your users determine if they want to see the description from an RSS feed entry):
 
 [youtube http://www.youtube.com/watch?v=m0eEKEEhcyc]
 
-You can add any number of feeds through an administration panel, the plugin will then pull all the feeds from these sites, merge them and sort them by date.  You can easily delete a specific feed and add excerpts from news feeds.  Also, you can open up the links in the feed into either a Lightbox, a  new window, or in the home window.  Finally, you can add a bunch of feeds, assign them to categories and then output only feeds you want based on the category.  This allows you to have one input of RSS feeds, and yet put them on different pages of your web site.
 
-The output will be organized like this:
+Features:
+--------
 
-* Title
-* Excerpt (if selected)
-* Date
-* Source (if selected)
+* Select number of posts per feed you want to show
+* Select number of posts on a page of your web site
+* Separate out Today from Earlier posts
+* Sort by date (ascending or descending) 
+* Output feed name as (Source, Sponsor, or Club)
+* Show an excerpt (and select the number of words to show - 50, 100, 200, 300)
+* Select how you would like the links to open (in a Lightbox, a new window, or the current window)
+* Set the links as no-follow or not
+* Suppress images in excerpts of you want
+* Resize images in excerpts (may show down how quickly the page loads)
+* Allow users to determine whether to show-hide excerpts
 
-and sorted by date ascending or descending.  The Source attribution can be changed to Club, Sponsor or no attribution (e.g., Source: LA Times, or Club: Consulting Club).
-
-The plugin uses SimplePie for the feed operations. The actual feeds are not stored in your databases but only cached for faster response times.
-You call the function by using a shortcode or output the results using a widget.
+These features are all set in the settings tab in the admin panel.
 
 = Credit = 
-Allen Weiss  http://www.allenweiss.com/wp_plugin
+
+[__Allen Weiss__](http://www.allenweiss.com/wp_plugin)
 
 == Installation ==
 
@@ -42,27 +48,14 @@ Allen Weiss  http://www.allenweiss.com/wp_plugin
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categorie in the widget.
 
-The parameters are all set in the setting tab and are:
-
-* number of posts per feed 
-* number of posts on a page
-* separate out Today from Earlier posts
-* sort by date (ascending or descending) 
-* output feed name as (Source, Sponsor, or Club)
-* excerpt (if yes, number of words to show - 50, 100, 200, 300)
-* where the links should open (in a Lightbox, a new window, or the current window)
-* set links as no follow or not
-* suppress images in excerpts
-* resize images in excerpts (may show down how quickly the page loads)
-* allow users to determine whether to show-hide excerpts
-
-Other parameters can be customized in the shortcode..right now this includes:
+You can also use other parameters which can be customized in the shortcode...this includes:
 
 * Headline font size
 * Headline bold weight
 * Style of the Today and Earlier tags
 * If using excerpt, symbol or word you want to indicate More..
 * Width of leading image in the excerpt
+* Suppress date or attribution from posts
 
 
 == Frequently Asked Questions ==
