@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.18
+Stable tag: 2.19
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -81,6 +81,8 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 == Change Log ==
 
+= Version 2.19 =
+* Option added to not load colorbox.  Some themes already load colorbox and this causes a conflict.
 = Version 2.18 =
 * Show-hide option added to excerpts.
 = Version 2.17 =

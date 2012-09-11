@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.18
+  Version: 2.19
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -182,13 +182,18 @@ if ( version_compare($wp_version, "3.3.1", "<" ) ) {
 
 function footer_scripts(){
 
-	  wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
-      wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );  
+
 	  wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
 	wp_enqueue_script( 'showexcerpt', plugins_url( 'scripts/show-excerpt.js', __FILE__) );  
-	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";
-
+	
 }
+
+function colorbox_scripts(){
+	  wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
+    wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );
+	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
+}
+
 
 function widget_footer_scripts(){
 	wp_enqueue_style( 'newstickercss', plugins_url( 'css/newsticker.css', __FILE__) );
@@ -241,6 +246,8 @@ function widget_footer_scripts(){
 	<li>Change the width of the maximum image size using the parameter maximgwidth (set by default to 150)</li>
 	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )</li>
 	<li>Change how images float on a page - the parameter is floattype (set by default to whatever is set in the admin options)</li>
+	<li>Change whether the date shows or not - the parameter is showdate (set to 0 to suppress the date)</li>
+	<li>Change whether the attribution shows or not (e.g., news source) - the parameter is showgroup (set to 0 to suppress the source affiliation)</li>
 	<ul>
 		</p>
 <p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
@@ -516,6 +523,12 @@ echo "</SELECT>";
 </p>
 <p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_items[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
 
+
+<p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_items[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+
+
+
+
 <p><label class='o_textinput' for='sourcename'>Attribution Label</label>
 <SELECT NAME="rss_import_items[sourcename]">
 <OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>>Source</OPTION>
@@ -686,7 +699,7 @@ next( $options );
 		$content=findalignImage($maxchars,$content,$adjustImageSize,$float);	
 }
 	
-
+	//return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
 	
 		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 
@@ -783,6 +796,8 @@ next( $options );
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
 add_action('wp_footer','footer_scripts');
+
+
 if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 3600; }
 }
@@ -801,6 +816,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'maximgwidth'=> 150,
 		'datestyle'=>'font-style:italic;',
 		'floattype'=>'',
+		'showdate' => 1,
+		'showgroup'=> 1,
 		'morestyle' =>'[...]'
 		), $atts);
 	
@@ -810,7 +827,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
     $thisCat = $parms['category'];
 	$parmfloat=$parms['floattype'];
 	$catArray=explode(",",$thisCat);
-
+	$showdate=$parms['showdate'];
+	$showgroup=$parms['showgroup'];
 
 	$hdweight = $parms['hdweight'];
 	$testyle = $parms['testyle'];
@@ -850,13 +868,14 @@ $targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
 $noFollow=$options['noFollow'];
 $showmore=$options['showmore'];
+$cb=$options['cb'];  //1 if colorbox should not be loaded
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
 	$attribution=$options['sourcename'].': ';
 }
 
-if ($floatType==1){
+if ($floatType=='1'){
 	$float="left";
 }else{
 	$float="none";	
@@ -864,7 +883,14 @@ if ($floatType==1){
 
 if ($parmfloat!='') $float=$parmfloat;
 
-   
+
+if ($cb!=='1'){
+add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+   }
+
+
+
+
    for ($i=1;$i<=$size;$i=$i+1){
 
 	
@@ -1042,8 +1068,11 @@ if ($nodays==0){
 		$readable .=  '<div class="rss-output"><div><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span>';
 		
 		if ($showmore==1){
-			$readable .=  '  <img src="'.$images_url.'/arrow_down.png"/  id="#'.$idnum.'" class="nav-toggle"></div>';		
+			
+			$readable .=  ' <a href="javascript:void(0)"><img src="'.$images_url.'/arrow_down.png"/  id="#'.$idnum.'" class="nav-toggle"></a></div>';	
+			
 		} else{
+			
 			$readable .=  '</div>';	
 		}
 			
@@ -1067,10 +1096,10 @@ if ($nodays==0){
 
 
 	
-	if (!empty($items["mystrdate"])){
+	if (!empty($items["mystrdate"]) && $showdate==1){
 	 $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
 	}
-		if (!empty($items["myGroup"])){
+		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
 	 $readable .=  '</div>';
