@@ -115,6 +115,18 @@ jQuery(function() { // when document has loaded
 		jQuery('span#secret').hide()};
     });
 
+
+
+	  jQuery(document).on('change', '#pagination', function() {       
+	     if(jQuery('#pagination').val() == 1){
+	//alert("hello");
+			jQuery('span#pag_options').show();
+		}else{
+			jQuery('span#pag_options').hide()};
+	    });
+	
+	
+
     jQuery(document).ready(function () {  
     if(jQuery('#showdesc').val() == 1){
 		jQuery('span#secret').show();
