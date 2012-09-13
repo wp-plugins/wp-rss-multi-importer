@@ -4,11 +4,11 @@ Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
 Stable tag: 2.20
-Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
+Imports and merges multiple RSS Feeds. Options including sorting, pagination, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
 
-WP RSS Multi Importer helps you create a feed reader on your Wordpress site.  The plugin gives you a lot of flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, limiting posts per feed and more.  This works well for news items as well as events (which are sorted differently than news items).
+If you want to bring RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, pagination, a widget and much more.  The plugin works well for news items as well as events (which are sorted differently than news items).
 
 = See How It Works =
 
