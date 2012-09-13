@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.19
+  Version: 2.20
 	Author: Allen Weiss
 	Author URI: http://www.allenweiss.com/wp_plugin
 	License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -473,7 +473,7 @@ echo "</SELECT>";
 
 
 
-
+<h3>Sorting and Separating Posts</h3>
  
       <p><label class='o_textinput' for='sortbydate'>Sort Output by Date (Descending = Closest Date First)</label>
 	
@@ -492,7 +492,7 @@ echo "</SELECT>";
 
 		</SELECT></p>
 	
-
+<h3>Number of Posts and Pagination</h3>
 <p><label class='o_textinput' for='maxfeed'>Number of Entries per Feed</label>
 <SELECT NAME="rss_import_items[maxfeed]">
 <OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
@@ -514,6 +514,32 @@ echo "</SELECT>";
 </SELECT></p>
 
 
+
+
+<p><label class='o_textinput' for='pag'>Do you want pagination?</label>
+<SELECT NAME="rss_import_items[pag]" id="pagination">
+<OPTION VALUE="1" <?php if($options['pag']==1){echo 'selected';} ?>>Yes</OPTION>
+<OPTION VALUE="0" <?php if($options['pag']==0){echo 'selected';} ?>>No</OPTION>
+</SELECT>  (Note: this will override the Number of Entries per Page of Output)</p>
+
+
+
+<span id="pag_options" <?php if($options['pag']==0){echo 'style="display:none"';}?>>
+	
+	<p style="padding-left:15px"><label class='o_textinput' for='perPage'>Number of Posts per Page for Pagination</label>
+	<SELECT NAME="rss_import_items[perPage]">
+	<OPTION VALUE="5" <?php if($options['perPage']==5){echo 'selected';} ?>>5</OPTION>
+	<OPTION VALUE="10" <?php if($options['perPage']==10){echo 'selected';} ?>>10</OPTION>
+	<OPTION VALUE="15" <?php if($options['perPage']==15){echo 'selected';} ?>>15</OPTION>
+	<OPTION VALUE="20" <?php if($options['perPage']==20){echo 'selected';} ?>>20</OPTION>
+	</SELECT></p>	
+	
+</span>
+
+
+
+<h3>How Links Open and No Follow Option</h3>
+
 <p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open?)</label>
 	<SELECT NAME="rss_import_items[targetWindow]" id="targetWindow">
 	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
@@ -524,7 +550,14 @@ echo "</SELECT>";
 <p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_items[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
 
 
-<p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_items[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+
+
+
+
+
+
+<h3>What Shows - Excerpts and Attribution</h3>
+
 
 
 
@@ -536,13 +569,19 @@ echo "</SELECT>";
 <OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>>Sponsor</OPTION>
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
 </SELECT></p>
-<h3>Excerpts</h3>
+
+
+
 <p><label class='o_textinput' for='showdesc'>Show Excerpt</label>
 <SELECT NAME="rss_import_items[showdesc]" id="showdesc">
 <OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
 </SELECT></p>
-<span id="secret">
+
+
+<span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
+	
+	
 	<p style="padding-left:15px"><label class='o_textinput' for='showmore'>Let your readers determine if they want to see the excerpt with a show-hide option. <input type="checkbox" Name="rss_import_items[showmore]" Value="1" <?php if ($options['showmore']==1){echo 'checked="checked"';} ?></label>
 	</p>	
 	
@@ -561,6 +600,11 @@ echo "</SELECT>";
 <p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
 	
 <p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+
+<h3>Conflict Handling</h3>
+
+<p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_items[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+
 </span>
 </div></div>
 
@@ -869,6 +913,8 @@ $floatType=$options['floatType'];
 $noFollow=$options['noFollow'];
 $showmore=$options['showmore'];
 $cb=$options['cb'];  //1 if colorbox should not be loaded
+$pag=$options['pag'];  //1 if pagination
+$perPage=$options['perPage'];
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
@@ -1014,21 +1060,58 @@ if($targetWindow==0){
 	
 $total = -1;
 $todayStamp=0;
-
-
-
 $idnum=0;
 
-foreach($myarray as $items) {
+//for pagination
+$currentPage = trim($_REQUEST[pg]);
+
+$currentURL = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; 
+
+$currentURL = str_replace( '&pg='.$currentPage, '', $currentURL );
+$currentURL = str_replace( '?pg='.$currentPage, '', $currentURL );
+
+if ( strpos( $currentURL, '?' ) == 0 ){
+	$currentURL=$currentURL.'?';
+}else{
+	$currentURL=$currentURL.'&';
 	
-$total = $total +1;
-if ($maxperPage>0 && $total>=$maxperPage) break;
+}
+
+//$pag=1;
+
+//pagination controls and parameters
+//$perPage = 5;  
+
+if (!isset($perPage)){$perPage=5;}
+
+$numPages = ceil(count($myarray) / $perPage);
+if(!$currentPage || $currentPage > $numPages)  
+    $currentPage = 0;
+$start = $currentPage * $perPage;  
+$end = ($currentPage * $perPage) + $perPage;
+
+	
+		if ($pag==1){   //set up pagination array and put into myarray
+	foreach($myarray AS $key => $val)  
+		{  
+	    if($key >= $start && $key < $end)  
+	        $pagedData[] = $myarray[$key];  
+		}
+		
+			$myarray=$pagedData;
+	}
+      //end set up pagination array and put into myarray
+
+
+
+foreach($myarray as $items) {
+
+if ($pag!==1){ 	
+	$total = $total +1;
+	if ($maxperPage>0 && $total>=$maxperPage) break;
+}
 
 $idnum=$idnum +1;
-
-
-
-
 
 //  Today and Earlier Script
 
@@ -1067,7 +1150,7 @@ if ($nodays==0){
 	
 		$readable .=  '<div class="rss-output"><div><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span>';
 		
-		if ($showmore==1){
+		if ($showmore==1 && $showDesc==1){
 			
 			$readable .=  ' <a href="javascript:void(0)"><img src="'.$images_url.'/arrow_down.png"/  id="#'.$idnum.'" class="nav-toggle"></a></div>';	
 			
@@ -1076,11 +1159,11 @@ if ($nodays==0){
 			$readable .=  '</div>';	
 		}
 			
-	if (!empty($items["mydesc"]) & 	$showDesc==1){
+	if (!empty($items["mydesc"]) && $showDesc==1){
 		
 		
 		
-		if ($showmore==1){
+		if ($showmore==1 && $showDesc==1){
 			$readable .=  '<div id="'.$idnum.'" style="display:none">';
 		}else{
 			$readable .=  '<div>';		
@@ -1103,11 +1186,30 @@ if ($nodays==0){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
 	 $readable .=  '</div>';
+	
+}
+    
 
 
 }
-    
-   }
+
+	//pagination controls at bottom
+	
+if ($pag==1){  
+$readable .='<div class="pag_box">';
+
+if($numPages > $currentPage && ($currentPage + 1) < $numPages)  
+    $readable .=  '<a href="http://'.$currentURL.'pg=' . ($currentPage + 1) . '" class="more-prev">Next page »</a>';
+
+	if($currentPage > 0 && $currentPage < $numPages)  
+	    $readable .= '<a href="http://'.$currentURL.'pg=' . ($currentPage - 1) . '" class="more-prev">« Previous page</a>';  
+
+$readable .='</div>';
+
+}
+     //end pagination controls at bottom
+	
+
 return $readable;
 
    }

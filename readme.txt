@@ -3,7 +3,7 @@ Contributors: allenweiss
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.19
+Stable tag: 2.20
 Imports and merges multiple RSS Feeds. Options including sorting feeds by date, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -21,8 +21,9 @@ The newest feature (let your users determine if they want to see the description
 
 = Features =
 
+* Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
-* Select number of posts on a page of your web site
+* Select number of posts on a page of your web site (when not in pagination mode)
 * Separate out Today from Earlier posts
 * Sort by date (ascending or descending) 
 * Output feed name as (Source, Sponsor, or Club)
@@ -75,12 +76,18 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 == Screenshots ==
 
-1. The output of this plugin on the frontend.
+1. Adding feeds and assigning categories.
 
-2. Admin administration panel.
+2. Adding new categories.
+
+3. Options panel.
+
+4. User view - with excerpts and images.
 
 == Change Log ==
 
+= Version 2.20 =
+* Pagination option added.
 = Version 2.19 =
 * Option added to not load colorbox.  Some themes already load colorbox and this causes a conflict.
 = Version 2.18 =
