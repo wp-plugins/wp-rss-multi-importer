@@ -8,7 +8,7 @@ Imports and merges multiple RSS Feeds. Options including sorting, pagination, li
 
 == Description ==
 
-If you want to bring RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, pagination, a widget and much more.  The plugin works well for news items as well as events (which are sorted differently than news items).
+If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, pagination, a widget and much more.  The plugin works well for news items as well as events (which are sorted differently than news items).
 
 = See How It Works =
 
