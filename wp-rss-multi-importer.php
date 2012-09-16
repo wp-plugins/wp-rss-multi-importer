@@ -2,14 +2,15 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.20
-	Author: Allen Weiss
-	Author URI: http://www.allenweiss.com/wp_plugin
-	License: GPL2  - most WordPress plugins are released under GPL2 license terms
+  Version: 2.21
+  Author: Allen Weiss
+  Author URI: http://www.allenweiss.com/wp_plugin
+  License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
  define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ), true );
 
  require_once 'inc/rss_multi_importer_widget.php' ;
+
 
 function wp_rss_multi_importer_start () {
 	
@@ -30,13 +31,16 @@ function ilc_farbtastic_script() {
 
 
 add_action('admin_init','wp_rss_multi_importer_start');
+
+
+
+
   
 
 
 add_action('admin_menu','wp_rss_multi_importer_menu');
 
 function wp_rss_multi_importer_menu () {
-
 add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_display');
 }
 
@@ -110,8 +114,49 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 
 
 
+function wp_rss_multi_importer_more_page(){
+   ?>	
+	   <div class="wrap">
+	<div id="poststuff">
 
 
+<?php    echo '<div class="postbox"><h3><label for="title">Help Us Help You</label></h3><div class="inside"><p>Hi All<br>In an attempt to increase the functionality of this plugin, let me know if you have any feature requests by <a href="http://www.allenweiss.com/wp_plugin" target="_blank">going here.</a></p>';
+	
+	echo '<p>If you\'d like to support the development and maintenance of this plugin, you can do so by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL" target="_blank">donating here.</a></p>';
+
+echo '<p>If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.<br>Allen</p></div></div></div></div>';	
+
+}
+
+
+	function wp_rss_multi_importer_style_tags(){
+	   ?>	
+		   <div class="wrap">
+		<div id="poststuff">
+
+
+	<?php    echo '<div class="postbox"><h3><label for="title">Shortcode Parameters</label></h3><div class="inside"><h2>You can now customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:</h2>';
+	?>
+	<p>
+<ul><li>Headline font size - the parameter is hdsize (set at 16px by default)</li>
+	<li>Headline bold weight - the parameter is hdweight (set at 400 by default)</li>
+	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em;) </li>
+	<li>If using excerpt, symbol or word you want to indicate More..- the parameter is morestyle (set by default to [...])</li>
+	<li>Change the width of the maximum image size using the parameter maximgwidth (set by default to 150)</li>
+	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )</li>
+	<li>Change how images float on a page - the parameter is floattype (set by default to whatever is set in the admin options)</li>
+	<li>Change whether the date shows or not - the parameter is showdate (set to 0 to suppress the date)</li>
+	<li>Change whether the attribution shows or not (e.g., news source) - the parameter is showgroup (set to 0 to suppress the source affiliation)</li>
+	<li>Specific the number of posts per feed instead of using the general number in the settings panel - the parameter is thisfeed (set to a number, as in thisfeed="4")</li>
+	<ul>
+		</p>
+<p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
+<p>If setting the style of the Today and Earlier tags, you need to enter the entire inline css - so be careful.</p>
+		
+<?php
+	echo '</div></div></div></div>';	
+
+	}
 
 
 
@@ -168,8 +213,7 @@ if ( version_compare($wp_version, "3.3.1", "<" ) ) {
   add_action( 'wp_enqueue_scripts', 'wprssmi_frontend_scripts' );
    
    function wprssmi_frontend_scripts() {
-		wp_enqueue_script( 'jquery' );
-     
+		wp_enqueue_script( 'jquery' );  
    }
 
 
@@ -181,15 +225,12 @@ if ( version_compare($wp_version, "3.3.1", "<" ) ) {
 
 
 function footer_scripts(){
-
-
-	  wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
-	wp_enqueue_script( 'showexcerpt', plugins_url( 'scripts/show-excerpt.js', __FILE__) );  
-	
+	wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', __FILE__) );
+	wp_enqueue_script( 'showexcerpt', plugins_url( 'scripts/show-excerpt.js', __FILE__) );  	
 }
 
 function colorbox_scripts(){
-	  wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
+	wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );
 	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
 }
@@ -213,50 +254,6 @@ function widget_footer_scripts(){
     function wprssmi_header() {        
         wp_enqueue_style( 'styles', plugins_url( 'css/styles.css', __FILE__) );
     }
-
-
-
-
-	function wp_rss_multi_importer_more_page(){
-	   ?>	
-		   <div class="wrap">
-		<div id="poststuff">
-
-
-	<?php    echo '<div class="postbox"><h3><label for="title">Help Us Help You</label></h3><div class="inside"><p>Hi All<br>In an attempt to increase the functionality of this plugin, let me know if you have any feature requests by <a href="http://www.allenweiss.com/wp_plugin" target="_blank">going here.</a></p>';
-
-	echo '<p>If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.<br>Allen</p></div></div></div></div>';	
-
-	}
-
-
-	function wp_rss_multi_importer_style_tags(){
-	   ?>	
-		   <div class="wrap">
-		<div id="poststuff">
-
-
-	<?php    echo '<div class="postbox"><h3><label for="title">Shortcode Parameters</label></h3><div class="inside"><h2>You can now customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:</h2>';
-	?>
-	<p>
-<ul><li>Headline font size - the parameter is hdsize (set at 16px by default)</li>
-	<li>Headline bold weight - the parameter is hdweight (set at 400 by default)</li>
-	<li>Style of the Today and Earlier tags - the parameter is testyle (set by default to: color: #000000; font-weight: bold;margin: 0 0 0.8125em;) </li>
-	<li>If using excerpt, symbol or word you want to indicate More..- the parameter is morestyle (set by default to [...])</li>
-	<li>Change the width of the maximum image size using the parameter maximgwidth (set by default to 150)</li>
-	<li>Change the style of the date - the parameter is datestyle (set by default to: font-style:italic; )</li>
-	<li>Change how images float on a page - the parameter is floattype (set by default to whatever is set in the admin options)</li>
-	<li>Change whether the date shows or not - the parameter is showdate (set to 0 to suppress the date)</li>
-	<li>Change whether the attribution shows or not (e.g., news source) - the parameter is showgroup (set to 0 to suppress the source affiliation)</li>
-	<ul>
-		</p>
-<p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
-<p>If setting the style of the Today and Earlier tags, you need to enter the entire inline css - so be careful.</p>
-		
-<?php
-	echo '</div></div></div></div>';	
-
-	}
 
 
 	
@@ -497,6 +494,8 @@ echo "</SELECT>";
 <SELECT NAME="rss_import_items[maxfeed]">
 <OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="3" <?php if($options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
+<OPTION VALUE="4" <?php if($options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
 <OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
 <OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
@@ -594,18 +593,36 @@ echo "</SELECT>";
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 <OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
 </SELECT></p>
-<p style="padding-left:15px"><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
+<h4>Image Handling</h4>
+<p><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
 </p>
-<p>Here you can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
+<p>You can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
 <p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
 	
 <p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+</span>
 
-<h3>Conflict Handling</h3>
+<h3>Cache and Conflict Handling</h3>
+
+<p><label class='o_textinput' for='cacheMin'>Number of minutes you want the post data held in cache (match to how often your feeds are updated)</label>
+<SELECT NAME="rss_import_items[cacheMin]" id="descnum">
+<OPTION VALUE="10" <?php if($options['cacheMin']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if($options['cacheMin']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['cacheMin']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if($options['cacheMin']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="60" <?php if($options['cacheMin']==60){echo 'selected';} ?>>60</OPTION>
+<OPTION VALUE="120" <?php if($options['cacheMin']==120){echo 'selected';} ?>>120</OPTION>
+<OPTION VALUE="180" <?php if($options['cacheMin']==180){echo 'selected';} ?>>180</OPTION>
+<OPTION VALUE="240" <?php if($options['cacheMin']==240){echo 'selected';} ?>>240</OPTION>
+<OPTION VALUE="300" <?php if($options['cacheMin']==300){echo 'selected';} ?>>300</OPTION>
+</SELECT></p>
+
+
+
 
 <p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_items[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+<input   size='10' name='rss_import_items[plugin_version]' type='hidden' value='2.21' />
 
-</span>
 </div></div>
 
        <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
@@ -712,11 +729,6 @@ next( $options );
 
 
 
-
-
-
-
-
    
    /**
    *  Shortcode setup and call (shortcode is [wp_rss_multi_importer]) with options
@@ -724,8 +736,6 @@ next( $options );
    
    add_shortcode('wp_rss_multi_importer','wp_rss_multi_importer_shortcode');
  
-
-
 
 
 
@@ -836,16 +846,18 @@ next( $options );
 
 
 
+
+
+
+
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
 add_action('wp_footer','footer_scripts');
 
 
-if(!function_exists("wprssmi_hourly_feed")) {
-function wprssmi_hourly_feed() { return 3600; }
-}
-add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+
+
 
 	
 	$siteurl= get_site_url();
@@ -856,16 +868,19 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'category' => 0, 
 		'hdsize' => '16px', 
 		'hdweight'=>400, 
+		'anchorcolor' =>'',
 		'testyle'=>'color: #000000; font-weight: bold;margin: 0 0 0.8125em;',
 		'maximgwidth'=> 150,
 		'datestyle'=>'font-style:italic;',
 		'floattype'=>'',
 		'showdate' => 1,
 		'showgroup'=> 1,
+		'thisfeed'=>'',
+		'timer' => 0,  
 		'morestyle' =>'[...]'
 		), $atts);
 	
-	
+	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
     $thisCat = $parms['category'];
@@ -873,21 +888,27 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$catArray=explode(",",$thisCat);
 	$showdate=$parms['showdate'];
 	$showgroup=$parms['showgroup'];
-
 	$hdweight = $parms['hdweight'];
 	$testyle = $parms['testyle'];
 	global $morestyle;
     $morestyle = $parms['morestyle'];
 	global $maximgwidth;
 	$maximgwidth = $parms['maximgwidth'];
-
+	$thisfeed = $parms['thisfeed'];  // max posts per category
+	$timerstop = $parms['timer'];
+	
+	
+	
+	
    	$readable = '';
    	$options = get_option('rss_import_items','option not found');
 
 
+
+
 $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
-	if (count($cat_array)==0) {  //for backward compatibility
+	if (count($cat_array)==0) {  // for backward compatibility
 		$noExistCat=1;
 	}else{
 		$noExistCat=0;	
@@ -900,20 +921,27 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 	
 //GET PARAMETERS  
 $size = count($options);
-$sortDir=$options['sortbydate'];  //1 is ascending
+$sortDir=$options['sortbydate'];  // 1 is ascending
 $stripAll=$options['stripAll'];
 $todaybefore=$options['todaybefore'];
 $adjustImageSize=$options['adjustImageSize'];
-$showDesc=$options['showdesc'];  //1 is show
+$showDesc=$options['showdesc'];  // 1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
+
+
+$cacheMin=$options['cacheMin'];
 $maxposts=$options['maxfeed'];
-$targetWindow=$options['targetWindow'];  //0=LB, 1=same, 2=new
+
+if ($thisfeed!='') $maxposts=$thisfeed;
+
+
+$targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
 $noFollow=$options['noFollow'];
 $showmore=$options['showmore'];
-$cb=$options['cb'];  //1 if colorbox should not be loaded
-$pag=$options['pag'];  //1 if pagination
+$cb=$options['cb'];  // 1 if colorbox should not be loaded
+$pag=$options['pag'];  // 1 if pagination
 $perPage=$options['perPage'];
 if(empty($options['sourcename'])){
 	$attribution='';
@@ -930,10 +958,24 @@ if ($floatType=='1'){
 if ($parmfloat!='') $float=$parmfloat;
 
 
+if ($cacheMin==''){
+$cacheMin=15;  //set caching minutes	
+}
+
+
+
 if ($cb!=='1'){
 add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
    }
 
+
+//delete_transient($thisCat);  // for testing purposes
+
+timer_start();  //TIMER START - for testing purposes
+
+
+	$myarray=get_transient($thisCat);  // added  for transient cache
+   if (false===$myarray) {   //  added  for transient cache - only get feeds and put into array if the array isn't cached (for a given category set)
 
 
 
@@ -994,7 +1036,11 @@ if (empty($myfeeds)){
 
 	$url=(string)($feeditem["FeedURL"]);
 	
-	$feed = fetch_feed($url);
+
+				$feed = fetch_feed($url);
+
+	
+	
 
 	if (is_wp_error( $feed ) ) {
 
@@ -1002,7 +1048,7 @@ if (empty($myfeeds)){
 	
 	}
 
-	$maxfeed= $feed->get_item_quantity(0);
+	$maxfeed= $feed->get_item_quantity(0);  
 
 
 //SORT DEPENDING ON SETTINGS
@@ -1032,9 +1078,18 @@ if (empty($myfeeds)){
 
 
 
+
+
+set_transient($thisCat, $myarray, 60*$cacheMin);  //  added  for transient cache
+}  //  added  for transient cache
+
+if ($timerstop==1){
+ timer_stop(1); echo ' seconds<br>';  //TIMER END for testing purposes
+}
+
+
+
 //$myarrary sorted by mystrdate
-
-
 
 foreach ($myarray as $key => $row) {
     $dates[$key]  = $row["mystrdate"]; 
@@ -1064,23 +1119,20 @@ $idnum=0;
 
 //for pagination
 $currentPage = trim($_REQUEST[pg]);
-
 $currentURL = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; 
-
 $currentURL = str_replace( '&pg='.$currentPage, '', $currentURL );
 $currentURL = str_replace( '?pg='.$currentPage, '', $currentURL );
 
 if ( strpos( $currentURL, '?' ) == 0 ){
 	$currentURL=$currentURL.'?';
 }else{
-	$currentURL=$currentURL.'&';
-	
+	$currentURL=$currentURL.'&';	
 }
 
-//$pag=1;
+
 
 //pagination controls and parameters
-//$perPage = 5;  
+
 
 if (!isset($perPage)){$perPage=5;}
 
@@ -1148,7 +1200,7 @@ if ($nodays==0){
 
 
 	
-		$readable .=  '<div class="rss-output"><div><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a></span>';
+		$readable .=  '<div class="rss-output"><div><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></span>';
 		
 		if ($showmore==1 && $showDesc==1){
 			
@@ -1215,7 +1267,6 @@ return $readable;
    }
    
 
-   
     
    
 ?>
