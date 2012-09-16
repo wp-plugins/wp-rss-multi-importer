@@ -78,7 +78,7 @@ Configure your feeds in the administration panel, then choose the categories, nu
 
 If you want to put this in the code on your theme, you can do it like this:
 
-<?php echo do_shortcode('[wp_rss_multi_importer]'); ?>
+echo do_shortcode('[wp_rss_multi_importer]'); 
 
 == Screenshots ==
 
