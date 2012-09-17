@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.21
+Stable tag: 2.22
 Imports and merges multiple RSS Feeds. Options including sorting, pagination, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -18,7 +18,6 @@ If you want to put RSS feeds on your site, look no further.  WP RSS Multi Import
 The newest feature (let your users paginate through your RSS feed posts):
 
 [youtube http://www.youtube.com/watch?v=OgMlIPwnits]
-
 
 
 = Features =
@@ -35,6 +34,7 @@ The newest feature (let your users paginate through your RSS feed posts):
 * Suppress images in excerpts of you want
 * Resize images in excerpts (may show down how quickly the page loads)
 * Allow users to determine whether to show-hide excerpts
+* Set caching time for faster page loading
 
 These features are all set in the settings tab in the admin panel.
 
@@ -92,6 +92,8 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 == Change Log ==
 
+= Version 2.22 =
+* Caching made optional. Enhanced the admin section by putting option settings on a separate panel. More options added to the number of words in the excerpt.
 = Version 2.21 =
 * Performance improvements. Ability to change color of hyperlinked titles added with shortcode parameter.  Also, specify number of posts per feed via shortcode parameter.
 = Version 2.20 =

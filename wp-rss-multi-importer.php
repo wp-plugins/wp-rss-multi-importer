@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.21
+  Version: 2.22
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -17,6 +17,7 @@ function wp_rss_multi_importer_start () {
 
 register_setting('wp_rss_multi_importer_options', 'rss_import_items');
 register_setting('wp_rss_multi_importer_categories', 'rss_import_categories');	
+register_setting('wp_rss_multi_importer_item_options', 'rss_import_options');	 
 add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprssimport' );  
 
 
@@ -33,6 +34,20 @@ function ilc_farbtastic_script() {
 add_action('admin_init','wp_rss_multi_importer_start');
 
 
+add_action('admin_init','upgrade_db');  // Used starting in version 2.22...afterwards, version is being stored in db
+
+function upgrade_db() {
+
+	$myoptions = get_option( 'rss_import_items' ); 
+	$newoptions = get_option('rss_import_options');
+	
+	if ( !empty($myoptions) && empty($newoptions)) {  // this transfers data to new table
+	//	$plugin_version=$newoptions['plugin_version'];  // might be useful in future updates
+		//	if ($plugin_version<2.22){
+					add_option( 'rss_import_options', $myoptions, '', '');
+			//	}
+			}
+}
 
 
   
@@ -61,23 +76,26 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 	<div class="wrap">
 	
 		<div id="icon-themes" class="icon32"></div>
-		<h2>RSS Feed Options</h2>
+		<h2>WP RSS Multi-Importer Options</h2>
 		<?php settings_errors(); ?>
 		
 		<?php if( isset( $_GET[ 'tab' ] ) ) {
 			$active_tab = $_GET[ 'tab' ];
+		} else if( $active_tab == 'setting_options' ) {
+				$active_tab = 'setting_options';
 		} else if( $active_tab == 'category_options' ) {
 			$active_tab = 'category_options';
 		} else if( $active_tab == 'style_options' ) {
 			$active_tab = 'style_options';
 		} else if( $active_tab == 'more_options' ){
 			$active_tab = 'more_options';
-		} else { $active_tab = 'main_options';	
+		} else { $active_tab = 'items_list';	
 			
 		} // end if/else ?>
 		
 		<h2 class="nav-tab-wrapper">
-			<a href="?page=wp_rss_multi_importer_admin&tab=main_options" class="nav-tab <?php echo $active_tab == 'main_options' ? 'nav-tab-active' : ''; ?>">RSS Feeds & Options</a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>">RSS Feeds</a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>">Setting Options</a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>">Category Options</a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>">Style Options</a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>">More</a>
@@ -86,9 +104,13 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		<form method="post" action="options.php">
 			<?php
 			
-				if( $active_tab == 'main_options' ) {
+				if( $active_tab == 'items_list' ) {
 						
-			wp_rss_multi_importer_options_page();
+			wp_rss_multi_importer_items_page();
+			
+		} else if ( $active_tab == 'setting_options' ) {
+
+				wp_rss_multi_importer_options_page();
 			
 		} else if ( $active_tab == 'category_options' ) {
 			
@@ -245,6 +267,30 @@ function widget_footer_scripts(){
  
 
 
+
+
+
+function delete_db_transients() {
+
+    global $wpdb;
+
+  
+    $expired = $wpdb->get_col( "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE '_transient_wprssmi_%';" );
+
+    foreach( $expired as $transient ) {
+
+        $key = str_replace('_transient_', '', $transient);
+        delete_transient($key);
+
+    }
+}
+
+
+
+
+
+
+
 /**
  * Include CSS in plugin page header
  */
@@ -309,6 +355,10 @@ function widget_footer_scripts(){
 
 function wp_rss_multi_importer_options_page() {
 
+
+delete_db_transients();
+
+
        ?>
 
        <div class="wrap">
@@ -316,7 +366,7 @@ function wp_rss_multi_importer_options_page() {
   <h2>RSS Multi-Importer Admin</h2>
        <?php screen_icon(); 
 
-do_settings_sections( 'wprssimport' );
+//do_settings_sections( 'wprssimport' );
 
 ?>
 
@@ -331,13 +381,244 @@ do_settings_sections( 'wprssimport' );
 		$siteurl= get_site_url();
         $images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';
 
+      settings_fields( 'wp_rss_multi_importer_item_options' );
+
+
+       $options = get_option( 'rss_import_options' ); 
+
+
+    	
+
+
+
+
+  
+
+    
+
+       ?>
+
+      
+      
+
+<div class="postbox"><h3><label for="title">Options Settings</label></h3>
+<div class="inside">
+
+
+
+<h3>Sorting and Separating Posts</h3>
+ 
+      <p><label class='o_textinput' for='sortbydate'>Sort Output by Date (Descending = Closest Date First)</label>
+	
+		<SELECT NAME="rss_import_options[sortbydate]">
+		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>>Ascending</OPTION>
+		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>>Descending</OPTION>
+		
+		</SELECT></p>  
+		
+		
+		<p><label class='o_textinput' for='todaybefore'>Separate Today and Earlier Posts</label>
+
+		<SELECT NAME="rss_import_options[todaybefore]">
+		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>>Yes</OPTION>
+		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>>No</OPTION>
+
+		</SELECT></p>
+	
+<h3>Number of Posts and Pagination</h3>
+<p><label class='o_textinput' for='maxfeed'>Number of Entries per Feed</label>
+<SELECT NAME="rss_import_options[maxfeed]">
+<OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="3" <?php if($options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
+<OPTION VALUE="4" <?php if($options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
+<OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
+<OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
+</SELECT></p>
+
+
+<p><label class='o_textinput' for='maxperPage'>Number of Entries per Page of Output</label>
+<SELECT NAME="rss_import_options[maxperPage]">
+<OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if($options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if($options['maxperPage']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="50" <?php if($options['maxperPage']==50){echo 'selected';} ?>>50</OPTION>
+</SELECT></p>
+
+
+
+
+<p><label class='o_textinput' for='pag'>Do you want pagination?</label>
+<SELECT NAME="rss_import_options[pag]" id="pagination">
+<OPTION VALUE="1" <?php if($options['pag']==1){echo 'selected';} ?>>Yes</OPTION>
+<OPTION VALUE="0" <?php if($options['pag']==0){echo 'selected';} ?>>No</OPTION>
+</SELECT>  (Note: this will override the Number of Entries per Page of Output)</p>
+
+
+
+<span id="pag_options" <?php if($options['pag']==0){echo 'style="display:none"';}?>>
+	
+	<p style="padding-left:15px"><label class='o_textinput' for='perPage'>Number of Posts per Page for Pagination</label>
+	<SELECT NAME="rss_import_options[perPage]">
+	<OPTION VALUE="5" <?php if($options['perPage']==5){echo 'selected';} ?>>5</OPTION>
+	<OPTION VALUE="10" <?php if($options['perPage']==10){echo 'selected';} ?>>10</OPTION>
+	<OPTION VALUE="15" <?php if($options['perPage']==15){echo 'selected';} ?>>15</OPTION>
+	<OPTION VALUE="20" <?php if($options['perPage']==20){echo 'selected';} ?>>20</OPTION>
+	</SELECT></p>	
+	
+</span>
+
+
+
+<h3>How Links Open and No Follow Option</h3>
+
+<p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open?)</label>
+	<SELECT NAME="rss_import_options[targetWindow]" id="targetWindow">
+	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
+	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>>Open in Same Window</OPTION>
+	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>>Open in New Window</OPTION>
+	</SELECT>	
+</p>
+<p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_options[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
+
+
+
+
+
+
+
+
+<h3>What Shows - Excerpts and Attribution</h3>
+
+
+
+
+
+<p><label class='o_textinput' for='sourcename'>Attribution Label</label>
+<SELECT NAME="rss_import_options[sourcename]">
+<OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>>Source</OPTION>
+<OPTION VALUE="Club" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>>Club</OPTION>
+<OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>>Sponsor</OPTION>
+<OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
+</SELECT></p>
+
+
+
+<p><label class='o_textinput' for='showdesc'>Show Excerpt</label>
+<SELECT NAME="rss_import_options[showdesc]" id="showdesc">
+<OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
+<OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
+</SELECT></p>
+
+
+<span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
+	
+	
+	<p style="padding-left:15px"><label class='o_textinput' for='showmore'>Let your readers determine if they want to see the excerpt with a show-hide option. <input type="checkbox" Name="rss_import_options[showmore]" Value="1" <?php if ($options['showmore']==1){echo 'checked="checked"';} ?></label>
+	</p>	
+	
+	
+<p style="padding-left:15px"><label class='o_textinput' for='descnum'>Excerpt length (number of words)</label>
+<SELECT NAME="rss_import_options[descnum]" id="descnum">
+<OPTION VALUE="20" <?php if($options['descnum']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['descnum']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
+<OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
+<OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
+<OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
+</SELECT></p>
+<h4>Image Handling</h4>
+<p><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_options[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
+</p>
+<p>You can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
+<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_options[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
+	
+<p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+</span>
+
+<h3>Cache and Conflict Handling</h3>
+
+<p><label class='o_textinput' for='cacheMin'>Number of minutes you want the post data held in cache (match to how often your feeds are updated)</label>
+<SELECT NAME="rss_import_options[cacheMin]" id="cacheMin">
+<OPTION VALUE="0" <?php if($options['cacheMin']==0){echo 'selected';} ?>>Turn off caching</OPTION>
+<OPTION VALUE="1" <?php if($options['cacheMin']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="5" <?php if($options['cacheMin']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if($options['cacheMin']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if($options['cacheMin']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['cacheMin']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if($options['cacheMin']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="60" <?php if($options['cacheMin']==60){echo 'selected';} ?>>60</OPTION>
+<OPTION VALUE="120" <?php if($options['cacheMin']==120){echo 'selected';} ?>>120</OPTION>
+<OPTION VALUE="180" <?php if($options['cacheMin']==180){echo 'selected';} ?>>180</OPTION>
+<OPTION VALUE="240" <?php if($options['cacheMin']==240){echo 'selected';} ?>>240</OPTION>
+<OPTION VALUE="300" <?php if($options['cacheMin']==300){echo 'selected';} ?>>300</OPTION>
+</SELECT></p>
+
+
+
+
+<p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.21' />
+
+</div></div>
+
+       <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
+
+
+
+       </form>
+
+      <div class="postbox"><h3><label for="title">   Help Others</label></h3><div class="inside">If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.</div></div> 
+
+       </div>
+</div>
+       </div>
+
+       <?php 
+
+  }
+
+
+
+
+function wp_rss_multi_importer_items_page() {
+
+
+	delete_db_transients();
+
+       ?>
+
+       <div class="wrap">
+	<div id="poststuff">
+  <h2>RSS Multi-Importer Admin</h2>
+       <?php screen_icon(); 
+
+do_settings_sections( 'wprssimport' );
+
+?>
+
+
+
+       <div id="options">
+
+
+       <form action="options.php" method="post"  >            
+
+       <?php
+		$siteurl= get_site_url();
+        $images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';
+
       settings_fields( 'wp_rss_multi_importer_options' );
 
 
        $options = get_option( 'rss_import_items' ); 
 
 
-    	
+
 //this included for backward compatibility
   if ( !empty($options) ) {
 $cat_array = preg_grep("^feed_cat_^", array_keys($options));
@@ -364,24 +645,24 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
                $key = key( $options );
 
-           
+
             if ( !strpos( $key, '_' ) > 0 ) continue; //this makes sure only feeds are included here...everything else are options
 
 				$j = wprss_get_id_number($key);
-				
-				
+
+
              echo "<div class='wprss-input' id='$j'>";
 
                echo "<p><label class='textinput' for='$key'>" . wprssmi_convert_key( $key ) . "</label>
 
                <input  class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />  <a href='#' class='btnDelete' id='$j'><img src='$images_url/remove.png'/></a></p>";
-               
+
 
                next( $options );
-             
+
 
                $key = key( $options );
-               
+
 
                echo "<p><label class='textinput' for='$key'>" . wprssmi_convert_key( $key ) . "</label>
 
@@ -415,7 +696,7 @@ echo "<OPTION VALUE='0'>NONE</OPTION>";
 echo $options[$key];
 
 	for ( $i=1; $i<=$catsize; $i++ ) {   
-		   
+
 if( $i % 2== 0 ) continue;
 
  	$catkey = key( $catOptions );
@@ -427,10 +708,10 @@ next( $catOptions );
 
 	 if($options[$key]==$IDValue){
 		$sel='selected  ';
-	
+
 		} else {
 		$sel='';
-		
+
 		}
 
 echo "<OPTION " .$sel.  "VALUE=".$IDValue.">".$nameValue."</OPTION>";
@@ -449,181 +730,23 @@ echo "</SELECT>";
 
                echo "</div>"; 
 
-               
+
 
            }
 
        }
 
-       
 
-  
 
-    
+
+
+
 
        ?>
 
        <div id="buttons"><a href="#" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
-      
-
-<div class="postbox"><h3><label for="title">Options Settings</label></h3><div class="inside">
 
 
-
-<h3>Sorting and Separating Posts</h3>
- 
-      <p><label class='o_textinput' for='sortbydate'>Sort Output by Date (Descending = Closest Date First)</label>
-	
-		<SELECT NAME="rss_import_items[sortbydate]">
-		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>>Ascending</OPTION>
-		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>>Descending</OPTION>
-		
-		</SELECT></p>  
-		
-		
-		<p><label class='o_textinput' for='todaybefore'>Separate Today and Earlier Posts</label>
-
-		<SELECT NAME="rss_import_items[todaybefore]">
-		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>>Yes</OPTION>
-		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>>No</OPTION>
-
-		</SELECT></p>
-	
-<h3>Number of Posts and Pagination</h3>
-<p><label class='o_textinput' for='maxfeed'>Number of Entries per Feed</label>
-<SELECT NAME="rss_import_items[maxfeed]">
-<OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
-<OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
-<OPTION VALUE="3" <?php if($options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
-<OPTION VALUE="4" <?php if($options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
-<OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
-<OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
-<OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
-</SELECT></p>
-
-
-<p><label class='o_textinput' for='maxperPage'>Number of Entries per Page of Output</label>
-<SELECT NAME="rss_import_items[maxperPage]">
-<OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="20" <?php if($options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
-<OPTION VALUE="30" <?php if($options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
-<OPTION VALUE="40" <?php if($options['maxperPage']==40){echo 'selected';} ?>>40</OPTION>
-<OPTION VALUE="50" <?php if($options['maxperPage']==50){echo 'selected';} ?>>50</OPTION>
-</SELECT></p>
-
-
-
-
-<p><label class='o_textinput' for='pag'>Do you want pagination?</label>
-<SELECT NAME="rss_import_items[pag]" id="pagination">
-<OPTION VALUE="1" <?php if($options['pag']==1){echo 'selected';} ?>>Yes</OPTION>
-<OPTION VALUE="0" <?php if($options['pag']==0){echo 'selected';} ?>>No</OPTION>
-</SELECT>  (Note: this will override the Number of Entries per Page of Output)</p>
-
-
-
-<span id="pag_options" <?php if($options['pag']==0){echo 'style="display:none"';}?>>
-	
-	<p style="padding-left:15px"><label class='o_textinput' for='perPage'>Number of Posts per Page for Pagination</label>
-	<SELECT NAME="rss_import_items[perPage]">
-	<OPTION VALUE="5" <?php if($options['perPage']==5){echo 'selected';} ?>>5</OPTION>
-	<OPTION VALUE="10" <?php if($options['perPage']==10){echo 'selected';} ?>>10</OPTION>
-	<OPTION VALUE="15" <?php if($options['perPage']==15){echo 'selected';} ?>>15</OPTION>
-	<OPTION VALUE="20" <?php if($options['perPage']==20){echo 'selected';} ?>>20</OPTION>
-	</SELECT></p>	
-	
-</span>
-
-
-
-<h3>How Links Open and No Follow Option</h3>
-
-<p><label class='o_textinput' for='targetWindow'>Target Window (when link clicked, where should it open?)</label>
-	<SELECT NAME="rss_import_items[targetWindow]" id="targetWindow">
-	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
-	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>>Open in Same Window</OPTION>
-	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>>Open in New Window</OPTION>
-	</SELECT>	
-</p>
-<p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_items[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
-
-
-
-
-
-
-
-
-<h3>What Shows - Excerpts and Attribution</h3>
-
-
-
-
-
-<p><label class='o_textinput' for='sourcename'>Attribution Label</label>
-<SELECT NAME="rss_import_items[sourcename]">
-<OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>>Source</OPTION>
-<OPTION VALUE="Club" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>>Club</OPTION>
-<OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>>Sponsor</OPTION>
-<OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
-</SELECT></p>
-
-
-
-<p><label class='o_textinput' for='showdesc'>Show Excerpt</label>
-<SELECT NAME="rss_import_items[showdesc]" id="showdesc">
-<OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
-<OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
-</SELECT></p>
-
-
-<span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
-	
-	
-	<p style="padding-left:15px"><label class='o_textinput' for='showmore'>Let your readers determine if they want to see the excerpt with a show-hide option. <input type="checkbox" Name="rss_import_items[showmore]" Value="1" <?php if ($options['showmore']==1){echo 'checked="checked"';} ?></label>
-	</p>	
-	
-	
-<p style="padding-left:15px"><label class='o_textinput' for='descnum'>Excerpt length (number of words)</label>
-<SELECT NAME="rss_import_items[descnum]" id="descnum">
-<OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
-<OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
-<OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
-<OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
-<OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
-</SELECT></p>
-<h4>Image Handling</h4>
-<p><label class='o_textinput' for='stripAll'>Check to get rid of all images in the excerpt.  <input type="checkbox" Name="rss_import_items[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
-</p>
-<p>You can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.</p>
-<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'>If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
-	
-<p style="padding-left:15px"><label class='o_textinput' for='floatType'>Float images to the left (can be over-written in shortcode).  <input type="checkbox" Name="rss_import_items[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
-</span>
-
-<h3>Cache and Conflict Handling</h3>
-
-<p><label class='o_textinput' for='cacheMin'>Number of minutes you want the post data held in cache (match to how often your feeds are updated)</label>
-<SELECT NAME="rss_import_items[cacheMin]" id="descnum">
-<OPTION VALUE="10" <?php if($options['cacheMin']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="20" <?php if($options['cacheMin']==20){echo 'selected';} ?>>20</OPTION>
-<OPTION VALUE="30" <?php if($options['cacheMin']==30){echo 'selected';} ?>>30</OPTION>
-<OPTION VALUE="40" <?php if($options['cacheMin']==40){echo 'selected';} ?>>40</OPTION>
-<OPTION VALUE="60" <?php if($options['cacheMin']==60){echo 'selected';} ?>>60</OPTION>
-<OPTION VALUE="120" <?php if($options['cacheMin']==120){echo 'selected';} ?>>120</OPTION>
-<OPTION VALUE="180" <?php if($options['cacheMin']==180){echo 'selected';} ?>>180</OPTION>
-<OPTION VALUE="240" <?php if($options['cacheMin']==240){echo 'selected';} ?>>240</OPTION>
-<OPTION VALUE="300" <?php if($options['cacheMin']==300){echo 'selected';} ?>>300</OPTION>
-</SELECT></p>
-
-
-
-
-<p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_items[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
-<input   size='10' name='rss_import_items[plugin_version]' type='hidden' value='2.21' />
-
-</div></div>
 
        <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 
@@ -640,8 +763,6 @@ echo "</SELECT>";
        <?php 
 
   }
-
-
 
 
 
@@ -859,6 +980,10 @@ add_action('wp_footer','footer_scripts');
 
 
 
+
+
+
+
 	
 	$siteurl= get_site_url();
     $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
@@ -897,16 +1022,16 @@ add_action('wp_footer','footer_scripts');
 	$thisfeed = $parms['thisfeed'];  // max posts per category
 	$timerstop = $parms['timer'];
 	
-	
+	$cachename='wprssmi_'.$thisCat;
 	
 	
    	$readable = '';
-   	$options = get_option('rss_import_items','option not found');
+   	$options = get_option('rss_import_options','option not found');
+	$option_items = get_option('rss_import_items','option not found');
 
 
 
-
-$cat_array = preg_grep("^feed_cat_^", array_keys($options));
+$cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 
 	if (count($cat_array)==0) {  // for backward compatibility
 		$noExistCat=1;
@@ -917,10 +1042,10 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
 
     
-   if(!empty($options)){
+   if(!empty($option_items)){
 	
 //GET PARAMETERS  
-$size = count($options);
+$size = count($option_items);
 $sortDir=$options['sortbydate'];  // 1 is ascending
 $stripAll=$options['stripAll'];
 $todaybefore=$options['todaybefore'];
@@ -959,7 +1084,7 @@ if ($parmfloat!='') $float=$parmfloat;
 
 
 if ($cacheMin==''){
-$cacheMin=15;  //set caching minutes	
+$cacheMin=0;  //set caching minutes	
 }
 
 
@@ -969,12 +1094,17 @@ add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indica
    }
 
 
-//delete_transient($thisCat);  // for testing purposes
+
 
 timer_start();  //TIMER START - for testing purposes
 
 
-	$myarray=get_transient($thisCat);  // added  for transient cache
+	$myarray=get_transient($cachename);  // added  for transient cache
+	
+	if ($cacheMin==0){
+		delete_transient($cachename); 
+	}
+	
    if (false===$myarray) {   //  added  for transient cache - only get feeds and put into array if the array isn't cached (for a given category set)
 
 
@@ -983,28 +1113,28 @@ timer_start();  //TIMER START - for testing purposes
 
 	
 
-   			$key =key($options);
+   			$key =key($option_items);
 				if ( !strpos( $key, '_' ) > 0 ) continue; //this makes sure only feeds are included here...everything else are options
 				
-   			$rssName= $options[$key];
+   			$rssName= $option_items[$key];
 
    
-   			next($options);
+   			next($option_items);
    			
-   			$key =key($options);
+   			$key =key($option_items);
    			
-   			$rssURL=$options[$key];
+   			$rssURL=$option_items[$key];
 
 
 
-  	next($options);
-	$key =key($options);
+  	next($option_items);
+	$key =key($option_items);
 	
 
 
 
 
-if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
+if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
 
 
 
@@ -1012,15 +1142,15 @@ if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_a
 	
 }
    
-$cat_array = preg_grep("^feed_cat_^", array_keys($options));  // for backward compatibility
+$cat_array = preg_grep("^feed_cat_^", array_keys($option_items));  // for backward compatibility
 
 	if (count($cat_array)>0) {
 
-  next($options); //skip feed category
+  next($option_items); //skip feed category
 }
 
    }
- 
+ //var_dump($myfeeds);
 
 if (empty($myfeeds)){
 	
@@ -1080,7 +1210,10 @@ if (empty($myfeeds)){
 
 
 
-set_transient($thisCat, $myarray, 60*$cacheMin);  //  added  for transient cache
+if ($cacheMin!==0){
+set_transient($cachename, $myarray, 60*$cacheMin);  //  added  for transient cache
+}
+
 }  //  added  for transient cache
 
 if ($timerstop==1){
@@ -1094,6 +1227,8 @@ if ($timerstop==1){
 foreach ($myarray as $key => $row) {
     $dates[$key]  = $row["mystrdate"]; 
 }
+
+
 
 //SORT, DEPENDING ON SETTINGS
 
@@ -1165,6 +1300,10 @@ if ($pag!==1){
 
 $idnum=$idnum +1;
 
+
+//beginning of default template
+
+
 //  Today and Earlier Script
 
 
@@ -1196,7 +1335,9 @@ if ($nodays==0){
 	}
 	
 }
-	
+
+
+
 
 
 	
@@ -1232,14 +1373,26 @@ if ($nodays==0){
 
 	
 	if (!empty($items["mystrdate"]) && $showdate==1){
-	 $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
+	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use if you want time to show
+	$readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
 	}
 		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
 	 $readable .=  '</div>';
 	
-}
+	
+	
+	
+	//  This is the end of the default template
+	
+	
+	
+	
+	
+	
+	
+	}
     
 
 
