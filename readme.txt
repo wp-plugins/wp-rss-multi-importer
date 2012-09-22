@@ -48,7 +48,7 @@ These features are all set in the settings tab in the admin panel.
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
-4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categorie in the widget.
+4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
 You can also use other parameters which can be customized in the shortcode...this includes:
 
