@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.23
+  Version: 2.24
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -186,7 +186,7 @@ echo '<p>If you find this plugin helpful, let others know by <a href="http://wor
 
 
 function wp_section_text() {
-    echo '<div class="postbox"><h3><label for="title">Usage Details</label></h3><div class="inside"><p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).</p><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
+    echo '<div class="postbox"><h3><label for="title">Usage Details</label></h3><div class="inside"><p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below).  CLICK SAVE SETTINGS.</p><p>Then go to the Settings Tab, configure the options. CLICK SAVE SETTINGS.<p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
     echo '<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category="2"] (or [wp_rss_multi_importer category="1,2"] to have two categories) on the page you wish to have only show feeds from those categories.</p></div></div>';
 
 }
@@ -387,13 +387,6 @@ delete_db_transients();
        $options = get_option( 'rss_import_options' ); 
 
 
-    	
-
-
-
-
-  
-
     
 
        ?>
@@ -404,7 +397,15 @@ delete_db_transients();
 <div class="postbox"><h3><label for="title">Options Settings</label></h3>
 <div class="inside">
 
+<?php
 
+
+if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
+?>
+<H2 class="save_warning">You must choose and then click Save Settings for the plugin to function correctly.  If not sure which options to choose right now, click Save Settings anyway.</H2>
+<?php
+}
+?>
 
 <h3>Sorting and Separating Posts</h3>
  
@@ -562,7 +563,7 @@ delete_db_transients();
 
 
 <p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
-<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.23' />
+<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.24' />
 
 </div></div>
 
@@ -1026,8 +1027,10 @@ add_action('wp_footer','footer_scripts');
 	
 	
    	$readable = '';
-   	$options = get_option('rss_import_options','option not found');
-	$option_items = get_option('rss_import_items','option not found');
+   	$options = get_option('rss_import_options');
+	$option_items = get_option('rss_import_items');
+
+if ($option_items==false) return "You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds";
 
 
 
@@ -1150,7 +1153,7 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));  // for backwa
 }
 
    }
- //var_dump($myfeeds);
+  if ($maxposts=="") return "One more step...go into the the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose Options.</a>";  // check to confirm they set options
 
 if (empty($myfeeds)){
 	
@@ -1219,6 +1222,10 @@ set_transient($cachename, $myarray, 60*$cacheMin);  //  added  for transient cac
 if ($timerstop==1){
  timer_stop(1); echo ' seconds<br>';  //TIMER END for testing purposes
 }
+
+
+
+
 
 
 
