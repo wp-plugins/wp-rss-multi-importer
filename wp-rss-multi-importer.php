@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.22
+  Version: 2.23
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -197,7 +197,7 @@ function wp_section_text() {
 
 if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin' ) {
 
-    add_action( 'admin_print_scripts', 'wprssmi_register_scripts' );
+    add_action( 'init', 'wprssmi_register_scripts' );
 
    add_action( 'admin_print_styles', 'wprssmi_header' );
 
@@ -562,7 +562,7 @@ delete_db_transients();
 
 
 <p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
-<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.21' />
+<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.23' />
 
 </div></div>
 
