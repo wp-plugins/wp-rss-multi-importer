@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.24
+  Version: 2.25
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -563,7 +563,7 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
 
 <p ><label class='o_textinput' for='cb'>Check if you are having colorbox conflict problems.   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
-<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.24' />
+<input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='2.25' />
 
 </div></div>
 
@@ -616,9 +616,9 @@ do_settings_sections( 'wprssimport' );
       settings_fields( 'wp_rss_multi_importer_options' );
 
 
-       $options = get_option( 'rss_import_items' ); 
+       	$options = get_option( 'rss_import_items' ); 
 
-
+		$catOptions_exist= get_option( 'rss_import_categories' ); 
 
 //this included for backward compatibility
   if ( !empty($options) ) {
@@ -638,6 +638,7 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
        if ( !empty($options) ) {
 
            $size = count($options);  
+
 
            for ( $i=1; $i<=$size; $i++ ) {            
 
@@ -670,7 +671,7 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
                <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />" ; 
 
 
-			if (empty($catOptions)){
+			if (empty($catOptions_exist)){
 				echo " <input id='$j' class='wprss-input' size='10' name='rss_import_items[feed_cat_$j]' type='hidden' value='0' />" ; 	
 
 			}
@@ -696,9 +697,9 @@ echo "<OPTION VALUE='0'>NONE</OPTION>";
 
 echo $options[$key];
 
-	for ( $i=1; $i<=$catsize; $i++ ) {   
+	for ( $k=1; $k<=$catsize; $k++ ) {   
 
-if( $i % 2== 0 ) continue;
+if( $k % 2== 0 ) continue;
 
  	$catkey = key( $catOptions );
  	$nameValue=$catOptions[$catkey];
