@@ -52,6 +52,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		}
 		
 		
+		
 		if ($showicon==1){
 			$title=	'<img src="'.$widget_images_url.'/rss.png" width="14" height="14" style="border:0;margin-right:5px;">'.$title;
 		}
@@ -81,6 +82,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	
 	
 		$cat_array = preg_grep("^feed_cat_^", array_keys($options));
+		
+	
+		
 
 			if (count($cat_array)==0) {  //for backward compatibility
 				$noExistCat=1;
@@ -157,6 +161,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 
 			$url=(string)($feeditem["FeedURL"]);
+			
+			while ( stristr($url, 'http') != $url )
+				$url = substr($url, 1);
 		
 			$feed = fetch_feed($url);
 		
