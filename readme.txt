@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.25
-Imports and merges multiple RSS Feeds. Options including sorting, pagination, limit feeds/page and by category, and include excerpts with images. 
+Stable tag: 2.30
+Imports and merges multiple RSS Feeds. 7 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
 
-If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility by adding and deleting specific feeds, sorting by date, categorizing your feeds, pagination, a widget and much more.  The plugin works well for news items as well as events (which are sorted differently than news items).
+If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility with templates, sorting by date, categorizing your feeds, pagination, a widget and much more.
 
 = See How It Works =
 
@@ -19,19 +19,20 @@ Quick start video:
 
 [youtube http://www.youtube.com/watch?v=K2ImrLW6rZY]
 
-The newest feature (let your users paginate through your RSS feed posts):
+See the various templates included:
 
-[youtube http://www.youtube.com/watch?v=OgMlIPwnits]
+[youtube http://www.youtube.com/watch?v=5PwO8eCiD1w]
 
 
 = Features =
 
+* Templates - choose from 7 different templates, create your own and save it
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site (when not in pagination mode)
 * Separate out Today from Earlier posts
 * Sort by date (ascending or descending) 
-* Output feed name as (Source, Sponsor, or Club)
+* Output feed name as (Source, Sponsor, Via, or Club)
 * Show an excerpt (and select the number of words to show - 50, 100, 200, 300)
 * Select how you would like the links to open (in a Lightbox, a new window, or the current window)
 * Set the links as no-follow or not
@@ -54,7 +55,7 @@ These features are all set in the settings tab in the admin panel.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
-You can also use other parameters which can be customized in the shortcode...this includes:
+You can also use other parameters for the DEFAULT template which can be customized in the shortcode...this includes:
 
 * Headline font size
 * Headline bold weight
@@ -96,6 +97,8 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 == Change Log ==
 
+= Version 2.30 =
+* Added templates, improved admin interface, fixed several bugs.  Switched caching methods to allow for more real time RSS if desired. Updated colorbox version.
 = Version 2.25 =
 * Fixed bug that caused feeds to disappear from admin panel when several categories added.  No data was lost by users.
 = Version 2.24 =
