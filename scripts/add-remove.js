@@ -44,7 +44,7 @@ jQuery(function() { // when document has loaded
 	
 	
 	jQuery('a#addCat').click(function() { 
-		
+	//	alert('hello');
 		
 		var z=jQuery('div.cat-input').size();
 			if (z==0){
@@ -92,7 +92,7 @@ jQuery(function() { // when document has loaded
         else 
        	 {
        	 	jQuery(this).addClass("errorfld") ;
-        	$messageDiv.show().html('The URL is not complete, please fix.');
+        	$messageDiv.show().html('Bad URL- feeds start with http');
         };
     });
 
@@ -108,31 +108,27 @@ jQuery(function() { // when document has loaded
 
 
 
-    jQuery(document).on('change', '#showdesc', function() {       
+   jQuery(document).on('change', '#showdesc', function() {       
     if(jQuery(this).val() == 1){
 		jQuery('span#secret').show();
 	}else{
 		jQuery('span#secret').hide()};
-    });
+ });
 
-
-
-	  jQuery(document).on('change', '#pagination', function() {       
-	     if(jQuery('#pagination').val() == 1){
-	//alert("hello");
-			jQuery('span#pag_options').show();
-		}else{
-			jQuery('span#pag_options').hide()};
-	    });
-	
-	
-
-    jQuery(document).ready(function () {  
-    if(jQuery('#showdesc').val() == 1){
-		jQuery('span#secret').show();
+  jQuery(document).on('change', '#pagination', function() {       
+     if(jQuery('#pagination').val() == 1){
+//alert("hello");
+		jQuery('span#pag_options').show();
 	}else{
-		jQuery('span#secret').hide()};
+		jQuery('span#pag_options').hide()};
     });
+
+   // jQuery(document).ready(function () {  
+   // if(jQuery('#showdesc').val() == 1){
+	//	jQuery('span#secret').show();
+//	}else{
+//		jQuery('span#secret').hide()};
+   // });
 
 
    jQuery(document).on('change', '.cat-input', function() {
