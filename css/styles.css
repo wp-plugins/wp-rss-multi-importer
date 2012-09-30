@@ -26,6 +26,7 @@
 
 .rss-output p {
   margin-bottom: 0em;
+
 }
 
 .errorfld {	
@@ -46,8 +47,19 @@
 	margin-left:510px;
 }
 
+
 .save_warning{
 	color:red !important;;
 }
+	
 
+#template-restore{
+ font-size: 16px;
+}
 
+#template-save{
+ font-size: 16px;
+}
+#css-save{
+ font-size: 16px;
+}
