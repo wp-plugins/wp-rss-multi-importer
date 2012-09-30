@@ -11,12 +11,16 @@ if (is_multisite()) {
             switch_to_blog($blog['blog_id']);
             delete_option('rss_import_items');
             delete_option('rss_import_categories');
+			delete_option('rss_template_item');
+			delete_option('rss_import_options');
         }
         restore_current_blog();
     }
 } else {
     delete_option('rss_import_items');
     delete_option('rss_import_categories');
+	delete_option('rss_template_item');
+	delete_option('rss_import_options');
 }
 //
 ?>
