@@ -69,6 +69,11 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		}
 	    add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		
+		
+		if ($cb!=='1'){
+		add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+		   }
+		
 		if (empty( $sortDir ) ){$sortDir=0;}
 	
 		echo $before_widget;

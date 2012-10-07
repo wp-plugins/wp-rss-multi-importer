@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.30
+  Version: 2.31
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.30 );
+define( 'WP_RSS_MULTI_VERSION', 2.31 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -1074,10 +1074,12 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'showdate' => 1,
 		'showgroup'=> 1,
 		'thisfeed'=>'',
-		'timer' => 0,  
+		'timer' => 0,
+		'dumpthis'  =>0,
 		'morestyle' =>'[...]'
 		), $atts);
 	
+	$dumpthis=$parms['dumpthis'];
 	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
@@ -1254,6 +1256,7 @@ if (empty($myfeeds)){
 	if (is_wp_error( $feed ) ) {
 		
 		if ($size<4){
+			
 			return "You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.";
 			exit;
 
@@ -1303,6 +1306,19 @@ set_transient($cachename, $myarray, 60*$cacheMin);  //  added  for transient cac
 
 if ($timerstop==1){
  timer_stop(1); echo ' seconds<br>';  //TIMER END for testing purposes
+}
+
+
+
+//  CHECK $myarray BEFORE DOING ANYTHING ELSE //
+
+if ($dumpthis==1){
+	var_dump($myarray);
+}
+if (!isset($myarray) || empty($myarray)){
+	
+	return "There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.";
+		exit;
 }
 
 
@@ -1384,7 +1400,7 @@ $end = ($currentPage * $perPage) + $perPage;
 	}
 	
 
-	require_once ( WP_RSS_MULTI_TEMPLATES . $template );
+	require( WP_RSS_MULTI_TEMPLATES . $template );
 
     
 

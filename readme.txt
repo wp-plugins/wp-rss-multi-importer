@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.30
+Stable tag: 2.31
 Imports and merges multiple RSS Feeds. 7 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -97,6 +97,8 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 == Change Log ==
 
+= Version 2.31 =
+* Fixed ability to open widget feeds in lightbox and allow several shortcodes on the same page.
 = Version 2.30 =
 * Added templates, improved admin interface, fixed several bugs.  Switched caching methods to allow for more real time RSS if desired. Updated colorbox version.
 = Version 2.25 =
