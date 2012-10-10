@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.31
+  Version: 2.32
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.31 );
+define( 'WP_RSS_MULTI_VERSION', 2.32 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -28,6 +28,9 @@ require_once ( WP_RSS_MULTI_UTILS . 'template_functions.php' );
 
 /* Load the messages file. */
 require_once ( WP_RSS_MULTI_UTILS . 'panel_messages.php' );
+
+/* Load the cron file. */
+require_once ( WP_RSS_MULTI_INC . 'cron.php' );
 
 /* Load the widget functions file. */
 require_once ( WP_RSS_MULTI_INC . 'rss_multi_importer_widget.php' );
@@ -309,9 +312,9 @@ function widget_footer_scripts(){
 
 
 
-function template_scroll_footer_scripts(){
-	wp_enqueue_script( 'template_newsticker', plugins_url( 'scripts/wprssmi-newsticker.js', __FILE__) );  //  Future template	
-	echo "<script type='text/javascript'>jQuery(document).ready(function () {jQuery('#newsticker').vscroller();});</script>";  // Future template
+function vertical_scroll_footer_scripts(){
+		wp_enqueue_script( 'vertical_scroll', plugins_url( 'scripts/jquery.vticker.js', __FILE__) );  //  Future template	
+	
 }
 
 
@@ -839,7 +842,7 @@ echo "</SELECT>";
 //  Categories Page
 
 function wp_rss_multi_importer_category_page() {
-	
+
 		$siteurl= get_site_url();
         $images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';
 
@@ -1044,6 +1047,8 @@ next( $options );
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
+
+	
 add_action('wp_footer','footer_scripts');
 
 if(!function_exists("wprssmi_hourly_feed")) {
@@ -1074,12 +1079,11 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'showdate' => 1,
 		'showgroup'=> 1,
 		'thisfeed'=>'',
-		'timer' => 0,
-		'dumpthis'  =>0,
+		'timer' => 0, 
+		'cachetime'=>NULL,
 		'morestyle' =>'[...]'
 		), $atts);
 	
-	$dumpthis=$parms['dumpthis'];
 	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
@@ -1098,7 +1102,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$timerstop = $parms['timer'];
 	
 	$cachename='wprssmi_'.$thisCat;
-	
+	$cachetime=$parms['cachetime'];
 	
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
@@ -1162,6 +1166,10 @@ if ($parmfloat!='') $float=$parmfloat;
 if ($cacheMin==''){
 $cacheMin=0;  //set caching minutes	
 }
+
+
+if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
+
 
 
 
@@ -1256,12 +1264,11 @@ if (empty($myfeeds)){
 	if (is_wp_error( $feed ) ) {
 		
 		if ($size<4){
-			
 			return "You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.";
 			exit;
 
 		}else{
-//	echo $feed->get_error_message();	
+	//echo $feed->get_error_message();	
 		continue;
 		}
 	}
@@ -1310,6 +1317,8 @@ if ($timerstop==1){
 
 
 
+
+
 //  CHECK $myarray BEFORE DOING ANYTHING ELSE //
 
 if ($dumpthis==1){
@@ -1320,6 +1329,8 @@ if (!isset($myarray) || empty($myarray)){
 	return "There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.";
 		exit;
 }
+
+
 
 
 

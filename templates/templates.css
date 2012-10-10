@@ -152,7 +152,8 @@ div#wprssmi_center_box {
 
 
 
-<style type="text/css">
+/*  SMOOTH SCROLL TEMPLATE - START */
+
 	#wprssmi_RssParade
 	{
 		width: 600px;
@@ -279,49 +280,17 @@ div#wprssmi_center_box {
 			color:;   //change the text color here
 		
 	}
-		
-/*  Vertical Scroll - Future Template  */
+	
+/*  SMOOTH SCROLL TEMPLATE - END */
 
-	.wprssmi-news-wrapper
-	{
-		margin-top: 10px;
-	/*	background-color: #CCCCCC;*/
+	/*  VERTICAL SCROLL TEMPLATE - START */
 
-	}
-	.wprssmi-news-wrapper .wprssmi-news-contents-wrapper
-	{
-		width: 400px;
-		margin: auto;
-		border-right: 1px dashed #6a6a6a;
-		border-left: 1px dashed #6a6a6a;
-		height: 600px;
-
-	}
-	.wprssmi-news-wrapper .wprssmi-news-contents
-	{
-		overflow: hidden;
-		position: relative;
-		z-index: 998;
-		height: 308px;
-	}
-	.wprssmi-news-wrapper .wprssmi-news
-	{
-		width: 100%;
-		height: 150px;
-		color: #999999;
-		position: absolute;
-		z-index: 999;
-		border-bottom: 1px dashed #6a6a6a;
-			margin-left:3px;
-	}
-	.wprssmi-news-wrapper .wprssmi-news-header, .wprssmi-news-footer
-	{
-		color: White;
-		height: 20px;
-		font-weight: bold;
-		font-size: 14px;
-		padding-top: 12px;
-		padding-left: 32px;
+	.wprssmi_rss_vs .title{
+		font-size:1.1em;
 	}
 
+	.wprssmi_rss_vs .date{
+		font-size:.9em;
+	}
 
+	/*  VERTICAL SCROLL  TEMPLATE - END */

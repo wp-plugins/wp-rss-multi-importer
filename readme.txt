@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.31
-Imports and merges multiple RSS Feeds. 7 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
+Stable tag: 2.32
+Imports and merges multiple RSS Feeds. 8 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
 
@@ -37,7 +37,7 @@ See the various templates included:
 * Select how you would like the links to open (in a Lightbox, a new window, or the current window)
 * Set the links as no-follow or not
 * Suppress images in excerpts of you want
-* Resize images in excerpts (may show down how quickly the page loads)
+* Resize images in excerpts (may slow down how quickly the page loads)
 * Allow users to determine whether to show-hide excerpts
 * Set caching time for faster page loading
 
@@ -97,6 +97,8 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 == Change Log ==
 
+= Version 2.32 =
+* Added new vertical scroll template. Added cron hourly service.  Cache shortcode parameter added.
 = Version 2.31 =
 * Fixed ability to open widget feeds in lightbox and allow several shortcodes on the same page.
 = Version 2.30 =

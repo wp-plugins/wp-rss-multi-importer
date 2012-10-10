@@ -46,26 +46,26 @@ function wp_rss_multi_importer_style_tags(){
 ?>
 
 <table class="widefat">
-<tr><th>FEATURE CHANGE</th><th>PARAMETER</th><th>DEFAULT</th></tr>
-<tr class="alternate"><td >Headline font size</td><td>hdsize</td><td>16px</td></tr>	
-<tr><td >Headline bold weight</td><td>hdweight</td><td>400</td></tr>		
-<tr class="alternate"><td >Style of the Today and Earlier tags</td><td>testyle</td><td>color: #000000; font-weight: bold;margin: 0 0 0.8125em;</td></tr>	
-<tr ><td>If using excerpt, symbol or word you want to indicate More..</td><td>morestyle</td><td>[...]</td></tr>	
-<tr class="alternate"><td >Change the width of the maximum image size</td><td>maximgwidth</td><td>150</td></tr>	
-<tr ><td >Change the style of the date</td><td>datestyle</td><td>font-style:italic;</td></tr>	
-<tr class="alternate"><td >Change how images float on a page</td><td>floattype</td><td>set by default to whatever is set in the admin options</td></tr>	
-<tr ><td >Change whether the date shows or not</td><td>showdate</td><td>set to 0 to suppress the date</td></tr>	
-<tr class="alternate"><td >Change whether the attribution shows or not (e.g., news source) </td><td>showgroup</td><td>set to 0 to suppress the source affiliation</td></tr>	
+<tr><th>FEATURE CHANGE</th><th>PARAMETER</th><th>DEFAULT</th><th>EXAMPLE</th></tr>
+<tr class="alternate"><td >Headline font size</td><td>hdsize</td><td>16px</td><td>[wp_rss_multi_importer hdsize="18px"]</td></tr>	
+<tr><td >Headline bold weight</td><td>hdweight</td><td>400</td><td>[wp_rss_multi_importer hdweight="500"]</td></tr>		
+<tr class="alternate"><td >Style of the Today and Earlier tags</td><td>testyle</td><td>color: #000000; font-weight: bold;margin: 0 0 0.8125em;</td><td>[wp_rss_multi_importer testyle="color:#cccccc"]</td></tr>	
+<tr ><td>If using excerpt, symbol or word you want to indicate More..</td><td>morestyle</td><td>[...]</td><td>[wp_rss_multi_importer morestyle="more >>"]</td></tr>	
+<tr class="alternate"><td >Change the width of the maximum image size</td><td>maximgwidth</td><td>150</td><td>[wp_rss_multi_importer maximgwidth="160"]</td></tr>	
+<tr ><td >Change the style of the date</td><td>datestyle</td><td>font-style:italic;</td><td>[wp_rss_multi_importer datestyle="font-style:bold;"]</td></tr>	
+<tr class="alternate"><td >Change how images float on a page</td><td>floattype</td><td>set by default to whatever is set in the admin options</td><td>[wp_rss_multi_importer floattype="right"]</td></tr>	
+<tr ><td >Change whether the date shows or not</td><td>showdate</td><td>set to 0 to suppress the date</td><td>[wp_rss_multi_importer showdate="0"]</td></tr>	
+<tr class="alternate"><td >Change whether the attribution shows or not (e.g., news source) </td><td>showgroup</td><td>set to 0 to suppress the source affiliation</td><td>[wp_rss_multi_importer showgroup="0"]</td></tr>	
+<tr class="alternate"><td >Specify the cache time (to override global setting)</td><td>cachetime</td><td>set in settings option</td><td>[wp_rss_multi_importer cachetime="20"]</td></tr>
 
-
-<tr ><td >Specific the number of posts per feed instead of using the general number in the settings panel</td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td></tr>	
+<tr ><td >Specific the number of posts per feed instead of using the general number in the settings panel</td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
 
 
 
 	
 </table>
 
-<p>So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
+<p>You can use combinations of parameters, too.  So, if you'd like to change the headline font size to 18px and make it a heavier bold and change the more in the excerpt to >>, just do this:   [wp_rss_multi_importer hdsize="18px" hdweight="500" morestyle=">>"] </p>
 <p>If setting the style of the Today and Earlier tags, you need to enter the entire inline css - so be careful.</p>
 	
 <?php
