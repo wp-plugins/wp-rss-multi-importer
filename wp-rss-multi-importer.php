@@ -1,15 +1,15 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
-  Description: This plugin helps you import multiple RSS feeds, categorize them and have them sorted by date, assign an attribution label, and limit the number of items per feed.
-  Version: 2.32
+  Description: Import multiple RSS feeds, categorize them, 8 templates for customization, sort by date, assign an attribution label, limit the number of items per feed and much more.
+  Version: 2.33
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.32 );
+define( 'WP_RSS_MULTI_VERSION', 2.33 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -147,7 +147,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>">Help & More...</a>
 		</h2>
 	
-	<!--	<form method="post" action="options.php"> -->
+
 			<?php
 			
 				if( $active_tab == 'items_list' ) {
@@ -176,10 +176,10 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 				
 				} // end if/else  	
 				
-				//submit_button();
+				
 			
 			?>
-	<!--	</form>  -->
+
 		
 	</div><!-- /.wrap -->
 <?php
@@ -295,7 +295,7 @@ function footer_scripts(){
 }
 
 function colorbox_scripts(){
-	wp_enqueue_style( 'colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
+	wp_enqueue_style( 'wprssmi_colorbox', plugins_url( 'css/colorbox.css', __FILE__) );
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', __FILE__) );
 	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
 }
@@ -313,7 +313,7 @@ function widget_footer_scripts(){
 
 
 function vertical_scroll_footer_scripts(){
-		wp_enqueue_script( 'vertical_scroll', plugins_url( 'scripts/jquery.vticker.js', __FILE__) );  //  Future template	
+		wp_enqueue_script( 'vertical_scroll', plugins_url( 'scripts/jquery.vticker.js', __FILE__) );  
 	
 }
 
@@ -802,7 +802,7 @@ echo "</SELECT>";
 
        ?>
 
-       <div id="buttons"><a href="#" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
+       <div id="buttons"><a href="javascript:void(0)" id="add" class="addbutton"><img src="<?php echo $images_url; ?>/add.png"></a>  
 
 
 
@@ -1080,6 +1080,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'showgroup'=> 1,
 		'thisfeed'=>'',
 		'timer' => 0, 
+		'dumpthis' =>0,
 		'cachetime'=>NULL,
 		'morestyle' =>'[...]'
 		), $atts);
@@ -1100,7 +1101,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$maximgwidth = $parms['maximgwidth'];
 	$thisfeed = $parms['thisfeed'];  // max posts per category
 	$timerstop = $parms['timer'];
-	
+	$dumpthis= $parms['dumpthis'];  //diagnostic parameter
 	$cachename='wprssmi_'.$thisCat;
 	$cachetime=$parms['cachetime'];
 	
