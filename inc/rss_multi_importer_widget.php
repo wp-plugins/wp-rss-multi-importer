@@ -46,7 +46,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$linktitle = $instance['linktitle'];
 		$showdesc = $instance['showdesc'];
 		$maxposts = $instance['maxposts'];
-
+		$targetwindow= $instance['targetwindow'];
+		
+		
 		if (!empty($linktitle)){
 			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
 		}
@@ -69,8 +71,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		}
 	    add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		
-		
-		if ($cb!=='1'){
+			
+		if ($cb!=='1' && $targetwindow==0 ){
 		add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
 		   }
 		
@@ -229,9 +231,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 		// HOW THE LINK OPENS
 
-		if($targetWindow==0){
+		if($targetwindow==0){
 			$openWindow='class="colorbox"';
-		}elseif ($targetWindow==1){
+		}elseif ($targetwindow==1){
 			$openWindow='target=_self';		
 		}else{
 			$openWindow='target=_blank';	
@@ -313,7 +315,7 @@ echo '	<div class="news-contents">';
 		$instance['linktitle'] = strip_tags($new_instance['linktitle']);
 		$instance['showdesc'] = strip_tags($new_instance['showdesc']);		
 		$instance['maxposts'] = strip_tags($new_instance['maxposts']);	
-		
+		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);	
 		return $instance;
 	}
 
@@ -339,6 +341,7 @@ echo '	<div class="news-contents">';
 			'showdate' => 1,
 			'showicon' => 0,
 			'linktitle' => '',
+			'targetwindow' => 0,
 			'showdesc' => 0,
 			'background' => '#ffffff',
 		);
@@ -357,7 +360,7 @@ echo '	<div class="news-contents">';
 		$linktitle = esc_attr($instance['linktitle']);
 		$showdesc = esc_attr($instance['showdesc']);
 		$maxposts = esc_attr($instance['maxposts']);
-		
+		$targetwindow = esc_attr($instance['targetwindow']);
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
 		
@@ -377,6 +380,19 @@ echo '	<div class="news-contents">';
 		      	<label for="<?php echo $this->get_field_id('linktitle'); ?>"><?php _e('URL to link title to another page (optional)'); ?></label>
 		      	<input class="widefat" id="<?php echo $this->get_field_id('linktitle'); ?>" name="<?php echo $this->get_field_name('linktitle'); ?>" type="text" value="<?php echo $linktitle; ?>" />
 		    </p>
+			
+		
+			
+		<p>
+	<label for="<?php echo $this->get_field_id('targetwindow'); ?>"><?php _e('Target Window'); ?></label>					
+				<select name="<?php echo $this->get_field_name('targetwindow'); ?>">
+			
+			<OPTION ID="0" VALUE="0" <?php if($targetwindow==0){echo 'selected="selected"';} ?>>Use LightBox</OPTION>
+				<OPTION ID="1" VALUE="1" <?php if($targetwindow==1){echo 'selected="selected"';} ?>>Open in Same Window</OPTION>
+				<OPTION ID="2" VALUE="2" <?php if($targetwindow==2){echo 'selected="selected"';} ?>>Open in New Window</OPTION>
+				</SELECT>	
+			</p>
+			
 		
 
 		<p>
@@ -433,7 +449,7 @@ echo '	<div class="news-contents">';
 					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
-						$myoptions = array('2','5', '8', '10', '15','20');
+						$myoptions = array('2','5','6','7', '8', '10', '15','20');
 						foreach ($myoptions as $myoption) {
 							echo '<option value="' . $myoption . '" id="' . $myoption . '"', $numoption == $myoption ? ' selected="selected"' : '', '>', $myoption, '</option>';
 						}
