@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.33
+Stable tag: 2.34
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -21,12 +21,12 @@ Quick start video:
 
 See the various templates included:
 
-[youtube http://www.youtube.com/watch?v=5PwO8eCiD1w]
+[youtube http://www.youtube.com/watch?v=fZvCfoidN6A]
 
 
 = Features =
 
-* Templates - choose from 7 different templates, create your own and save it
+* Templates - choose from 8 different templates, create and style your own and save it
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site (when not in pagination mode)
@@ -40,6 +40,7 @@ See the various templates included:
 * Resize images in excerpts (may slow down how quickly the page loads)
 * Allow users to determine whether to show-hide excerpts
 * Set caching time for faster page loading
+* Export all the feeds as a single RSS feed
 
 These features are all set in the settings tab in the admin panel.
 
@@ -85,6 +86,8 @@ If you want to put this in the code on your theme, you can do it like this:
 
 echo do_shortcode('[wp_rss_multi_importer]'); 
 
+Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
+
 == Screenshots ==
 
 1. Adding feeds and assigning categories.
@@ -97,6 +100,8 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 == Change Log ==
 
+= Version 2.34 =
+* Added ability to re-export all feeds as one single RSS feed.
 = Version 2.33 =
 * Added open window options to the widget.  Added diagnostic parameter.
 = Version 2.32 =

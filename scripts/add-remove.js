@@ -58,7 +58,7 @@ jQuery(function() { // when document has loaded
 		
 		jQuery( "<div class='cat-input'"+i+"'  id="+i+"><p><label class='textinput' for='cat_name_" + i + "'>Category Name</label>" +
 
-		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this Category</a></p>" +
+		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this feed</a></p>" +
 
 
 			
@@ -123,14 +123,20 @@ jQuery(function() { // when document has loaded
 		jQuery('span#pag_options').hide()};
     });
 
-   // jQuery(document).ready(function () {  
-   // if(jQuery('#showdesc').val() == 1){
-	//	jQuery('span#secret').show();
-//	}else{
-//		jQuery('span#secret').hide()};
-   // });
+
 
 
    jQuery(document).on('change', '.cat-input', function() {
 	 this.value = this.value.toUpperCase();
 	    });
+	
+	
+	jQuery(document).on('change', '#feedslug',function() {
+		this.value = this.value.replace(/ /g,'');
+				
+	});
+	
+	
+	
+		
+		
