@@ -306,7 +306,7 @@ foreach($myarray as $items) {
 <pubdate><?php echo  date_i18n("D, M d, Y",$items["mystrdate"])?></pubdate>
 <guid><?php echo $items["mylink"]?></guid>
 </item>	
-<?		
+<?php		
 }
 ?>
 </channel></rss>

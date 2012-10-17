@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Import multiple RSS feeds, categorize them, 8 templates for customization, sort by date, assign an attribution label, limit the number of items per feed and much more.
-  Version: 2.34
+  Version: 2.35
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.34 );
+define( 'WP_RSS_MULTI_VERSION', 2.35 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -84,6 +84,28 @@ function ilc_farbtastic_script() {
   wp_enqueue_style( 'farbtastic' );
   wp_enqueue_script( 'farbtastic' );
 }
+
+
+
+
+function isMobile() {
+    return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
+}
+
+function isMobileForWordPress() {
+	global $isMobileDevice;
+    if(isMobile()){
+       $isMobileDevice=1;
+		}else{
+ 			$isMobileDevice=0;
+		}
+		return $isMobileDevice;
+}
+
+add_action('init', 'isMobileForWordPress', 1);
+
+
+
 
 
 
@@ -611,7 +633,11 @@ if (!isset($myarray) || empty($myarray)){
 		exit;
 }
 
-
+global $isMobileDevice;
+if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
+	$targetWindow=2;
+	
+	}
 
 
 
