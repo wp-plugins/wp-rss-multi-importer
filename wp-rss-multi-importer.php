@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Import multiple RSS feeds, categorize them, 8 templates for customization, sort by date, assign an attribution label, limit the number of items per feed and much more.
-  Version: 2.35
+  Version: 2.36
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.35 );
+define( 'WP_RSS_MULTI_VERSION', 2.36 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -44,6 +44,9 @@ require_once ( WP_RSS_MULTI_UTILS . 'panel_messages.php' );
 /* Load the database functions file. */
 require_once ( WP_RSS_MULTI_UTILS . 'db_functions.php' );
 
+/* Load the excerpt functions file. */
+require_once ( WP_RSS_MULTI_UTILS . 'excerpt_functions.php' );
+
 /* Load the cron file. */
 require_once ( WP_RSS_MULTI_INC . 'cron.php' );
 
@@ -62,159 +65,8 @@ require_once ( WP_RSS_MULTI_INC . 'scripts.php' );
 /* Load the feed files. */
 require_once ( WP_RSS_MULTI_INC . 'rss_feed.php' );
 
-
-
-//ON INIT
-
-add_action('admin_init','wp_rss_multi_importer_start');
-
-function wp_rss_multi_importer_start () {
-	
-register_setting('wp_rss_multi_importer_options', 'rss_import_items');
-register_setting('wp_rss_multi_importer_categories', 'rss_import_categories');	
-register_setting('wp_rss_multi_importer_item_options', 'rss_import_options');	 
-register_setting('wp_rss_multi_importer_template_item', 'rss_template_item');	 
-register_setting('wp_rss_multi_importer_feed_options', 'rss_feed_options');	 
-add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprssimport' );  
-
-}
-
-add_action('init', 'ilc_farbtastic_script');
-function ilc_farbtastic_script() {
-  wp_enqueue_style( 'farbtastic' );
-  wp_enqueue_script( 'farbtastic' );
-}
-
-
-
-
-function isMobile() {
-    return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
-}
-
-function isMobileForWordPress() {
-	global $isMobileDevice;
-    if(isMobile()){
-       $isMobileDevice=1;
-		}else{
- 			$isMobileDevice=0;
-		}
-		return $isMobileDevice;
-}
-
-add_action('init', 'isMobileForWordPress', 1);
-
-
-
-
-
-
-add_action('admin_menu','wp_rss_multi_importer_menu');
-
-function wp_rss_multi_importer_menu () {
-add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','wp_rss_multi_importer_admin', 'wp_rss_multi_importer_display');
-}
-
-
-
-
-add_action( 'widgets_init', 'src_load_widgets');  //load widget
-
-function src_load_widgets() {
-register_widget('WP_Multi_Importer_Widget');
-}
-
-
-
-function wp_rss_multi_importer_display( $active_tab = '' ) {
-?>
-	
-	<div class="wrap">
-	
-		<div id="icon-themes" class="icon32"></div>
-		<h2>WP RSS Multi-Importer Options</h2>
-		<?php settings_errors(); ?>
-		
-		<?php if( isset( $_GET[ 'tab' ] ) ) {
-			$active_tab = $_GET[ 'tab' ];
-		} else if( $active_tab == 'setting_options' ) {
-				$active_tab = 'setting_options';
-		} else if( $active_tab == 'category_options' ) {
-			$active_tab = 'category_options';
-		} else if( $active_tab == 'style_options' ) {
-			$active_tab = 'style_options';
-		} else if( $active_tab == 'template_options' ){
-				$active_tab = 'template_options';
-		} else if( $active_tab == 'feed_options' ){
-				$active_tab = 'feed_options';
-		} else if( $active_tab == 'more_options' ){
-			$active_tab = 'more_options';
-		} else { $active_tab = 'items_list';	
-			
-		} // end if/else ?>
-		
-		<h2 class="nav-tab-wrapper">
-			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("RSS Feeds")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Setting Options")?></a>
-			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Category Options")?></a>
-			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Style Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export Feed Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Help & More...")?></a>
-		</h2>
-
-			<?php
-			
-				if( $active_tab == 'items_list' ) {
-						
-			wp_rss_multi_importer_items_page();
-			
-		} else if ( $active_tab == 'setting_options' ) {
-
-				wp_rss_multi_importer_options_page();
-			
-		} else if ( $active_tab == 'category_options' ) {
-			
-			wp_rss_multi_importer_category_page();
-			
-		} else if ( $active_tab == 'style_options' ) {
-			
-			wp_rss_multi_importer_style_tags();
-			
-		} else if ( $active_tab == 'template_options' ) {
-				
-			wp_rss_multi_importer_template_page();	
-			
-		} else if ( $active_tab == 'feed_options' ) {
-				
-			wp_rss_multi_importer_feed_page();	
-			
-			
-			
-				
-				} else {
-						wp_rss_multi_importer_more_page();
-				
-				} // end if/else  	
-				
-				
-			
-			?>
-
-		
-	</div><!-- /.wrap -->
-<?php
-} 
-
-
-
-function wp_section_text() {
-    echo '<div class="postbox"><h3><label for="title">Usage Details</label></h3><div class="inside"><H4>Step 1:</H4><p>Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below). Click Save Settings.</p><H4>Step 2:</H4><p>Go to the tab called <a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options">Setting Options</a>, choose options and click Save Settings.</p><H4>Step 3:</H4><p>Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.</p>';
-    echo '<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category="2"] (or [wp_rss_multi_importer category="1,2"] to have two categories) on the page you wish to have only show feeds from those categories.</p></div></div>';
-
-}
- 
-
+/* Load the admin_init files. */
+require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
 
 
@@ -225,125 +77,6 @@ function wp_section_text() {
    
    add_shortcode('wp_rss_multi_importer','wp_rss_multi_importer_shortcode');
  
-
-// Helper functions
-
-
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow)  //show excerpt function
-	{
-		global $morestyle;
-    $content=CleanHTML($content);
-
-	if ($stripAll==1){
-			$content=strip_tags(html_entity_decode($content));	
-			$content= limitwords($maxchars,$content);	
-	}else{
-		$content=strip_tags(html_entity_decode($content),'<a><img>');
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow);	
-}
-	
-	//return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.">".$morestyle."</a>", $content);
-	
-		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
-
-	}
-	
-
-
-	
-	function limitwords($maxchars,$content){
-	
-		global $morestyle;
-		if($maxchars !=99){
-
-
-		  $words = explode(' ', $content, ($maxchars + 1));
-	  			if(count($words) > $maxchars)
-		  				array_pop($words);
-	 				
-						$content = implode(' ', $words)." ". $morestyle;
-						
-	
-		}else{
-						$content=$content."";
-		}
-		return $content;
-	}
-	
-	
-	
-	
-	
-	function CleanHTML($content){
-		
-		$content=str_replace("&nbsp;&raquo;", "", $content);
-		$content=str_replace("&nbsp;", " ", $content);	
-		
-	return 	$content;
-	}
-	
-	
-	
-
-	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow){
-		
-		
-	$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image
-		
-		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image  
-		
-
-			if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){
-
-
-			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($matches[2])."</div>";
-			}else{
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$matches[2]."</div>";
-			}	
-			
-		
-		
-		
-				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
-				
-			
-				
-				
-				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
-				
-				
-					$content=str_replace("<a ","<a ".$openWindow, $content,  $count = 1);  // add window open to leading image, if it exists
-
-		}else{
-		
-			
-			$content = limitwords($maxchars,strip_tags($content));
-		}
-	return $content;	
-	}
-	
-	
-	function remove_img_hw( $imghtml ) {
-	 $imghtml = preg_replace( '/(width|height)=\"\d*\"\s?/', "", $imghtml );
-	    return $imghtml;
-	}
-	
-	function resize_image($imghtml){
-		global $maximgwidth;
-		preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches);
-		$thisWidth=getimagesize($matches[1]);
-		if ($thisWidth > $maxImgWidth){
-		return str_replace("<img", "<img width=".$maximgwidth, remove_img_hw($imghtml));
-			}else{
-		return str_replace("<img", "<img width=".$thisWidth, remove_img_hw($imghtml));		
-	}
-}
-
-
-
-
 
 
 
@@ -547,6 +280,11 @@ if (empty($myfeeds)){
 }
 
 
+if ($dumpthis==1){
+	echo "Feeds<br>";
+	var_dump($myfeeds);
+}
+
 
  
  foreach($myfeeds as $feeditem){
@@ -558,6 +296,7 @@ if (empty($myfeeds)){
 	while ( stristr($url, 'http') != $url )
 		$url = substr($url, 1);
 
+if (empty($url)) {continue;}
 
 				$feed = fetch_feed($url);
 
@@ -587,7 +326,22 @@ if (empty($myfeeds)){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
 		
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
+			
+					
+					
+						if ($enclosure = $item->get_enclosure()){
+							if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+								$mediaImage=$item->get_enclosure()->get_thumbnail();
+							}else if (!IS_NULL($item->get_enclosure()->get_link())){
+								$mediaImage=$item->get_enclosure()->get_link();	
+							}
+
+						}
+						
+
+						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
+
+				
 			}
 
 		}else{	
@@ -597,7 +351,25 @@ if (empty($myfeeds)){
 				if (empty($item))	continue;	
 				
 					
-					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
+		
+				
+				
+			if ($enclosure = $item->get_enclosure()){
+
+				if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+					$mediaImage=$item->get_enclosure()->get_thumbnail();
+				}else if (!IS_NULL($item->get_enclosure()->get_link())){
+					$mediaImage=$item->get_enclosure()->get_link();	
+				}
+				
+			}
+				
+	
+				
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
+					
+					
+					
 				}	
 		}
 
@@ -625,6 +397,7 @@ if ($timerstop==1){
 //  CHECK $myarray BEFORE DOING ANYTHING ELSE //
 
 if ($dumpthis==1){
+	echo "<br>Array<br>";
 	var_dump($myarray);
 }
 if (!isset($myarray) || empty($myarray)){

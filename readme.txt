@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.35
+Stable tag: 2.36
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -13,7 +13,7 @@ If you want to put RSS feeds on your site, look no further.  WP RSS Multi Import
 
 = See How It Works =
 
-[youtube http://www.youtube.com/watch?v=BPvjMMxjWWQ]
+[youtube http://www.youtube.com/watch?v=lnHN9vzVWsU]
 
 Quick start video:
 
@@ -100,6 +100,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.36 =
+* Added ability to pick up images in RSS enclosures and more diagnostic code.
 = Version 2.35 =
 * Fixed bug due to php short form and added mobile detection to not use lightbox.
 = Version 2.34 =
