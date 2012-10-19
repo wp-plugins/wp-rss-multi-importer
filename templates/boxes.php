@@ -24,7 +24,7 @@ $readable .=  '<ul id="wprssmi_rss_list">';
             	            	
          $readable .=  ' <div class="blog_container">';
         $readable .=      '	<p class="blog_title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></p>';
-         $readable .=     '	<p>'.showexcerpt($items["mydesc"],15,$openWindow,1,$items["mylink"],$adjustImageSize,$float,$noFollow).'</p>';
+         $readable .=     '	<p>'.showexcerpt($items["mydesc"],15,$openWindow,1,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]).'</p>';
          $readable .=     '	<p><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'"><i>Continue reading post from '.$items["myGroup"].'</i></a></p>';
           $readable .=    '	</div>';
             	 

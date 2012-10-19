@@ -59,7 +59,7 @@ function wp_rss_multi_importer_style_tags(){
 <tr class="alternate"><td >Specify the cache time (to override global setting)</td><td>cachetime</td><td>set in settings option</td><td>[wp_rss_multi_importer cachetime="20"]</td></tr>
 
 <tr ><td >Specific the number of posts per feed instead of using the general number in the settings panel</td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
-
+<tr ><td >Change the float of the elements in the feed</td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
 
 
 	

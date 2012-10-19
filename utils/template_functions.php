@@ -124,6 +124,7 @@ function restore_template(){
 file_put_contents(WP_RSS_MULTI_TEMPLATES .'templates.css', $templateOptions['template_css']);
 	
 	 delete_option('rss_template_item');
+	echo 'You have no files saved.  Be sure to save again what you want preserved.';
 }
 
 
