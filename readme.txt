@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.36
+Stable tag: 2.37
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
 
 == Description ==
@@ -100,6 +100,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.37 =
+* Fixed bug and added ability to have simple list view to the widget.
 = Version 2.36 =
 * Added ability to pick up images in RSS enclosures and more diagnostic code.
 = Version 2.35 =

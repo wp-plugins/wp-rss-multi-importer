@@ -87,7 +87,7 @@ function wprssmi_tempate_header(){
 
 function footer_scripts(){
 	wp_enqueue_style( 'frontend', plugins_url( 'css/frontend.css', dirname(__FILE__)) );
-	wp_enqueue_script( 'showexcerpt', plugins_url( WP_RSS_MULTI_SCRIPTS.'/show-excerpt.js', dirname(__FILE__)) );  	
+	wp_enqueue_script( 'showexcerpt', plugins_url('scripts/show-excerpt.js', dirname(__FILE__)) );  	
 }
 
 function colorbox_scripts(){

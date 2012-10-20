@@ -47,7 +47,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$showdesc = $instance['showdesc'];
 		$maxposts = $instance['maxposts'];
 		$targetwindow= $instance['targetwindow'];
-		
+		$simplelist= $instance['simplelist'];
 		
 		if (!empty($linktitle)){
 			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
@@ -244,6 +244,41 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 $total = -1;
 
+
+
+
+
+if ($simplelist==1){
+	
+	echo '<ul class="wprssmi_widget_list">';
+	
+	
+	
+		foreach($myarray as $items) {
+
+		$total = $total +1;
+			
+		if ($count>0 && $total>=$count) break;
+	
+		echo '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["mytitle"].'</a>  <span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span></li>';
+
+
+
+	}  	//  don't mess with this php code
+	
+	
+	
+	
+	
+	
+	echo '</ul>';	
+	
+	
+} else{
+
+
+
+
 echo ' <div class="news-wrapper" id="newsticker" style="10px;background-color:'.$background.';">';
 echo '	<div class="news-contents">';
 
@@ -285,6 +320,19 @@ echo '	<div class="news-contents">';
 
 	echo '</div></div>';
 		
+	
+	
+	
+	
+	}
+	
+	
+	
+
+	
+	
+	
+	
 		
 		
 
@@ -315,7 +363,8 @@ echo '	<div class="news-contents">';
 		$instance['linktitle'] = strip_tags($new_instance['linktitle']);
 		$instance['showdesc'] = strip_tags($new_instance['showdesc']);		
 		$instance['maxposts'] = strip_tags($new_instance['maxposts']);	
-		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);	
+		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);
+		$instance['simplelist'] = strip_tags($new_instance['simplelist']);	
 		return $instance;
 	}
 
@@ -339,6 +388,7 @@ echo '	<div class="news-contents">';
 			'maxposts' =>1,
 			'addmotion' => 0,
 			'showdate' => 1,
+			'simplelist'=>0,
 			'showicon' => 0,
 			'linktitle' => '',
 			'targetwindow' => 0,
@@ -361,6 +411,7 @@ echo '	<div class="news-contents">';
 		$showdesc = esc_attr($instance['showdesc']);
 		$maxposts = esc_attr($instance['maxposts']);
 		$targetwindow = esc_attr($instance['targetwindow']);
+		$simplelist= esc_attr($instance['simplelist']);
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
 		
@@ -384,8 +435,14 @@ echo '	<div class="news-contents">';
 		
 			
 		<p>
-	<label for="<?php echo $this->get_field_id('targetwindow'); ?>"><?php _e('Target Window'); ?></label>					
+				
+					<label for="<?php echo $this->get_field_id('targetwindow'); ?>"><?php _e('Target Window'); ?></label>
+					
+					
+						
+				
 				<select name="<?php echo $this->get_field_name('targetwindow'); ?>">
+
 			
 			<OPTION ID="0" VALUE="0" <?php if($targetwindow==0){echo 'selected="selected"';} ?>>Use LightBox</OPTION>
 				<OPTION ID="1" VALUE="1" <?php if($targetwindow==1){echo 'selected="selected"';} ?>>Open in Same Window</OPTION>
@@ -417,7 +474,12 @@ echo '	<div class="news-contents">';
 	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add scrolling motion'); ?></label>
 	    </p>
 	
-			
+			<p>
+		      	<input id="<?php echo $this->get_field_id('simplelist'); ?>" name="<?php echo $this->get_field_name('simplelist'); ?>" type="checkbox" value="1" <?php checked( '1', $simplelist ); ?>/>
+		    	<label for="<?php echo $this->get_field_id('simplelist'); ?>"><?php _e('Check to get just a simple unordered list'); ?></label>
+		    </p>
+		
+		
 		<p>
 			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which category do you want displayed?'); ?></label>
 			<select name="<?php echo $this->get_field_name('category'); ?>[]" id="<?php echo $this->get_field_id('category'); ?>" class="widefat" multiple="multiple">
