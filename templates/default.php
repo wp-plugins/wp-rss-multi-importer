@@ -44,8 +44,6 @@ if ($nodays==0){
 
 
 
-
-
 	
 		$readable .=  '<div class="rss-output"><div class="title"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></span>';
 		
@@ -68,7 +66,7 @@ if ($nodays==0){
 			$readable .=  '<div class="body">';		
 		}
 		
-		
+
 	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
 	
 	$readable .=  '</div>';	
@@ -79,12 +77,20 @@ if ($nodays==0){
 
 	
 	if (!empty($items["mystrdate"]) && $showdate==1){
-	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use if you want time to show
+	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use this instead if you want time to show
 	$readable .=  '<span class="date" style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
 	}
 		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span class="source" style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
+
+	$getCatName=getCategoryName($items["mycatid"]);  // use these 5 lines of code to get and display the category name
+	if (!empty($getCatName) && $showcategory==1){
+		$catClassID='classID'.$items["mycatid"];
+ $readable .=  '  <span class="categoryname  ' .$catClassID.'">Category: '.$getCatName.'</span>';
+	}
+	
+	
 	 $readable .=  '</div>';
 	
 	

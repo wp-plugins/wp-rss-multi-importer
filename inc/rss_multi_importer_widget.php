@@ -483,7 +483,7 @@ echo '	<div class="news-contents">';
 		<p>
 			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which category do you want displayed?'); ?></label>
 			<select name="<?php echo $this->get_field_name('category'); ?>[]" id="<?php echo $this->get_field_id('category'); ?>" class="widefat" multiple="multiple">
-				<option id="All" value="0" <?echo in_array(0, (array) $instance['category'] ) ? ' selected="selected"' : ''?>>ALL CATEGORIES</option>
+				<option id="All" value="0" <?php echo in_array(0, (array) $instance['category'] ) ? ' selected="selected"' : ''?>>ALL CATEGORIES</option>
 				<?php
 					if ( !empty($options) ) {
 						$size = count($options);

@@ -14,6 +14,8 @@ if (is_multisite()) {
             delete_option('rss_import_categories');
 			delete_option('rss_template_item');
 			delete_option('rss_admin_options');
+			delete_option('rss_feed_options');
+			delete_option('rss_post_options');
         }
         restore_current_blog();
     }
@@ -23,6 +25,8 @@ if (is_multisite()) {
 	delete_option('rss_template_item');
 	delete_option('rss_import_options');
 	delete_option('rss_admin_options');
+	delete_option('rss_feed_options');
+	delete_option('rss_post_options');
 }
 //
 ?>

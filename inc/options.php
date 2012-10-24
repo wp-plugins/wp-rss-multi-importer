@@ -222,6 +222,8 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
 </SELECT></p>
 
+<p style="padding-left:15px"><label class='o_textinput' for='showcategory'><?php _e("Show Category Name")?>  <input type="checkbox" Name="rss_import_options[showcategory]" Value="1" <?php if ($options['showcategory']==1){echo 'checked="checked"';} ?></label></p>
+
 
 <span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
 	
@@ -627,4 +629,125 @@ function wp_rss_multi_importer_feed_page() {
 </div></div></div>
 <?php
 }
+
+
+
+
+function wp_rss_multi_importer_post_page() {
+
+       ?>
+
+       <div class="wrap">
+	<div id="poststuff">
+  <h2><?php _e("Put Your RSS Feed Into Posts")?></h2>
+  
+<p>NOTE: This option is still in "beta" form since there are still some decisions about how much should go into the posts.</p>
+<p>You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.</p>
+<p>You can delete any post created by this plugin by simply deleting the post.</p>
+<p>The feed will update into posts every hour.  You must check to activate this feature.</p>
+
+       <div id="options">
+
+       <form action="options.php" method="post"  >            
+
+       <?php
+
+      settings_fields('wp_rss_multi_importer_post_options');
+      $post_options = get_option('rss_post_options');    
+
+       ?>
+
+
+<div class="postbox">
+<div class="inside">
+
+
+
+<h3><?php _e("Feed to Post Options Settings")?></h3>
+
+<p style="padding-left:15px"><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature")?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+<p style="padding-left:15px"><label class='o_textinput' for='post_status'><?php _e("Default status of posts")?></label>
+<SELECT NAME="rss_post_options[post_status]" id="post_status">
+<OPTION VALUE="draft" <?php if($post_options['post_status']=="draft"){echo 'selected';} ?>>draft</OPTION>
+<OPTION VALUE="publish" <?php if($post_options['post_status']=="publish"){echo 'selected';} ?>>publish</OPTION>
+<OPTION VALUE="pending" <?php if($post_options['post_status']=="pending"){echo 'selected';} ?>>pending</OPTION>
+<OPTION VALUE="future" <?php if($post_options['post_status']=="future"){echo 'selected';} ?>>future</OPTION>
+<OPTION VALUE="private" <?php if($post_options['post_status']=="private"){echo 'selected';} ?>>private</OPTION>
+</SELECT></p>
+
+
+<p><label class='o_textinput' for='maxfeed'><?php _e("Number of Entries per Feed")?></label>
+<SELECT NAME="rss_post_options[maxfeed]">
+<OPTION VALUE="1" <?php if($post_options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="2" <?php if($post_options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="3" <?php if($post_options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
+<OPTION VALUE="4" <?php if($post_options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
+<OPTION VALUE="5" <?php if($post_options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if($post_options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="15" <?php if($post_options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
+<OPTION VALUE="20" <?php if($post_options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
+</SELECT></p>
+
+
+<?php
+$catOptions= get_option( 'rss_import_categories' ); 
+
+	if ( !empty($catOptions) ) {
+?>
+<p><label class='o_textinput' for='maxfeed'><?php _e("Restrict to one of your defined categories")?></label>
+	<SELECT NAME="rss_post_options[category]">
+<OPTION VALUE='0'>All</OPTION>
+<?php
+	$catsize = count($catOptions);
+
+//echo $options[$key];
+
+	for ( $k=1; $k<=$catsize; $k++ ) {   
+
+if( $k % 2== 0 ) continue;
+
+ 	$catkey = key( $catOptions );
+ 	$nameValue=$catOptions[$catkey];
+next( $catOptions );
+ 	$catkey = key( $catOptions );
+	$IDValue=$catOptions[$catkey];
+
+
+	 if($post_options['category']==$IDValue){
+		$sel='selected  ';
+
+		} else {
+		$sel='';
+
+		}
+
+echo "<OPTION " .$sel.  "VALUE=".$IDValue.">".$nameValue."</OPTION>";
+next( $catOptions );
+
+}
+echo "</SELECT>";
+}
+
+?>
+
+
+</div></div>
+
+       <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
+
+
+
+       </form>
+
+<button type="button" name="fetchnow" id="fetch-now" value="">CLICK TO FETCH FEEDS NOW</button>	
+<div id="note"></div>
+</div></div></div>
+<?php
+}
+
+
+
+
 ?>

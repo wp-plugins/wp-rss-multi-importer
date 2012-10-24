@@ -6,6 +6,7 @@ function upgrade_db() {
 
 	$myoptions = get_option( 'rss_import_items' ); 
 	$newoptions = get_option('rss_import_options');
+	$plugin_version=$newoptions['plugin_version'];
 	
 	if ( !empty($myoptions) && empty($newoptions)) {  // this transfers data to new table if upgrading
 	//	$plugin_version=$newoptions['plugin_version'];  // might be useful in future updates
@@ -28,6 +29,28 @@ function upgrade_db() {
 
 	
 	}
+	
+	$post_options = get_option('rss_post_options');
+	if (empty($post_options)){
+	
+	$post_settings = array(
+		'active'=> 0,
+		'post_status' => 'draft',
+		'maxfeed' => 5,
+		'category' => 0			
+	);
+	
+		update_option( 'rss_post_options', $post_settings );
+	}
+	
+	//for resetting the admin message
+	if ($plugin_version<2.40){
+	$wprssmi_admin_options = get_option( 'rss_admin_options' );
+	$wprssmi_admin_options['dismiss_slug'] ='false';
+	//update_option( 'wprssmi_admin_options', $post_settings );
+	}
 }
+
+
 
 ?>

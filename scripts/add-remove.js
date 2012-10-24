@@ -58,7 +58,7 @@ jQuery(function() { // when document has loaded
 		
 		jQuery( "<div class='cat-input'"+i+"'  id="+i+"><p><label class='textinput' for='cat_name_" + i + "'>Category Name</label>" +
 
-		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this feed</a></p>" +
+		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this category</a></p>" +
 
 
 			
@@ -97,7 +97,7 @@ jQuery(function() { // when document has loaded
     });
 
     function isvalidurl(url) {
-        var regexp = /(ftp|http|https|Http|Https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+        var regexp = /(ftp|http|https|Http|Https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
         return regexp.test(url);
     }
 

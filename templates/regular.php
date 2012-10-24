@@ -85,10 +85,17 @@ if ($nodays==0){
 		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span class="source">'.$attribution.''.$items["myGroup"].'</span>';
 	}
+	
+	$getCatName=getCategoryName($items["mycatid"]);  // use these 5 lines of code to get and display the category name
+	if (!empty($getCatName) && $showcategory==1){
+		$catClassID='classID'.$items["mycatid"];
+ $readable .=  '  <span class="categoryname  ' .$catClassID.'">Category: '.$getCatName.'</span>';
+	}
+	
 	 $readable .=  '</div>';
 	
 	
 	
 		}
-	//  This is the end of the default template
+	//  This is the end of the regular template
 ?>

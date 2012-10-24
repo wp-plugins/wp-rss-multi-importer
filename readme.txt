@@ -4,20 +4,22 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.37
-Imports and merges multiple RSS Feeds. 8 templates, customize, sort, paginate, limit feeds/page and by category, and include excerpts with images. 
+Stable tag: 2.40
+Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
 
-If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer gives you the most flexibility with templates, sorting by date, categorizing your feeds, pagination, a widget and much more.
+If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 3 things (separately or at the same time):
+
+<blockquote>
+1. Display the aggregated feed items in one of **8 different templates that you can customize** 
+2. **Create blog posts** from the feed items so readers can comment on them
+3. **Output an RSS feed** so that your users can consume the aggregated feeds you create
+</blockquote>
 
 = See How It Works =
 
-[youtube http://www.youtube.com/watch?v=lnHN9vzVWsU]
-
-Quick start video:
-
-[youtube http://www.youtube.com/watch?v=K2ImrLW6rZY]
+[youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
 
 See the various templates included:
 
@@ -27,6 +29,7 @@ See the various templates included:
 = Features =
 
 * Templates - choose from 8 different templates, create and style your own and save it
+* Import feed items (like news) and creates blog posts so readers can comment on them
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site (when not in pagination mode)
@@ -42,7 +45,7 @@ See the various templates included:
 * Set caching time for faster page loading
 * Export all the feeds as a single RSS feed
 
-These features are all set in the settings tab in the admin panel.
+These features are all available in the admin panel.
 
 = Credit = 
 
@@ -86,6 +89,15 @@ If you want to put this in the code on your theme, you can do it like this:
 
 echo do_shortcode('[wp_rss_multi_importer]'); 
 
+= Can I have the feeds go directly into blog posts? =
+
+Yes.  Just add feeds and then go to the Feed to Posts Options tab in the admin section.
+
+= Can I export my own feed of the aggregated feed? =
+
+Yes.  Just add feeds and then go to the Export Feed Options tab in the admin section.
+
+
 Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Screenshots ==
@@ -100,20 +112,22 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.40 =
+* Added option to import feed items (like news) and creates blog posts so readers can comment on them.  Category name added as an option to add to templates, plus bug fixes.
 = Version 2.37 =
-* Fixed bug and added ability to have simple list view to the widget.
+* Bug fixes and added option to have simple list view to the widget.
 = Version 2.36 =
 * Added ability to pick up images in RSS enclosures and more diagnostic code.
 = Version 2.35 =
 * Fixed bug due to php short form and added mobile detection to not use lightbox.
 = Version 2.34 =
-* Added ability to re-export all feeds as one single RSS feed.
+* Added option to re-export all feeds as one single RSS feed.
 = Version 2.33 =
 * Added open window options to the widget.  Added diagnostic parameter.
 = Version 2.32 =
 * Added new vertical scroll template. Added cron hourly service.  Cache shortcode parameter added.
 = Version 2.31 =
-* Fixed ability to open widget feeds in lightbox and allow several shortcodes on the same page.
+* Fixed option to open widget feeds in lightbox and allow several shortcodes on the same page.
 = Version 2.30 =
 * Added templates, improved admin interface, fixed several bugs.  Switched caching methods to allow for more real time RSS if desired. Updated colorbox version.
 = Version 2.25 =
@@ -145,9 +159,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 = Version 2.01 =
 * Fixed bug that caused some users to have problems when they haven't added any categories.
 = Version 2.0 =
-* Added ability to assign feeds to a category and output feeds from a given a given category.  Limit posts on a page.  Uninstall now works for multiuser sites.  Solved problem for some users where the LightBox option was conflicting with other plugins that also relied on Lightbox or Colorbox.
+* Added option to assign feeds to a category and output feeds from a given a given category.  Limit posts on a page.  Uninstall now works for multiuser sites.  Solved problem for some users where the LightBox option was conflicting with other plugins that also relied on Lightbox or Colorbox.
 = Version 1.1 =
-* Added ability to determine where the links should open (Lightbox, new window, current window)
+* Added option to determine where the links should open (Lightbox, new window, current window)
 = Version 1.0 =
 * Fixed problem where showing text before the shortcode rendered after the shortcode
 = Version 0.7 =
@@ -155,4 +169,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 = Version 0.6 =
 * Fixed bugs in Lightbox and eliminated error message
 = Version 0.5 =
-* Added ability to include short descriptions - excerpts (if they exist in the RSS feed)
+* Added option to include short descriptions - excerpts (if they exist in the RSS feed)
+
+== Upgrade Notice ==
+
+= 2.40 =
+This version includes feed to post option and fixes several bugs

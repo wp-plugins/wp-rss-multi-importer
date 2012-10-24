@@ -1,15 +1,15 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
-  Description: Import multiple RSS feeds, categorize them, 8 templates for customization, sort by date, assign an attribution label, limit the number of items per feed and much more.
-  Version: 2.37
+  Description: Import multiple RSS feeds, categorize them, 8 templates for customization, feed to post option, handles images, limit the number of items per feed and much more.
+  Version: 2.40
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.37 );
+define( 'WP_RSS_MULTI_VERSION', 2.40 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -36,16 +36,16 @@ define( 'WP_RSS_MULTI_CSS', WP_RSS_MULTI_URL . trailingslashit( 'css' ), true );
 define( 'WP_RSS_MULTI_IMAGES', WP_RSS_MULTI_URL . trailingslashit( 'images' ), true );
 
 /* Load the template functions file. */
-require_once ( WP_RSS_MULTI_UTILS . 'template_functions.php' );
+require_once ( WP_RSS_MULTI_INC . 'template_functions.php' );
 
 /* Load the messages file. */
-require_once ( WP_RSS_MULTI_UTILS . 'panel_messages.php' );
+require_once ( WP_RSS_MULTI_INC . 'panel_messages.php' );
 
 /* Load the database functions file. */
-require_once ( WP_RSS_MULTI_UTILS . 'db_functions.php' );
+require_once ( WP_RSS_MULTI_INC . 'db_functions.php' );
 
 /* Load the excerpt functions file. */
-require_once ( WP_RSS_MULTI_UTILS . 'excerpt_functions.php' );
+require_once ( WP_RSS_MULTI_INC . 'excerpt_functions.php' );
 
 /* Load the cron file. */
 require_once ( WP_RSS_MULTI_INC . 'cron.php' );
@@ -65,10 +65,12 @@ require_once ( WP_RSS_MULTI_INC . 'scripts.php' );
 /* Load the feed files. */
 require_once ( WP_RSS_MULTI_INC . 'rss_feed.php' );
 
+require_once(  WP_RSS_MULTI_INC . 'import_posts.php');  // beta
+
 /* Load the admin_init files. */
 require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
-
+ 
 
    
    /**
@@ -170,7 +172,7 @@ $showDesc=$options['showdesc'];  // 1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
 
-
+$showcategory=$options['showcategory'];
 $cacheMin=$options['cacheMin'];
 $maxposts=$options['maxfeed'];
 
@@ -250,15 +252,15 @@ timer_start();  //TIMER START - for testing purposes
   	next($option_items);
 	$key =key($option_items);
 	
-// $rssCatID=$option_items[$key];  ///this should be the category ID
+ $rssCatID=$option_items[$key];  ///this should be the category ID
 
 
 
 if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
 
 
+$myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL,"FeedCatID"=>$rssCatID); //with Feed Category ID
 
-   $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
 	
 }
    
@@ -281,7 +283,7 @@ if (empty($myfeeds)){
 
 
 if ($dumpthis==1){
-	echo "Feeds<br>";
+	echo "<strong>Feeds</strong><br>";
 	var_dump($myfeeds);
 }
 
@@ -304,7 +306,7 @@ if (empty($url)) {continue;}
 	
 
 	if (is_wp_error( $feed ) ) {
-		
+	//	$feed->get_error_message();
 		if ($size<4){
 			return "You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.";
 			exit;
@@ -338,10 +340,10 @@ if (empty($url)) {continue;}
 
 						}
 						
+						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+					//	$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
 
-						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
-
-				
+						unset($mediaImage);
 			}
 
 		}else{	
@@ -365,10 +367,11 @@ if (empty($url)) {continue;}
 			}
 				
 	
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
 				
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
+				//$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
 					
-					
+						unset($mediaImage);
 					
 				}	
 		}
@@ -397,8 +400,9 @@ if ($timerstop==1){
 //  CHECK $myarray BEFORE DOING ANYTHING ELSE //
 
 if ($dumpthis==1){
-	echo "<br>Array<br>";
+	echo "<br><strong>Array</strong><br>";
 	var_dump($myarray);
+	exit;
 }
 if (!isset($myarray) || empty($myarray)){
 	
@@ -487,7 +491,7 @@ $end = ($currentPage * $perPage) + $perPage;
 //  templates checked and added here
 
 	if (!isset($template) || $template=='') {
-	return "One more step...go into the the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>";
+	return "One more step...go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>";
 	}
 	
 

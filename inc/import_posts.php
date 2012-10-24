@@ -1,37 +1,48 @@
 <?php
 
 
-//  RSS FEED FUNCTIONS
-
-function rssmi_feed() {
 
 
-wp_rss_multi_importer_feed();
-}
+//  POST FEED FUNCTIONS
 
-add_action('init', 'rssmi_rss');
-
-function rssmi_rss(){
-	$feed_options = get_option('rss_feed_options', 'option not found');
-	global $wp_rewrite;
-	$wp_rewrite->flush_rules();
-add_feed($feed_options['feedslug'], 'rssmi_feed');	
-}
-
-
-function rss_text_limit($striptags=0,$string, $length, $replacer = '...') {
-	if ($striptags==1){
-	 $string = strip_tags($string);
-	}
-	  if(strlen($string) > $length)
-	    return (preg_match('/^(.*)\W.*$/', substr($string, 0, $length+1), $matches) ? $matches[1] : substr($string, 0, $length)) . $replacer;  
-	  return $string;
-	}
-
-
-function wp_rss_multi_importer_feed(){
+function rssmi_import_feed_post() {
 	
-$catArray=array(0);
+	$post_options = get_option('rss_post_options');
+	
+	if($post_options['active']==1){
+		wp_rss_multi_importer_post();
+	}
+}
+
+
+
+
+add_action('wp_ajax_fetch_now', 'fetch_rss_callback');
+
+function fetch_rss_callback() {
+
+	$post_options = get_option('rss_post_options');
+
+		if($post_options['active']==1){
+
+			wp_rss_multi_importer_post();
+	        echo '<h3>The most recent feeds have been put into posts.</h3>';
+
+		}else{
+			
+	 		echo '<h3>Nothing was done because you have not activated this service.</h3>';
+}
+
+	die(); 
+}
+
+
+
+
+
+function wp_rss_multi_importer_post(){
+	
+
 
 if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 0; }  // no caching of RSS feed
@@ -46,11 +57,12 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
   
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
-	$feed_options = get_option('rss_feed_options', 'option not found');
+	$post_options = get_option('rss_post_options', 'option not found');
 
 	if ($option_items==false) return "You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds";
 
 
+if(!empty($option_items)){
 $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 
 	if (count($cat_array)==0) {  // for backward compatibility
@@ -59,71 +71,43 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 		$noExistCat=0;	
 	}
 
-
+}
 
     
    if(!empty($option_items)){
 	
 //GET PARAMETERS  
 $size = count($option_items);
-$sortDir=$options['sortbydate'];  // 1 is ascending
-$stripAll=$options['stripAll'];
-$todaybefore=$options['todaybefore'];
-$adjustImageSize=$options['adjustImageSize'];
-$showDesc=$options['showdesc'];  // 1 is show
-$descNum=$options['descnum'];
+$sortDir=0;  // 1 is ascending
 $maxperPage=$options['maxperPage'];
 
+$maxposts=$post_options['maxfeed'];
+$post_status=$post_options['post_status'];
 
-$cacheMin=$options['cacheMin'];
-$maxposts=$options['maxfeed'];
+$thisCategory=$post_options['category'];
 
-if ($thisfeed!='') $maxposts=$thisfeed;
+if (!isset($post_options['category'])){
+	$thisCategory=0;
+}
+$catArray=array($thisCategory);
+
+
+
+
 
 
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
-$floatType=$options['floatType'];
-$noFollow=$options['noFollow'];
-$showmore=$options['showmore'];
-$cb=$options['cb'];  // 1 if colorbox should not be loaded
-$pag=$options['pag'];  // 1 if pagination
-$perPage=$options['perPage'];
+
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
 	$attribution=$options['sourcename'].': ';
 }
 
-if ($floatType=='1'){
-	$float="left";
-}else{
-	$float="none";	
-}
-
-if ($parmfloat!='') $float=$parmfloat;
-
-	$cacheMin=0;
-if ($cacheMin==''){
-$cacheMin=0;  //set caching minutes	
-}
 
 
-if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
-
-
-
-
-
-
-
-
-	$myarray=get_transient($cachename);  // added  for transient cache
 	
-	if ($cacheMin==0){
-		delete_transient($cachename); 
-	}
-	
-   if (false===$myarray) {   //  added  for transient cache - only get feeds and put into array if the array isn't cached (for a given category set)
+
 
 
 
@@ -148,7 +132,7 @@ if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes wi
   	next($option_items);
 	$key =key($option_items);
 	
-// $rssCatID=$option_items[$key];  ///this should be the category ID
+
 
 
 
@@ -239,18 +223,6 @@ if (empty($myfeeds)){
 
 
 
-if ($cacheMin!==0){
-set_transient($cachename, $myarray, 60*$cacheMin);  //  added  for transient cache
-}
-
-}  //  added  for transient cache
-
-if ($timerstop==1){
- timer_stop(1); echo ' seconds<br>';  //TIMER END for testing purposes
-}
-
-
-
 
 
 //  CHECK $myarray BEFORE DOING ANYTHING ELSE //
@@ -284,35 +256,34 @@ if($sortDir==1){
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
 
-//header("Content-Type: application/rss+xml; charset=UTF-8");
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-?>
-<rss version="2.0">
-<channel>
-<title><?php echo $feed_options['feedtitle'] ?></title>
-<link></link>
-<description><?php echo $feed_options['feeddesc'] ?></description>
-<language>en-us</language>
-<?php	
+	$total=0;
+
+global $wpdb;
 foreach($myarray as $items) {
-	?>	
-<item>		
-<title><?php echo $items["mytitle"]?></title>	
-<link><?php echo $items["mylink"]?></link>
-
-<description><?php echo '<![CDATA['.rss_text_limit($feed_options['striptags'],$items["mydesc"], 500).'<br/><br/>Keep on reading: <a href="'.$items["mylink"].'">'.$items["mytitle"].'</a>'.']]>';  ?></description>
-<pubdate><?php echo  date_i18n("D, M d, Y",$items["mystrdate"])?></pubdate>
-<guid><?php echo $items["mylink"]?></guid>
-</item>	
-<?php		
+	
+	$total = $total +1;
+	if ($total>5) break;
+	$thisLink=trim($items["mylink"]);
+	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
+	$thisContent='';
+if (empty( $mypostids )){  //only post if it hasn't been posted before
+  	$post = array();
+  	$post['post_status'] = $post_status;
+  	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
+  	$post['post_title'] = trim($items["mytitle"]);
+	$thisContent .= strip_tags($items["mydesc"],'<a><img>');
+	$thisContent .= ' <br>Source: <a href='.$items["mylink"].' target=_blank>'.$items["myGroup"].'</a>';
+  	$post['post_content'] = $thisContent;
+    $post_id = wp_insert_post($post);
+	add_post_meta($post_id, 'rssmi_source_link', $items["mylink"]);
+	//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )
+	unset($post);
 }
-?>
-</channel></rss>
- <?php   
 
 
 }
 
+}
 
 
   }

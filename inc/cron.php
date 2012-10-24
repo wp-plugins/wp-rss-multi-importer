@@ -13,6 +13,8 @@ function wp_rss_multi_activation() {
 
 function wp_rss_multi_cron() {
 	find_db_transients();
+	rssmi_import_feed_post();
+
 }
 
 

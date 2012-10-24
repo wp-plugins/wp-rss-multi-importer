@@ -7,7 +7,7 @@
 div.rss-output {
 	
 	padding: 1.025em;
-  /*float: left;*/    /*  uncomment to float all posts to the left */
+/*float: left; */  /*  uncomment to float all posts to the left */
 	
 
 }
@@ -19,6 +19,11 @@ font-weight:400;
 	
 }
 
+span.categoryname{
+	
+	margin-left:20px;
+}
+
 /*  DEFAULT AND DATE ABOVE TEMPLATES  - END */
 
 
@@ -26,12 +31,14 @@ font-weight:400;
 /*  REGULAR TEMPLATES - START */
 div.reg_rss-output {	
 	padding: 1.025em;
-	
+
+float: left;	
 }
 
 div.reg_rss-output .title {	
 	font-size:1.3em;
-	
+	//text-indent:-9999px;
+		
 }
 
 /*  REGULAR TEMPLATES  - END */
@@ -287,10 +294,13 @@ div#wprssmi_center_box {
 
 	.wprssmi_rss_vs .title{
 		font-size:1.1em;
+		padding-top:10px;
 	}
 
 	.wprssmi_rss_vs .date{
 		font-size:.9em;
 	}
+	
+
 
 	/*  VERTICAL SCROLL  TEMPLATE - END */

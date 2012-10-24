@@ -38,7 +38,7 @@ if ( version_compare($wp_version, "3.3.1", ">" ) ) {
 
 
 function wprssmi_ajax_load_scripts() {
-	wp_enqueue_script( 'ajax-template', plugins_url('scripts/ajax-template.js',dirname(__FILE__)),array('jquery'));
+	wp_enqueue_script( 'ajax-template', plugins_url('scripts/ajax.js',dirname(__FILE__)),array('jquery'));
 	wp_localize_script( 'ajax-template', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
 }
 
