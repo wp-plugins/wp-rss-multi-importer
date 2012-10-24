@@ -11,11 +11,10 @@ Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to pos
 
 If you want to put RSS feeds on your site, look no further.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 3 things (separately or at the same time):
 
-<blockquote>
 1. Display the aggregated feed items in one of **8 different templates that you can customize** 
 2. **Create blog posts** from the feed items so readers can comment on them
 3. **Output an RSS feed** so that your users can consume the aggregated feeds you create
-</blockquote>
+
 
 = See How It Works =
 
