@@ -25,7 +25,7 @@ If you want to put RSS feeds on your site, look no further.  WP RSS Multi Import
 
 [youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
 
-See the various templates included:
+= See the various templates included =
 
 [youtube http://www.youtube.com/watch?v=fZvCfoidN6A]
 
