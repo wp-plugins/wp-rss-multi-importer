@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, feeds, aggregation, aggregator, import
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.40
+Stable tag: 2.41
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
@@ -116,6 +116,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.41 =
+* Added more options to the Feed to Post settings.  Prepared files for translation into other languages.
 = Version 2.40 =
 * Added option to import feed items (like news) and creates blog posts so readers can comment on them.  Category name added as an option to add to templates, plus bug fixes.
 = Version 2.37 =

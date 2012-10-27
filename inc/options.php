@@ -4,23 +4,26 @@
 	function wprssmi_convert_key( $key ) { 
 
      if ( strpos( $key, 'feed_name_' ) === 0 ) { 
+	
+        // $label = str_replace( 'feed_name_', 'Feed Name ', $key );
 
-         $label = str_replace( 'feed_name_', 'Feed Name ', $key );
+ $label = str_replace( 'feed_name_', __('Feed Name ') , $key );
+
      }
 
      else if ( strpos( $key, 'feed_url_' ) === 0 ) { 
 
-         $label = str_replace( 'feed_url_', 'Feed URL ', $key );
+         $label = str_replace( 'feed_url_', __('Feed URL '), $key );
      }
 
 		else if ( strpos( $key, 'feed_cat_' ) === 0 ) { 
 
-         $label = str_replace( 'feed_url_', 'Feed Category ', $key );
+         $label = str_replace( 'feed_url_', __('Feed Category '), $key );
      }
 
 		else if ( strpos( $key, 'cat_name_' ) === 0 ) { 
 
-         $label = str_replace( 'cat_name_', 'Category ID # ', $key );
+         $label = str_replace( 'cat_name_', __('Category ID # '), $key );
      }
 
 
@@ -124,8 +127,8 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
       <p><label class='o_textinput' for='sortbydate'><?php _e("Sort Output by Date (Descending = Closest Date First")?></label>
 	
 		<SELECT NAME="rss_import_options[sortbydate]">
-		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>>Ascending</OPTION>
-		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>>Descending</OPTION>
+		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>><?php _e("Ascending")?></OPTION>
+		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>><?php _e("Descending")?></OPTION>
 		
 		</SELECT></p>  
 		
@@ -133,8 +136,8 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 		<p><label class='o_textinput' for='todaybefore'><?php _e("Separate Today and Earlier Posts")?></label>
 
 		<SELECT NAME="rss_import_options[todaybefore]">
-		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>>Yes</OPTION>
-		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>>No</OPTION>
+		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>><?php _e("Yes")?></OPTION>
+		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>><?php _e("No")?></OPTION>
 
 		</SELECT></p>
 	
@@ -166,9 +169,9 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
 <p><label class='o_textinput' for='pag'><?php _e("Do you want pagination?")?></label>
 <SELECT NAME="rss_import_options[pag]" id="pagination">
-<OPTION VALUE="1" <?php if($options['pag']==1){echo 'selected';} ?>>Yes</OPTION>
-<OPTION VALUE="0" <?php if($options['pag']==0){echo 'selected';} ?>>No</OPTION>
-</SELECT>  (Note: this will override the Number of Entries per Page of Output)</p>
+<OPTION VALUE="1" <?php if($options['pag']==1){echo 'selected';} ?>><?php _e("Yes")?></OPTION>
+<OPTION VALUE="0" <?php if($options['pag']==0){echo 'selected';} ?>><?php _e("No")?></OPTION>
+</SELECT>  <?php _e("(Note: this will override the Number of Entries per Page of Output)")?></p>
 
 
 
@@ -190,9 +193,9 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
 <p><label class='o_textinput' for='targetWindow'><?php _e("Target Window (when link clicked, where should it open?)")?></label>
 	<SELECT NAME="rss_import_options[targetWindow]" id="targetWindow">
-	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>>Use LightBox</OPTION>
-	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>>Open in Same Window</OPTION>
-	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>>Open in New Window</OPTION>
+	<OPTION VALUE="0" <?php if($options['targetWindow']==0){echo 'selected';} ?>><?php _e("Use LightBox")?></OPTION>
+	<OPTION VALUE="1" <?php if($options['targetWindow']==1){echo 'selected';} ?>><?php _e("Open in Same Window")?></OPTION>
+	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>><?php _e("Open in New Window")?></OPTION>
 	</SELECT>	
 </p>
 <p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_options[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
@@ -207,22 +210,22 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
 <p><label class='o_textinput' for='sourcename'><?php _e("Attribution Label")?></label>
 <SELECT NAME="rss_import_options[sourcename]">
-<OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>>Source</OPTION>
-<OPTION VALUE="Via" <?php if($options['sourcename']=='Via'){echo 'selected';} ?>>Via</OPTION>
-<OPTION VALUE="Club" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>>Club</OPTION>
-<OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>>Sponsor</OPTION>
-<OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>>No Attribution</OPTION>
+<OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>><?php _e("Source")?></OPTION>
+<OPTION VALUE="Via" <?php if($options['sourcename']=='Via'){echo 'selected';} ?>><?php _e("Via")?></OPTION>
+<OPTION VALUE="Club" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>><?php _e("Club")?></OPTION>
+<OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>><?php _e("Sponsor")?></OPTION>
+<OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>><?php _e("No Attribution")?></OPTION>
 </SELECT></p>
 
 <h3><?php _e("What Shows - EXCERPTS")?></h3>
 
 <p><label class='o_textinput' for='showdesc'><?php _e("Show Excerpt")?></label>
 <SELECT NAME="rss_import_options[showdesc]" id="showdesc">
-<OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>>Yes</OPTION>
-<OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>>No</OPTION>
+<OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>><?php _e("Yes")?></OPTION>
+<OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>><?php _e("No")?></OPTION>
 </SELECT></p>
 
-<p style="padding-left:15px"><label class='o_textinput' for='showcategory'><?php _e("Show Category Name")?>  <input type="checkbox" Name="rss_import_options[showcategory]" Value="1" <?php if ($options['showcategory']==1){echo 'checked="checked"';} ?></label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='showcategory'><?php _e("Show Category Name")?>   <input type="checkbox" Name="rss_import_options[showcategory]" Value="1" <?php if ($options['showcategory']==1){echo 'checked="checked"';} ?></label></p>
 
 
 <span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
@@ -240,7 +243,7 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 <OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
 <OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
-<OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>>Give me everything</OPTION>
+<OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything")?></OPTION>
 </SELECT></p>
 <h4><?php _e("Image Handling")?></h4>
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.")?><input type="checkbox" Name="rss_import_options[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
@@ -283,7 +286,7 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
        </form>
 
-      <div class="postbox"><h3><label for="title"><?php _e("Help Others")?></label></h3><div class="inside">If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.</div></div> 
+      <div class="postbox"><h3><label for="title"><?php _e("Help Others")?></label></h3><div class="inside"><?php _e("If you find this plugin helpful, let others know by <a href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\" target=\"_blank\">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.")?></div></div> 
 
        </div>
 </div>
@@ -374,10 +377,10 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
                $key = key( $options );
 
-
+$url_esc=esc_url($options[$key]);
                echo "<p><label class='textinput' for='$key'>" . wprssmi_convert_key( $key ) . "</label>
 
-               <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$options[$key]' />" ; 
+               <input id='$j' class='wprss-input' size='75' name='rss_import_items[$key]' type='text' value='$url_esc' />" ; 
 
 
 			if (empty($catOptions_exist)){
@@ -465,7 +468,7 @@ echo "</SELECT>";
 
        </form>
 
-      <div class="postbox"><h3><label for="title">   Help Others</label></h3><div class="inside">If you find this plugin helpful, let others know by <a href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/" target="_blank">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.</div></div> 
+      <div class="postbox"><h3><label for="title">   <?php _e("Help Others")?></label></h3><div class="inside"><?php _e("If you find this plugin helpful, let others know by <a href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\" target=\"_blank\">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.")?></div></div> 
 
        </div>
 </div>
@@ -568,7 +571,7 @@ function wp_rss_multi_importer_feed_page() {
 	<div id="poststuff">
   <h2><?php _e("Export Your RSS Feed")?></h2>
   
-<p>You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.</p>
+<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.")?></p>
 
 
        <div id="options">
@@ -618,10 +621,10 @@ function wp_rss_multi_importer_feed_page() {
 	$url=site_url();
 	if (!empty($options['feedslug'])){
 
-		echo "<h3>Your RSS feed is here:<br><br><a href=".$url."?feed=".$options['feedslug']." target='_blank'>".$url."?feed=".$options['feedslug']."</a></h3>";
+		echo "<h3>". __("Your RSS feed is here:"). "<br><br><a href=".$url."?feed=".$options['feedslug']." target='_blank'>".$url."?feed=".$options['feedslug']."</a></h3>";
 	}else{
 		
-		echo "<h3>Your RSS feed is here:<br><br>".$url."?feed=[this is your slug]</h3>";
+		echo "<h3>". __("Your RSS feed is here:")." <br><br>".$url."?feed=[this is your slug]</h3>";
 	}
 
 	?>
@@ -640,11 +643,9 @@ function wp_rss_multi_importer_post_page() {
        <div class="wrap">
 	<div id="poststuff">
   <h2><?php _e("Put Your RSS Feed Into Posts")?></h2>
-  
-<p>NOTE: This option is still in "beta" form since there are still some decisions about how much should go into the posts.</p>
-<p>You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.</p>
-<p>You can delete any post created by this plugin by simply deleting the post.</p>
-<p>The feed will update into posts every hour.  You must check to activate this feature.</p>
+<p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.")?></p>
+<p><?php _e("You can delete any post created by this plugin by simply deleting the post.")?></p>
+<p><?php _e("The feed will update into posts every hour.  You must check to activate this feature.")?></p>
 
        <div id="options">
 
@@ -665,10 +666,10 @@ function wp_rss_multi_importer_post_page() {
 
 <h3><?php _e("Feed to Post Options Settings")?></h3>
 
-<p style="padding-left:15px"><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature")?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label>
+<p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature")?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-<p style="padding-left:15px"><label class='o_textinput' for='post_status'><?php _e("Default status of posts")?></label>
+<p><label class='o_textinput' for='post_status'><?php _e("Default status of posts")?></label>
 <SELECT NAME="rss_post_options[post_status]" id="post_status">
 <OPTION VALUE="draft" <?php if($post_options['post_status']=="draft"){echo 'selected';} ?>>draft</OPTION>
 <OPTION VALUE="publish" <?php if($post_options['post_status']=="publish"){echo 'selected';} ?>>publish</OPTION>
@@ -689,6 +690,55 @@ function wp_rss_multi_importer_post_page() {
 <OPTION VALUE="15" <?php if($post_options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
 <OPTION VALUE="20" <?php if($post_options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
 </SELECT></p>
+
+
+
+<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Post Entries per Hourly Fetch")?></label>
+<SELECT NAME="rss_post_options[maxperfetch]">
+<OPTION VALUE="1" <?php if($post_options['maxperfetch']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="2" <?php if($post_options['maxperfetch']==2){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="3" <?php if($post_options['maxperfetch']==3){echo 'selected';} ?>>3</OPTION>
+<OPTION VALUE="4" <?php if($post_options['maxperfetch']==4){echo 'selected';} ?>>4</OPTION>
+<OPTION VALUE="5" <?php if($post_options['maxperfetch']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if($post_options['maxperfetch']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="15" <?php if($post_options['maxperfetch']==15){echo 'selected';} ?>>15</OPTION>
+<OPTION VALUE="20" <?php if($post_options['maxperfetch']==20){echo 'selected';} ?>>20</OPTION>
+</SELECT></p>
+
+
+
+
+<p><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)")?></label>
+<SELECT NAME="rss_post_options[descnum]" id="descnum">
+<OPTION VALUE="20" <?php if($post_options['descnum']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($post_options['descnum']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="50" <?php if($post_options['descnum']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="100" <?php if($post_options['descnum']==100){echo 'selected';} ?>>100</OPTION>
+<OPTION VALUE="200" <?php if($post_options['descnum']==200){echo 'selected';} ?>>200</OPTION>
+<OPTION VALUE="300" <?php if($post_options['descnum']==300){echo 'selected';} ?>>300</OPTION>
+<OPTION VALUE="99" <?php if($post_options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything")?></OPTION>
+</SELECT></p>
+
+
+
+
+<p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images")?></label>
+<SELECT NAME="rss_post_options[maximgwidth]">
+<OPTION VALUE="150" <?php if($post_options['maximgwidth']==150){echo 'selected';} ?>>150px</OPTION>
+<OPTION VALUE="250" <?php if($post_options['maximgwidth']==250){echo 'selected';} ?>>250px</OPTION>
+<OPTION VALUE="900" <?php if($post_options['maximgwidth']==900){echo 'selected';} ?>><?php _e("unrestricted")?></OPTION>
+</SELECT></p>
+
+
+
+
+
+
+
+
+<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.")?><input type="checkbox" Name="rss_post_options[stripAll]" Value="1" <?php if ($post_options['stripAll']==1){echo 'checked="checked"';} ?></label>
+</p>
+
 
 
 <?php
@@ -741,7 +791,7 @@ echo "</SELECT>";
 
        </form>
 
-<button type="button" name="fetchnow" id="fetch-now" value="">CLICK TO FETCH FEEDS NOW</button>	
+<button type="button" name="fetchnow" id="fetch-now" value=""><?php _e("CLICK TO FETCH FEEDS NOW")?></button>	
 <div id="note"></div>
 </div></div></div>
 <?php

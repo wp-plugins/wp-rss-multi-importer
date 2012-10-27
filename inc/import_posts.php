@@ -104,12 +104,21 @@ if(empty($options['sourcename'])){
 	$attribution=$options['sourcename'].': ';
 }
 
+global $maximgwidth;
+$maximgwidth=$post_options['maximgwidth'];;
+$descNum=$post_options['descnum'];
+$stripAll=$post_options['stripAll'];
+$maxperfetch=$post_options['maxperfetch'];
+$targetWindow=2;	
+$adjustImageSize=1;
+$noFollow=0;
+$floatType=1;
 
-
-	
-
-
-
+if ($floatType=='1'){
+	$float="left";
+}else{
+	$float="none";	
+}
 
    for ($i=1;$i<=$size;$i=$i+1){
 
@@ -256,13 +265,23 @@ if($sortDir==1){
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
 
+
+
+if($targetWindow==0){
+	$openWindow='class="colorbox"';
+}elseif ($targetWindow==1){
+	$openWindow='target=_self';		
+}else{
+	$openWindow='target=_blank ';	
+}
+
 	$total=0;
 
 global $wpdb;
 foreach($myarray as $items) {
 	
 	$total = $total +1;
-	if ($total>5) break;
+	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
 	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
 	$thisContent='';
@@ -271,7 +290,7 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
   	$post['post_status'] = $post_status;
   	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
   	$post['post_title'] = trim($items["mytitle"]);
-	$thisContent .= strip_tags($items["mydesc"],'<a><img>');
+	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
 	$thisContent .= ' <br>Source: <a href='.$items["mylink"].' target=_blank>'.$items["myGroup"].'</a>';
   	$post['post_content'] = $thisContent;
     $post_id = wp_insert_post($post);

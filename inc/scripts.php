@@ -31,7 +31,17 @@ if ( version_compare($wp_version, "3.3.1", ">" ) ) {
     wp_enqueue_script( 'jquery' );	
 }
   wp_enqueue_script( 'add-remove', plugins_url('scripts/add-remove.js',dirname(__FILE__)),array('jquery'));
+  wp_localize_script( 'add-remove', 'wprssmi-add-remove', wprssmi_localize_vars());
 }
+
+
+
+function wprssmi_localize_vars() {
+    return array(
+        'Delete this category' => __('Delete this category')
+    );
+} 
+
 
 
 

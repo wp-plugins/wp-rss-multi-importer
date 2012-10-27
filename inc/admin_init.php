@@ -31,6 +31,10 @@ function ilc_farbtastic_script() {
 }
 
 
+function wp_rss_mi_lang_init() {
+  load_plugin_textdomain( 'WP_RSS_Multi_Importer', false, dirname( plugin_basename( __FILE__ ) ). '/lang/' );   // load the language files
+}
+add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 function isMobile() {
@@ -88,13 +92,13 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin'  && $wprssmi_admin_options['dismiss_slug'] != "true" ) {
 		?>
 		<div id="message" class="updated fade">
-		<h3>If you find this plugin helpful, let others know by <a target="_blank" href="http://wordpress.org/extend/plugins/wp-rss-multi-importer/">rating it here</a>. That way, it will help others determine whether or not they should try out the plugin. Thank you.</h3>
+		<h3><?php _e("If you find this plugin helpful, let others know by <a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\">rating it here</a>. That way, it will help others determine whether or not they should try out the plugin. Thank you.")?></h3>
 		<form method="post" action="options.php">		
 			<?php 
 			settings_fields('wp_rss_multi_importer_admin_options');
 			?>
 			<input type="hidden" name="rss_admin_options[dismiss_slug]" value="true">
-			<input type="submit" value="Dismiss This Message" name="submit">
+			<input type="submit" value="<?php _e("Dismiss This Message")?>" name="submit">
 			</form>
 		
 			</div>
@@ -102,7 +106,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 }
 ?>
 		<div id="icon-themes" class="icon32"></div>
-		<h2>WP RSS Multi-Importer Options</h2>
+		<h2><?php  _e("WP RSS Multi-Importer Options")?></h2>
 		<?php settings_errors(); ?>
 		
 		<?php if( isset( $_GET[ 'tab' ] ) ) {
