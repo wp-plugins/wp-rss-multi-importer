@@ -48,6 +48,7 @@ An extremely flexible plugin that imports RSS feeds to show on your Wordpress si
 * Allow users to determine whether to show-hide excerpts
 * Set caching time for faster page loading
 * Export all the feeds as a single RSS feed
+* Add social links (Twitter and Facebook)
 
 These features are all available in the admin panel.
 
