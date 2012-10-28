@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.41
+  Version: 2.42
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.41 );
+define( 'WP_RSS_MULTI_VERSION', 2.42 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -70,7 +70,7 @@ require_once(  WP_RSS_MULTI_INC . 'import_posts.php');  // testing
 /* Load the admin_init files. */
 require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
-    //wp_rss_multi_importer_post(); // testing
+ 
 
    
    /**
@@ -178,7 +178,7 @@ $maxposts=$options['maxfeed'];
 
 if ($thisfeed!='') $maxposts=$thisfeed;
 
-
+$showsocial=$options['showsocial'];
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
 $noFollow=$options['noFollow'];

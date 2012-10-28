@@ -109,6 +109,7 @@ $maximgwidth=$post_options['maximgwidth'];;
 $descNum=$post_options['descnum'];
 $stripAll=$post_options['stripAll'];
 $maxperfetch=$post_options['maxperfetch'];
+$showsocial=$post_options['showsocial'];
 $targetWindow=2;	
 $adjustImageSize=1;
 $noFollow=0;
@@ -290,8 +291,16 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
   	$post['post_status'] = $post_status;
   	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
   	$post['post_title'] = trim($items["mytitle"]);
+//	$thisContent .= strip_tags($items["mydesc"],'<a><img>');
+	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
+
 	$thisContent .= ' <br>Source: <a href='.$items["mylink"].' target=_blank>'.$items["myGroup"].'</a>';
+	
+	if ($showsocial==1){
+	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a></span>';
+	
+	}
   	$post['post_content'] = $thisContent;
     $post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $items["mylink"]);

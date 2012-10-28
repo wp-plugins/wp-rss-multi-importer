@@ -3,6 +3,8 @@
 add_action('admin_init','upgrade_db');  // Used starting in version 2.22...afterwards, version is being stored in db
 
 function upgrade_db() {
+	
+
 
 	$myoptions = get_option( 'rss_import_items' ); 
 	$newoptions = get_option('rss_import_options');
@@ -49,7 +51,35 @@ function upgrade_db() {
 	$wprssmi_admin_options['dismiss_slug'] ='false';
 	//update_option( 'wprssmi_admin_options', $post_settings );
 	}
+	
+
+	
+	if (empty($option_settings)){
+
+		$option_default_settings = array(
+		'sortbydate' => 0,
+		'pag' => 0,
+		'targetWindow' => 0,
+		'maxfeed'=> 4,
+		'sourcename' => 'Source',
+		'showcategory' => 0,
+		'noFollow' => 0,
+		'showdesc' => 1,
+		'descnum' => 50,
+		'floatType' => 1,
+		'adjustImageSize' => 1,
+		'showsocial' => 0
+		);
+	update_option( 'rss_import_options', $option_default_settings );
+
+	}
+	
+	
+	
 }
+
+
+
 
 
 

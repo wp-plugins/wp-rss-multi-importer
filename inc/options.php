@@ -108,15 +108,16 @@ delete_db_transients();
 
 <h3><?php _e("Template")?></h3>
 
+
 <?php
 $thistemplate=$options['template'];
 	get_template_function($thistemplate);
 ?>
 
 <?php
-if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
+if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 ?>
-<H2 class="save_warning"><?php _e("You must choose and then click Save Settings for the plugin to function correctly.  If not sure which options to choose right now, click Save Settings anyway.")?></H2>
+<H2 class="save_warning"><?php _e("You must choose and then click Save Settings for the plugin to function correctly.  If not sure which options to choose right now, don't worry - the most common settings have been set for you - just click Save Settings.")?></H2>
 <?php
 }
 ?>
@@ -219,7 +220,7 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 
 <h3><?php _e("What Shows - EXCERPTS")?></h3>
 
-<p><label class='o_textinput' for='showdesc'><?php _e("Show Excerpt")?></label>
+<p><label class='o_textinput' for='showdesc'><?php _e("<b>Show Excerpt</b>")?></label>
 <SELECT NAME="rss_import_options[showdesc]" id="showdesc">
 <OPTION VALUE="1" <?php if($options['showdesc']==1){echo 'selected';} ?>><?php _e("Yes")?></OPTION>
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>><?php _e("No")?></OPTION>
@@ -253,6 +254,11 @@ if ($options['maxfeed']=='' || $options['maxfeed']=='NULL') {
 	
 <p style="padding-left:15px"><label class='o_textinput' for='floatType'><?php _e("Float images to the left (can be over-written in shortcode).")?>  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
 </span>
+
+<h3><?php _e("Get Social")?></h3>
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ")?><input type="checkbox" Name="rss_import_options[showsocial]" Value="1" <?php if ($options['showsocial']==1){echo 'checked="checked"';} ?></label>
+</p>
+
 
 <h3><?php _e("Cache and Conflict Handling")?></h3>
 
@@ -739,7 +745,8 @@ function wp_rss_multi_importer_post_page() {
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.")?><input type="checkbox" Name="rss_post_options[stripAll]" Value="1" <?php if ($post_options['stripAll']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ")?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
+</p>
 
 <?php
 $catOptions= get_option( 'rss_import_categories' ); 
@@ -752,7 +759,7 @@ $catOptions= get_option( 'rss_import_categories' );
 <?php
 	$catsize = count($catOptions);
 
-//echo $options[$key];
+
 
 	for ( $k=1; $k<=$catsize; $k++ ) {   
 
@@ -778,6 +785,9 @@ next( $catOptions );
 
 }
 echo "</SELECT>";
+}else{
+	
+	echo __("<b>NOTE: If you set up categories (in Category Options) you can restrict only feeds in that category to go into blog posts.</b> ");
 }
 
 ?>
