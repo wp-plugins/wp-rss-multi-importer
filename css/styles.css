@@ -4,7 +4,7 @@
     padding-bottom: 10px;
     padding-left: 10px;
     padding-top: 10px;
-    width: 720px;
+    width: 800px;
 }
 
 .wprss-input p { line-height: 28px; }
@@ -22,6 +22,14 @@
     width: 400px;
 }
 
+.wprss-input .category_list{
+	margin-left:10px;
+}
+
+.wprss-input .chk_feed{
+	margin-left:10px;
+	color:red !important;
+}
 
 
 .rss-output p {
@@ -49,17 +57,6 @@
 
 
 .save_warning{
-	color:red !important;;
+	color:red !important;
 }
 	
-
-#template-restore{
- font-size: 16px;
-}
-
-#template-save{
- font-size: 16px;
-}
-#css-save{
- font-size: 16px;
-}

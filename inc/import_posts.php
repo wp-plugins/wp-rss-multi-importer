@@ -92,8 +92,10 @@ if (!isset($post_options['category'])){
 $catArray=array($thisCategory);
 
 
-
-
+$wpcategory=$post_options['wpcategory'];  // this is the wordpress category the feed should be entered into - tag_id
+if (!isset($post_options['wpcategory'])){
+	$wpcategory=0;
+}
 
 
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
@@ -287,7 +289,7 @@ foreach($myarray as $items) {
 	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
 	$thisContent='';
 if (empty( $mypostids )){  //only post if it hasn't been posted before
-  	$post = array();
+  	$post = array();  
   	$post['post_status'] = $post_status;
   	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
   	$post['post_title'] = trim($items["mytitle"]);
@@ -302,6 +304,7 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
 	
 	}
   	$post['post_content'] = $thisContent;
+	$post['post_category'] = array($wpcategory);  // category number goes here - tag_id
     $post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $items["mylink"]);
 	//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )

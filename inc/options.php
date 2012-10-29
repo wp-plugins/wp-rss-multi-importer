@@ -5,7 +5,6 @@
 
      if ( strpos( $key, 'feed_name_' ) === 0 ) { 
 	
-        // $label = str_replace( 'feed_name_', 'Feed Name ', $key );
 
  $label = str_replace( 'feed_name_', __('Feed Name ') , $key );
 
@@ -50,6 +49,30 @@ function cat_get_id_number($key){
 	return $j;
 
  }
+
+
+function check_feed($url){
+	
+		$url=(string)($url);
+
+
+		while ( stristr($url, 'http') != $url )
+			$url = substr($url, 1);
+
+		$url = esc_url_raw(strip_tags($url));
+
+
+					$feed = fetch_feed($url);
+
+		if (is_wp_error( $feed ) ) {
+			return "<span class=chk_feed>This feed has errors.</span>";
+			//.$feed->get_error_message()
+		}else{
+			
+		//	return "<span class=chk_feed>Feed OK</span>";
+		}
+		
+}
 
 
 
@@ -408,7 +431,7 @@ $url_esc=esc_url($options[$key]);
 $catOptions= get_option( 'rss_import_categories' ); 
 
 	if ( !empty($catOptions) ) {
-		echo "Category ";
+		echo "<span class=category_list>Category ";
 echo "<SELECT NAME=".$selectName." id='feed_cat'>";
 echo "<OPTION VALUE='0'>NONE</OPTION>";
 	$catsize = count($catOptions);
@@ -438,9 +461,9 @@ echo "<OPTION " .$sel.  "VALUE=".$IDValue.">".$nameValue."</OPTION>";
 next( $catOptions );
 
 }
-echo "</SELECT>";
+echo "</SELECT></span>";
 }
-
+echo check_feed($url_esc);  // check the feed for errors
 
               echo " </p>";
 
@@ -684,6 +707,10 @@ function wp_rss_multi_importer_post_page() {
 <OPTION VALUE="private" <?php if($post_options['post_status']=="private"){echo 'selected';} ?>>private</OPTION>
 </SELECT></p>
 
+<p><label class='o_textinput' for='wpcategory'><?php _e("What Wordpress blog post category, if any, do you want these posts to enter as?  Enter the ID number of this category.")?></label>
+	<input id="wpcategory" type="text" value="<?php echo $post_options['wpcategory']?>" name="rss_post_options[wpcategory]" size="2" maxlength="2"><a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a></p>
+	</p>
+
 
 <p><label class='o_textinput' for='maxfeed'><?php _e("Number of Entries per Feed")?></label>
 <SELECT NAME="rss_post_options[maxfeed]">
@@ -753,7 +780,7 @@ $catOptions= get_option( 'rss_import_categories' );
 
 	if ( !empty($catOptions) ) {
 ?>
-<p><label class='o_textinput' for='maxfeed'><?php _e("Restrict to one of your defined categories")?></label>
+<p><label class='o_textinput' for='category'><?php _e("Restrict feeds to one of your defined RSS Multi Importer categories")?></label>
 	<SELECT NAME="rss_post_options[category]">
 <OPTION VALUE='0'>All</OPTION>
 <?php

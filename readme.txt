@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.42
+Stable tag: 2.43
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
 
-An extremely flexible plugin that imports RSS feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 3 things (separately or at the same time):
+An extremely flexible plugin that imports RSS feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 4 things (separately or at the same time):
 
 
 <blockquote>
@@ -17,6 +17,7 @@ An extremely flexible plugin that imports RSS feeds to show on your Wordpress si
 <li>Display the aggregated feed items in one of **8 different templates that you can customize** </li>
 <li>**Create blog posts** from the feed items so readers can comment on them</li>
 <li>**Output an RSS feed** so that your users can consume the aggregated feeds you create</li>
+<li>Display the aggregated feed items in a widget, in one of 3 different ways</li>
 </ul>
 </blockquote>
 
@@ -117,6 +118,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.43 =
+* Added option to put Feed to Post entries into your selected blog category.  Also, there is now an alert if the feed you enter is going to cause errors.
 = Version 2.42 =
 * Added social sharing option.  Set default settings for new users.
 = Version 2.41 =
