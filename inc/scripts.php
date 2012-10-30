@@ -9,6 +9,8 @@ if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin' ) 
    	add_action( 'admin_print_styles', 'wprssmi_header' );
 
 	add_action('wp_print_scripts', 'wprssmi_ajax_load_scripts');
+	
+
 }
 
 
@@ -31,7 +33,9 @@ if ( version_compare($wp_version, "3.3.1", ">" ) ) {
     wp_enqueue_script( 'jquery' );	
 }
   wp_enqueue_script( 'add-remove', plugins_url('scripts/add-remove.js',dirname(__FILE__)),array('jquery'));
-  wp_localize_script( 'add-remove', 'wprssmi-add-remove', wprssmi_localize_vars());
+  wp_localize_script( 'add-remove', 'wprssmi_add_remove', wprssmi_localize_vars());
+ wp_enqueue_script( 'bpopup', plugins_url('scripts/jquery.bpopup-0.7.0.min.js',dirname(__FILE__)),array('jquery'));  //adds pop-up ability
+
 }
 
 
@@ -50,6 +54,7 @@ function wprssmi_localize_vars() {
 function wprssmi_ajax_load_scripts() {
 	wp_enqueue_script( 'ajax-template', plugins_url('scripts/ajax.js',dirname(__FILE__)),array('jquery'));
 	wp_localize_script( 'ajax-template', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );	
+
 }
 
 
@@ -103,7 +108,8 @@ function footer_scripts(){
 function colorbox_scripts(){
 	wp_enqueue_style( 'wprssmi_colorbox', plugins_url( 'css/colorbox.css', dirname(__FILE__)) );
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', dirname(__FILE__)) );
-	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
+	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344})});</script>";	
+	
 }
 
 

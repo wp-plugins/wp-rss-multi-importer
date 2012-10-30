@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.43
+  Version: 2.44
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.43 );
+define( 'WP_RSS_MULTI_VERSION', 2.44 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -119,6 +119,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'timer' => 0, 
 		'dumpthis' =>0,
 		'cachetime'=>NULL,
+		'pinterest'=>0,
 		'morestyle' =>'[...]'
 		), $atts);
 	
@@ -141,7 +142,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$dumpthis= $parms['dumpthis'];  //diagnostic parameter
 	$cachename='wprssmi_'.$thisCat;
 	$cachetime=$parms['cachetime'];
-	
+	$pinterest=$parms['pinterest'];
+
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -200,7 +202,11 @@ if ($floatType=='1'){
 
 if ($parmfloat!='') $float=$parmfloat;
 
-
+if ($pinterest==1){
+		$divfloat="left";
+	}else{
+		$divfloat='';	
+	}
 
 if ($cacheMin==''){
 $cacheMin=0;  //set caching minutes	

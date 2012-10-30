@@ -66,10 +66,12 @@ function check_feed($url){
 
 		if (is_wp_error( $feed ) ) {
 			return "<span class=chk_feed>This feed has errors.</span>";
-			//.$feed->get_error_message()
-		}else{
-			
-		//	return "<span class=chk_feed>Feed OK</span>";
+		//	$error_msg=$feed->get_error_message();
+		//	return "<span  ><button id=my-button class=chk_feed >Error: Click to see</button></span>
+		//	<div id=element_to_pop_up>
+		//	    <a class=bClose>x<a/>
+		//	   This feed is causing errors - this is the error message: '.$error_msg.'
+		//	</div>";
 		}
 		
 }
@@ -463,7 +465,7 @@ next( $catOptions );
 }
 echo "</SELECT></span>";
 }
-echo check_feed($url_esc);  // check the feed for errors
+echo check_feed($url_esc);  // needs style
 
               echo " </p>";
 
@@ -671,7 +673,7 @@ function wp_rss_multi_importer_post_page() {
 
        <div class="wrap">
 	<div id="poststuff">
-  <h2><?php _e("Put Your RSS Feed Into Posts")?></h2>
+  <h2><?php _e("Put Your RSS Feed Into Blog Posts")?></h2>
 <p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.")?></p>
 <p><?php _e("You can delete any post created by this plugin by simply deleting the post.")?></p>
 <p><?php _e("The feed will update into posts every hour.  You must check to activate this feature.")?></p>
@@ -708,7 +710,7 @@ function wp_rss_multi_importer_post_page() {
 </SELECT></p>
 
 <p><label class='o_textinput' for='wpcategory'><?php _e("What Wordpress blog post category, if any, do you want these posts to enter as?  Enter the ID number of this category.")?></label>
-	<input id="wpcategory" type="text" value="<?php echo $post_options['wpcategory']?>" name="rss_post_options[wpcategory]" size="2" maxlength="2"><a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a></p>
+	<input id="wpcategory" type="text" value="<?php echo $post_options['wpcategory']?>" name="rss_post_options[wpcategory]" size="2" maxlength="2"><a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank"><?php _e("How to find this ID number.")?></a></p>
 	</p>
 
 

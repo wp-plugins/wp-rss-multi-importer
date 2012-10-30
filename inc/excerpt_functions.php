@@ -26,7 +26,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$content= limitwords($maxchars,$content);	
 	}else{
 		$content=strip_tags(html_entity_decode($content),'<a><img>');
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage);	
+		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink);	
 }	
 		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 	}
@@ -56,25 +56,41 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	}
 	
 	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage){
-			
-	$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image if it exists
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink){
+		$leadmatch=0;	
+		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image if it exists
 		
-	$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image if it exists
+		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image if it exists
 		
-			if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){
+	if (preg_match("/$strmatch/sU", $content, $matches)) { //matches a leading hperlinked image
+		$leadmatch=1;
+	}else if (preg_match("/$strmatch2/sU", $content, $matches)) {  //matches a leading non-hperlinked image
+		$leadmatch=2;	
+	}
 
+	if ($leadmatch==1 || $leadmatch==2){
+		//	if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){  //matches a leading image
+			
+			
+		
 
 			if ($adjustImageSize==1){
 				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($matches[2])."</div>";
 			}else{
 				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$matches[2]."</div>";
 			}
+			
+			
 				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
 
 				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
+				
+					if ($leadmatch==1){  //replace leading link with link to web page - ensures this works, especially for youtube
 
-				$content=str_replace("<a ","<a ".$openWindow, $content,  $count = 1);  // add window open to leading image, if it exists
+						$content=str_replace($matches[1], $thisLink, $content);
+					}
+
+				$content=str_replace("<a ","<a ".$openWindow." " , $content,  $count = 1);  // add window open to leading image, if it exists
 
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 			
@@ -90,8 +106,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			
 			$content=$tabledImage."".$content;
 			
-		} else{
-			$content = limitwords($maxchars,strip_tags($content));
+		
+	} else{
+			$content = limitwords($maxchars,strip_tags($content));  //matches no leading image or media enclosure
 		}
 		
 	return $content;

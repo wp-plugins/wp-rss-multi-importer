@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.43
+Stable tag: 2.44
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
@@ -118,6 +118,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.44 =
+* Recognizes YouTube video feeds in the default template and puts the video in the lightbox if selected.  Added a Pinterest parameter to the shortcode for size correction.  Bug fixes.
 = Version 2.43 =
 * Added option to put Feed to Post entries into your selected blog category.  Also, there is now an alert if the feed you enter is going to cause errors.
 = Version 2.42 =

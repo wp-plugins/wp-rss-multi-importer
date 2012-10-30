@@ -44,8 +44,20 @@ if ($nodays==0){
 
 
 
+//  YouTube
+if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
+
+	if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $items["mylink"], $match)) {
+	    $video_id = $match[1];
+		$items["mylink"]='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
+		$openWindow='class="rssmi_youtube"';
+	}
+}
+
+
+
 	
-		$readable .=  '<div class="rss-output"><div class="title"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></span>';
+		$readable .=  '<div class="rss-output" style="float:'.$divfloat.'"><div class="title"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></span>';
 		
 		if ($showmore==1 && $showDesc==1){
 			

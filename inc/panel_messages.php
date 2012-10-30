@@ -84,7 +84,7 @@ function wp_rss_multi_importer_style_tags(){
 
 <tr ><td ><?php _e("Specific the number of posts per feed instead of using the general number in the settings panel<")?>/td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
 <tr ><td ><?php _e("Change the float of the elements in the feed")?></td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
-
+<tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly")?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
 
 	
 </table>
