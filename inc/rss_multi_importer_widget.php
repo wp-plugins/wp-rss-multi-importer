@@ -10,7 +10,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		parent::__construct(
 	 		'rss_multi_importer_widget', // Base ID
 			'RSS Multi-Importer', // Name
-			array( 'description' => __( 'Use this to put RSS feeds on your site', 'text_domain' ), ) // Args
+			array( 'description' => __( 'Use this to put RSS feeds on your site', 'text_domain' , 'wp-rss-multi-importer'), ) // Args
 		);
 	}
 
@@ -24,6 +24,13 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		add_action('wp_footer','footer_scripts');
+		
+		/* Load the excerpt functions file. */
+		
+		global $maximgwidth;
+		$maximgwidth=100;
+		require_once ( WP_RSS_MULTI_INC . 'excerpt_functions.php' );
+		
 		extract( $args );
 		
 		$siteurl= get_site_url();
@@ -48,6 +55,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$maxposts = $instance['maxposts'];
 		$targetwindow= $instance['targetwindow'];
 		$simplelist= $instance['simplelist'];
+		$showimage= $instance['showimage'];
+		
 		
 		if (!empty($linktitle)){
 			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
@@ -261,7 +270,7 @@ if ($simplelist==1){
 		if ($count>0 && $total>=$count) break;
 	
 		echo '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["mytitle"].'</a>  <span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span></li>';
-
+	
 
 
 	}  	//  don't mess with this php code
@@ -293,7 +302,23 @@ echo '	<div class="news-contents">';
 
 
 			echo '<div style="top: 101px;margin-left:5px;" class="news">';
-			echo '<p class="rss-output" style="margin-right:5px"><a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+			echo '<p class="rss-output" style="margin-right:5px">';
+			
+			
+			
+			
+			if($showimage==1 && $addmotion!=1){
+			
+			echo showexcerpt($items["mydesc"],0,0,0,$items["mylink"],1,0,0,$items["myimage"]);
+			
+			}
+			
+			echo '<a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+			
+		
+				
+			
+			
 			
 			if ($showdesc==1 && $addmotion!=1){
 			
@@ -365,6 +390,7 @@ echo '	<div class="news-contents">';
 		$instance['maxposts'] = strip_tags($new_instance['maxposts']);	
 		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);
 		$instance['simplelist'] = strip_tags($new_instance['simplelist']);	
+		$instance['showimage'] = strip_tags($new_instance['showimage']);	
 		return $instance;
 	}
 
@@ -380,7 +406,7 @@ echo '	<div class="news-contents">';
 		
 		//Defaults
 		$defaults = array(
-			'title' => __( 'RSS Feeds', $this->textdomain),
+			'title' => __( 'RSS Feeds', $this->textdomain, 'wp-rss-multi-importer'),
 			'checkbox' => 0,
 			'category' => array(),
 			'exclude' => array(),
@@ -393,6 +419,7 @@ echo '	<div class="news-contents">';
 			'linktitle' => '',
 			'targetwindow' => 0,
 			'showdesc' => 0,
+			'showimage' => 0,
 			'background' => '#ffffff',
 		);
 		
@@ -412,23 +439,24 @@ echo '	<div class="news-contents">';
 		$maxposts = esc_attr($instance['maxposts']);
 		$targetwindow = esc_attr($instance['targetwindow']);
 		$simplelist= esc_attr($instance['simplelist']);
+		$showimage= esc_attr($instance['showimage']);
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
 		
 	    ?>
 
 		 <p>
-	      	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Widget Title'); ?></label>
+	      	<label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Widget Title', 'wp-rss-multi-importer'); ?></label>
 	      	<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
 	    </p>
 	
 			<p>
 		      	<input id="<?php echo $this->get_field_id('showicon'); ?>" name="<?php echo $this->get_field_name('showicon'); ?>" type="checkbox" value="1" <?php checked( '1', $showicon ); ?>/>
-		    	<label for="<?php echo $this->get_field_id('showicon'); ?>"><?php _e('Show RSS icon'); ?></label>
+		    	<label for="<?php echo $this->get_field_id('showicon'); ?>"><?php _e('Show RSS icon', 'wp-rss-multi-importer'); ?></label>
 		    </p>
 
 			 <p>
-		      	<label for="<?php echo $this->get_field_id('linktitle'); ?>"><?php _e('URL to link title to another page (optional)'); ?></label>
+		      	<label for="<?php echo $this->get_field_id('linktitle'); ?>"><?php _e('URL to link title to another page (optional)', 'wp-rss-multi-importer'); ?></label>
 		      	<input class="widefat" id="<?php echo $this->get_field_id('linktitle'); ?>" name="<?php echo $this->get_field_name('linktitle'); ?>" type="text" value="<?php echo $linktitle; ?>" />
 		    </p>
 			
@@ -436,7 +464,7 @@ echo '	<div class="news-contents">';
 			
 		<p>
 				
-					<label for="<?php echo $this->get_field_id('targetwindow'); ?>"><?php _e('Target Window'); ?></label>
+					<label for="<?php echo $this->get_field_id('targetwindow'); ?>"><?php _e('Target Window', 'wp-rss-multi-importer'); ?></label>
 					
 					
 						
@@ -454,34 +482,39 @@ echo '	<div class="news-contents">';
 
 		<p>
 	      	<input id="<?php echo $this->get_field_id('checkbox'); ?>" name="<?php echo $this->get_field_name('checkbox'); ?>" type="checkbox" value="1" <?php checked( '1', $checkbox ); ?>/>
-	    	<label for="<?php echo $this->get_field_id('checkbox'); ?>"><?php _e('Check to sort ascending'); ?></label>
+	    	<label for="<?php echo $this->get_field_id('checkbox'); ?>"><?php _e('Check to sort ascending', 'wp-rss-multi-importer'); ?></label>
 	    </p>
 	
 		<p>
 	      	<input id="<?php echo $this->get_field_id('showdate'); ?>" name="<?php echo $this->get_field_name('showdate'); ?>" type="checkbox" value="1" <?php checked( '1', $showdate ); ?>/>
-	    	<label for="<?php echo $this->get_field_id('showdate'); ?>"><?php _e('Show date'); ?></label>
+	    	<label for="<?php echo $this->get_field_id('showdate'); ?>"><?php _e('Show date', 'wp-rss-multi-importer'); ?></label>
 	    </p>
 
 		<p>
 	      	<input id="<?php echo $this->get_field_id('showdesc'); ?>" name="<?php echo $this->get_field_name('showdesc'); ?>" type="checkbox" value="1" <?php checked( '1', $showdesc ); ?>/>
-	    	<label for="<?php echo $this->get_field_id('showdesc'); ?>"><?php _e('Show excerpt (will not show if scrolling)'); ?></label>
+	    	<label for="<?php echo $this->get_field_id('showdesc'); ?>"><?php _e('Show excerpt (will not show if scrolling)', 'wp-rss-multi-importer'); ?></label>
 	    </p>
 		
+		
+		<p>
+	      	<input id="<?php echo $this->get_field_id('showimage'); ?>" name="<?php echo $this->get_field_name('showimage'); ?>" type="checkbox" value="1" <?php checked( '1', $showimage ); ?>/>
+	    	<label for="<?php echo $this->get_field_id('showimage'); ?>"><?php _e('Show image (will not show if scrolling)', 'wp-rss-multi-importer'); ?></label>
+	    </p>
 
 	
 		<p>
 	      	<input id="<?php echo $this->get_field_id('addmotion'); ?>" name="<?php echo $this->get_field_name('addmotion'); ?>" type="checkbox" value="1" <?php checked( '1', $addmotion ); ?>/>
-	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add scrolling motion'); ?></label>
+	    	<label for="<?php echo $this->get_field_id('addmotion'); ?>"><?php _e('Check to add scrolling motion', 'wp-rss-multi-importer'); ?></label>
 	    </p>
 	
 			<p>
 		      	<input id="<?php echo $this->get_field_id('simplelist'); ?>" name="<?php echo $this->get_field_name('simplelist'); ?>" type="checkbox" value="1" <?php checked( '1', $simplelist ); ?>/>
-		    	<label for="<?php echo $this->get_field_id('simplelist'); ?>"><?php _e('Check to get just a simple unordered list'); ?></label>
+		    	<label for="<?php echo $this->get_field_id('simplelist'); ?>"><?php _e('Check to get just a simple unordered list', 'wp-rss-multi-importer'); ?></label>
 		    </p>
 		
 		
 		<p>
-			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which category do you want displayed?'); ?></label>
+			<label for="<?php echo $this->get_field_id('category'); ?>"><?php _e('Which category do you want displayed?', 'wp-rss-multi-importer'); ?></label>
 			<select name="<?php echo $this->get_field_name('category'); ?>[]" id="<?php echo $this->get_field_id('category'); ?>" class="widefat" multiple="multiple">
 				<option id="All" value="0" <?php echo in_array(0, (array) $instance['category'] ) ? ' selected="selected"' : ''?>>ALL CATEGORIES</option>
 				<?php
@@ -508,7 +541,7 @@ echo '	<div class="news-contents">';
 				?>
 			</select>
 			<p>
-					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?'); ?></label>
+					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?', 'wp-rss-multi-importer'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
 						$myoptions = array('2','5','6','7', '8', '10', '15','20');
@@ -522,7 +555,7 @@ echo '	<div class="news-contents">';
 				
 				
 				<p>
-						<label for="<?php echo $this->get_field_id('maxposts'); ?>"><?php _e('How many posts per feed?'); ?></label>
+						<label for="<?php echo $this->get_field_id('maxposts'); ?>"><?php _e('How many posts per feed?', 'wp-rss-multi-importer'); ?></label>
 						<select name="<?php echo $this->get_field_name('maxposts'); ?>" id="<?php echo $this->get_field_id('maxposts'); ?>" class="widefat">
 							<?php
 							$postoptions = array('1','2', '3', '4', '5','6');
@@ -548,7 +581,7 @@ echo '	<div class="news-contents">';
 								//]]>   
 							  </script>
 				<p>
-					 <label for="<?php echo $this->get_field_id('background'); ?>"><?php _e('Background Color:'); ?></label> 
+					 <label for="<?php echo $this->get_field_id('background'); ?>"><?php _e('Background Color:', 'wp-rss-multi-importer'); ?></label> 
 					 <input class="widefat" id="<?php echo $this->get_field_id('background'); ?>" name="<?php echo $this->get_field_name('background'); ?>" type="text" value="<?php if($background) { echo $background; } else { echo '#cccccc'; } ?>" />
 					<div class="cw-color-picker" rel="<?php echo $this->get_field_id('background'); ?>"></div>
 							

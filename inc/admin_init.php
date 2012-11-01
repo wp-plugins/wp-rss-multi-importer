@@ -11,6 +11,8 @@
 
 add_action('admin_init','wp_rss_multi_importer_start');
 
+
+
 function wp_rss_multi_importer_start () {
 	
 register_setting('wp_rss_multi_importer_options', 'rss_import_items');
@@ -22,6 +24,7 @@ register_setting('wp_rss_multi_importer_post_options', 'rss_post_options');
 register_setting('wp_rss_multi_importer_admin_options', 'rss_admin_options');	 
 add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprssimport' );  
 
+
 }
 
 add_action('init', 'ilc_farbtastic_script');
@@ -31,10 +34,6 @@ function ilc_farbtastic_script() {
 }
 
 
-function wp_rss_mi_lang_init() {
-  load_plugin_textdomain( 'WP_RSS_Multi_Importer', false, dirname( plugin_basename( __FILE__ ) ). '/lang/' );   // load the language files
-}
-add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 function isMobile() {
@@ -92,13 +91,13 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin'  && $wprssmi_admin_options['dismiss_slug'] != "true" ) {
 		?>
 		<div id="message" class="updated fade">
-		<h3><?php _e("If you find this plugin helpful, let others know by <a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\">rating it here</a>. That way, it will help others determine whether or not they should try out the plugin. Thank you.")?></h3>
+		<h3><?php _e("If you find this plugin helpful, let others know by <a target=\"_blank\" href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\">rating it here</a>. That way, it will help others determine whether or not they should try out the plugin. Thank you.", 'wp-rss-multi-importer')?></h3>
 		<form method="post" action="options.php">		
 			<?php 
 			settings_fields('wp_rss_multi_importer_admin_options');
 			?>
 			<input type="hidden" name="rss_admin_options[dismiss_slug]" value="true">
-			<input type="submit" value="<?php _e("Dismiss This Message")?>" name="submit">
+			<input type="submit" value="<?php _e("Dismiss This Message", 'wp-rss-multi-importer')?>" name="submit">
 			</form>
 		
 			</div>
@@ -106,7 +105,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 }
 ?>
 		<div id="icon-themes" class="icon32"></div>
-		<h2><?php  _e("WP RSS Multi-Importer Options")?></h2>
+		<h2><?php  _e("WP RSS Multi-Importer Options", 'wp-rss-multi-importer')?></h2>
 		<?php settings_errors(); ?>
 		
 		<?php if( isset( $_GET[ 'tab' ] ) ) {
@@ -130,14 +129,14 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		} // end if/else ?>
 		
 		<h2 class="nav-tab-wrapper">
-			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("RSS Feeds")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Setting Options")?></a>
-			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Category Options")?></a>
-			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Style Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export Feed Options")?></a>
-					<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Options")?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Help & More...")?></a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("RSS Feeds", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Setting Options", 'wp-rss-multi-importer')?></a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Category Options", 'wp-rss-multi-importer')?></a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Style Options", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export Feed Options", 'wp-rss-multi-importer')?></a>
+					<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Options", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Help & More...", 'wp-rss-multi-importer')?></a>
 		</h2>
 
 			<?php

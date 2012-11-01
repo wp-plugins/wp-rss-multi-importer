@@ -18,13 +18,13 @@ jQuery(function() { // when document has loaded
 			var i = (jQuery('div.wprss-input').get(-1).id);
 		}
 	i=parseInt(i)+1;
-	
+	var delstr=add_remove_parms;
 
 	jQuery('a#add').click(function() { // when you click the add link				
 
 		jQuery( "<div class='wprss-input'"+i+"'  id="+i+"><p><label class='textinput' for='feed_name_" + i + "'>Feed Name " + i + "</label>" +
 
-		        "<input id='feed_name_" + i + "' class='wprss-input' size='100' name='rss_import_items[feed_name_" + i + "]' type='text' value='' /> <a href='#' class='btnDeleteNew' id='"+i+"'>Delete this feed</a></p>" +
+		        "<input id='feed_name_" + i + "' class='wprss-input' size='100' name='rss_import_items[feed_name_" + i + "]' type='text' value='' /> <a href='#' class='btnDeleteNew' id='"+i+"'>"+delstr.delfeed+"</a></p>" +
 
 			"<p><label class='textinput' for='feed_url_" + i + "'>Feed URL " + i + "</label>" +
 			
@@ -55,10 +55,11 @@ jQuery(function() { // when document has loaded
 		i=parseInt(i)+1;
 		
 		
+	
 		
 		jQuery( "<div class='cat-input'"+i+"'  id="+i+"><p><label class='textinput' for='cat_name_" + i + "'>Category Name</label>" +
 
-		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>Delete this category</a></p>" +
+		        "<input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[cat_name_" + i + "]' type='text' value='' /> <input id='cat_name_" + i + "' class='cat-input' size='25' name='rss_import_categories[id_" + i + "]' type='hidden' value="+ i+" /><a href='#' class='btnDeleteNew' id='"+i+"'>"+delstr.delcat+"</a></p>" +
 
 
 			
@@ -85,6 +86,7 @@ jQuery(function() { // when document has loaded
     jQuery(document).on('change', '.url-item', function() {
        //alert(isvalidurl(jQuery(this).val()));  //for testing
         var $messageDiv = jQuery('#errormsg');
+		var urlprob=add_remove_parms;
         if (isvalidurl(jQuery(this).val())) { 
         	jQuery(this).removeClass("errorfld");
         	$messageDiv.hide().html('');
@@ -92,7 +94,7 @@ jQuery(function() { // when document has loaded
         else 
        	 {
        	 	jQuery(this).addClass("errorfld") ;
-        	$messageDiv.show().html('Bad URL- feeds start with http');
+			$messageDiv.show().html(urlprob.urlcheck);
         };
     });
 
@@ -137,6 +139,35 @@ jQuery(function() { // when document has loaded
 	});
 	
 	
-	
+	jQuery(document).on('change', '#wpcategory',function() {
+		var chkstr=add_remove_parms;
+		var intRegex = /^\d+$/;
+		if(!intRegex.test(this.value)){
+		alert(chkstr.intcheck);
 		
+		} 		
+	});
+	
+	
+	
+	///testing stuff here on
+	
+	
+	jQuery(function() {
+
+	            // Binding a click event
+	            // From jQuery v.1.7.0 use .on() instead of .bind()
+	            jQuery('#my-button').on('click', function(e) {
+
+	                // Prevents the default action to be triggered.
+	                e.preventDefault();
+
+	                // Triggering bPopup when click event is fired
+	                jQuery('#element_to_pop_up').bPopup();
+
+	            });
+
+	        });
+	
+	
 		

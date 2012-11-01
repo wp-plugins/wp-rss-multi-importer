@@ -52,6 +52,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
 		$content=str_replace("&#160;&#187;","",$content);	
+
+	$content = htmlentities($content, ENT_COMPAT, 'UTF-8');	
+		
 	return 	$content;
 	}
 	
@@ -68,11 +71,11 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$leadmatch=2;	
 	}
 
+
 	if ($leadmatch==1 || $leadmatch==2){
 		//	if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){  //matches a leading image
 			
-			
-		
+
 
 			if ($adjustImageSize==1){
 				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($matches[2])."</div>";

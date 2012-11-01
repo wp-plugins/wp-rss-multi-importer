@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.44
+  Version: 2.45
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.44 );
+define( 'WP_RSS_MULTI_VERSION', 2.45 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -80,6 +80,10 @@ require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
    add_shortcode('wp_rss_multi_importer','wp_rss_multi_importer_shortcode');
  
 
+function wp_rss_mi_lang_init() {
+  load_plugin_textdomain( 'wp-rss-multi-importer', false, dirname( plugin_basename( __FILE__ ) ). '/lang/' );   // load the language files
+}
+add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 
@@ -148,7 +152,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
 
-	if ($option_items==false) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds");
+	if ($option_items==false) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds", 'wp-rss-multi-importer');
 
 
 $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
@@ -280,11 +284,11 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));  // for backwa
 
    }
 
-  if ($maxposts=="") return _e("One more step...go into the the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose Options.</a>");  // check to confirm they set options
+  if ($maxposts=="") return _e("One more step...go into the the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose Options.</a>", 'wp-rss-multi-importer');  // check to confirm they set options
 
 if (empty($myfeeds)){
 	
-	return _e("You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.");
+	return _e("You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.", 'wp-rss-multi-importer');
 	exit;
 }
 
@@ -322,7 +326,7 @@ if (empty($url)) {continue;}
 				echo $feed->get_error_message();
 				}	
 		if ($size<4){
-			return _e("You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.");
+			return _e("You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.", 'wp-rss-multi-importer');
 			exit;
 
 		}else{
@@ -420,7 +424,7 @@ if ($dumpthis==1){
 }
 if (!isset($myarray) || empty($myarray)){
 	
-	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.");
+	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
 		exit;
 }
 
@@ -505,7 +509,7 @@ $end = ($currentPage * $perPage) + $perPage;
 //  templates checked and added here
 
 	if (!isset($template) || $template=='') {
-	return _e("One more step...go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>");
+	return _e("One more step...go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>", 'wp-rss-multi-importer');
 	}
 	
 
@@ -522,10 +526,10 @@ if ($pag==1){
 $readable .='<div class="pag_box">';
 
 if($numPages > $currentPage && ($currentPage + 1) < $numPages)  
-    $readable .=  '<a href="http://'.$currentURL.'pg=' . ($currentPage + 1) . '" class="more-prev">'.__('Next page').' »</a>';
+    $readable .=  '<a href="http://'.$currentURL.'pg=' . ($currentPage + 1) . '" class="more-prev">'.__('Next page', 'wp-rss-multi-importer').' »</a>';
 
 	if($currentPage > 0 && $currentPage < $numPages)  
-	    $readable .= '<a href="http://'.$currentURL.'pg=' . ($currentPage - 1) . '" class="more-prev">« '.__('Previous page').'</a>';  
+	    $readable .= '<a href="http://'.$currentURL.'pg=' . ($currentPage - 1) . '" class="more-prev">« '.__('Previous page', 'wp-rss-multi-importer').'</a>';  
 
 $readable .='</div>';
 
