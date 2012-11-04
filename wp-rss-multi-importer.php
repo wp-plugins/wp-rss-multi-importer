@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.45
+  Version: 2.46
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.45 );
+define( 'WP_RSS_MULTI_VERSION', 2.46 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -358,9 +358,8 @@ if (empty($url)) {continue;}
 
 						}
 						
-						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
-					//	$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
-
+						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+				
 						unset($mediaImage);
 			}
 
@@ -385,9 +384,8 @@ if (empty($url)) {continue;}
 			}
 				
 	
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
 				
-				//$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description(),"myimage"=>$mediaImage);
 					
 						unset($mediaImage);
 					

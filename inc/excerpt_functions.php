@@ -18,6 +18,8 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage)  //show excerpt function
 	{
+		
+	
 		global $morestyle;
     $content=CleanHTML($content);
 
@@ -51,12 +53,37 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	function CleanHTML($content){
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
-		$content=str_replace("&#160;&#187;","",$content);	
+		$content=str_replace("&#160;&#187;","",$content);
+		$content=str_replace("&#160;","",$content);
 
-	$content = htmlentities($content, ENT_COMPAT, 'UTF-8');	
+$content =_decodeAccented($content);
 		
 	return 	$content;
 	}
+	
+	
+	
+	
+	function _decodeAccented($encodedValue, $options = array()) {
+	    $options += array(
+	        'quote'     => ENT_NOQUOTES,
+	        'encoding'  => 'UTF-8',
+	    );
+	    return preg_replace_callback(
+	        '/&\w(acute|uml|tilde|cedil|circ|grave|ordm|ordf);/',
+	        create_function(
+	            '$m',
+	            'return html_entity_decode($m[0], ' . $options['quote'] . ', "' .
+	            $options['encoding'] . '");'
+	        ),
+	        $encodedValue
+	    );
+	}
+	
+	
+	
+	
+	
 	
 	
 	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink){
@@ -122,6 +149,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	function verifyimage($imageURL) {
+		$imageURL = preg_replace('/\?.*/', '', $imageURL);
 	    if( preg_match('#^http:\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
 	    {
 	        $msg = TRUE; 

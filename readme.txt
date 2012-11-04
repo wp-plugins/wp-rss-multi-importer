@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.45
+Stable tag: 2.46
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
@@ -45,8 +45,8 @@ An extremely flexible plugin that imports RSS feeds to show on your Wordpress si
 * Show an excerpt (and select the number of words to show - 50, 100, 200, 300)
 * Select how you would like the links to open (in a Lightbox, a new window, or the current window)
 * Set the links as no-follow or not
-* Suppress images in excerpts of you want
-* Resize images in excerpts (may slow down how quickly the page loads)
+* Suppress images in excerpts if you want
+* Resize images in excerpts
 * Allow users to determine whether to show-hide excerpts
 * Set caching time for faster page loading
 * Export all the feeds as a single RSS feed
@@ -119,6 +119,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.46 =
+* More fixes related to the foreign language character problem.  RSS content tag now used for excerpt so full text available if in the feed.
 = Version 2.45 =
 * Added option to show images in widget.  Fixed foreign language character problem.  Other smaller bug fixes.
 = Version 2.44 =

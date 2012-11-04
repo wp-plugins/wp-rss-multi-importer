@@ -108,7 +108,7 @@ function wp_rss_multi_importer_more_page(){
 			<h3><label for="title"><?php _e("How Does This Work?", 'wp-rss-multi-importer')?></label></h3>
 			<div class="inside">
 <p><?php _e("This plugin does several different things.  Mainly, it brings in RSS feeds and aggregates and sorts them and puts them on your web site.  You can assign categories to the feeds.", 'wp-rss-multi-importer')?></p>
-<p>I<?php _e("t can put them on your web site in 3 different ways. First, it can present them using shortcode using one of 8 different templates (see the Settings Option for this).  Second, it can take the feeds and put them directly into your blog posts, so people can comment on them (see the Feed to Post Options for this).  Third, it provide you with a feed to give your readers (see the Export Feed Options for this).", 'wp-rss-multi-importer')?></p>
+<p>I<?php _e("You can put them on your web site in 3 different ways. First, you can present them using shortcode using one of 8 different templates (see the Settings Option for this).  Second, the plugin can take the feeds and put them directly into your blog posts, so people can comment on them (see the Feed to Post Options for this).  Third, it provides you with a feed to give your readers (see the Export Feed Options for this).", 'wp-rss-multi-importer')?></p>
 <p><?php _e("Finally, you don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>
 
 
