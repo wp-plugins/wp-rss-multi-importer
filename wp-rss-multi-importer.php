@@ -2,14 +2,14 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.46
+  Version: 2.47
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.46 );
+define( 'WP_RSS_MULTI_VERSION', 2.47 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -124,6 +124,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'dumpthis' =>0,
 		'cachetime'=>NULL,
 		'pinterest'=>0,
+		'maxperpage' =>0,
+		'noimage' => 0,
 		'morestyle' =>'[...]'
 		), $atts);
 	
@@ -141,13 +143,14 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
     $morestyle = $parms['morestyle'];
 	global $maximgwidth;
 	$maximgwidth = $parms['maximgwidth'];
-	$thisfeed = $parms['thisfeed'];  // max posts per category
+	$thisfeed = $parms['thisfeed'];  // max posts per feed
 	$timerstop = $parms['timer'];
 	$dumpthis= $parms['dumpthis'];  //diagnostic parameter
 	$cachename='wprssmi_'.$thisCat;
 	$cachetime=$parms['cachetime'];
 	$pinterest=$parms['pinterest'];
-
+	$parmmaxperpage=$parms['maxperpage'];
+	$noimage=$parms['noimage'];
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -205,6 +208,8 @@ if ($floatType=='1'){
 }
 
 if ($parmfloat!='') $float=$parmfloat;
+if($parmmaxperpage!=0) $maxperPage=$parmmaxperpage;
+if ($noimage==1) $stripAll=1;
 
 if ($pinterest==1){
 		$divfloat="left";

@@ -85,7 +85,9 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Specific the number of posts per feed instead of using the general number in the settings panel<", 'wp-rss-multi-importer')?>/td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
 <tr ><td ><?php _e("Change the float of the elements in the feed", 'wp-rss-multi-importer')?></td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
+<tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in settings option</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
 
+<tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in settings option</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 	
 </table>
 
@@ -108,7 +110,7 @@ function wp_rss_multi_importer_more_page(){
 			<h3><label for="title"><?php _e("How Does This Work?", 'wp-rss-multi-importer')?></label></h3>
 			<div class="inside">
 <p><?php _e("This plugin does several different things.  Mainly, it brings in RSS feeds and aggregates and sorts them and puts them on your web site.  You can assign categories to the feeds.", 'wp-rss-multi-importer')?></p>
-<p>I<?php _e("You can put them on your web site in 3 different ways. First, you can present them using shortcode using one of 8 different templates (see the Settings Option for this).  Second, the plugin can take the feeds and put them directly into your blog posts, so people can comment on them (see the Feed to Post Options for this).  Third, it provides you with a feed to give your readers (see the Export Feed Options for this).", 'wp-rss-multi-importer')?></p>
+<p><?php _e("You can put them on your web site in 3 different ways. First, you can present them using shortcode using one of 8 different templates (see the Settings Option for this).  Second, the plugin can take the feeds and put them directly into your blog posts, so people can comment on them (see the Feed to Post Options for this).  Third, it provides you with a feed to give your readers (see the Export Feed Options for this).", 'wp-rss-multi-importer')?></p>
 <p><?php _e("Finally, you don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>
 
 

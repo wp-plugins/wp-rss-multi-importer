@@ -114,8 +114,8 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 				$active_tab = 'setting_options';
 		} else if( $active_tab == 'category_options' ) {
 			$active_tab = 'category_options';
-		} else if( $active_tab == 'style_options' ) {
-			$active_tab = 'style_options';
+		} else if( $active_tab == 'shortcode_parameters' ) {
+			$active_tab = 'shortcode_parameters';
 		} else if( $active_tab == 'template_options' ){
 				$active_tab = 'template_options';
 		} else if( $active_tab == 'feed_options' ){
@@ -132,7 +132,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("RSS Feeds", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Setting Options", 'wp-rss-multi-importer')?></a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Category Options", 'wp-rss-multi-importer')?></a>
-			<a href="?page=wp_rss_multi_importer_admin&tab=style_options" class="nav-tab <?php echo $active_tab == 'style_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Style Options", 'wp-rss-multi-importer')?></a>
+			<a href="?page=wp_rss_multi_importer_admin&tab=shortcode_parameters" class="nav-tab <?php echo $active_tab == 'shortcode_parameters' ? 'nav-tab-active' : ''; ?>"><?php  _e("Shortcode Parameters", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export Feed Options", 'wp-rss-multi-importer')?></a>
 					<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Options", 'wp-rss-multi-importer')?></a>
@@ -153,7 +153,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			
 			wp_rss_multi_importer_category_page();
 			
-		} else if ( $active_tab == 'style_options' ) {
+		} else if ( $active_tab == 'shortcode_parameters' ) {
 			
 			wp_rss_multi_importer_style_tags();
 			

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 2.9
 Tested up to: 3.4.2
-Stable tag: 2.46
+Stable tag: 2.47
 Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
 
 == Description ==
@@ -35,7 +35,7 @@ An extremely flexible plugin that imports RSS feeds to show on your Wordpress si
 = Features =
 
 * Templates - choose from 8 different templates, create and style your own and save it
-* Import feed items (like news) and creates blog posts so readers can comment on them
+* Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site (when not in pagination mode)
@@ -119,6 +119,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.47 =
+* Added more options to put Feed to Post entries into your blog categories. Added more shortcode parameters and fixed various bugs.
 = Version 2.46 =
 * More fixes related to the foreign language character problem.  RSS content tag now used for excerpt so full text available if in the feed.
 = Version 2.45 =

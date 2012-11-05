@@ -37,6 +37,19 @@ function fetch_rss_callback() {
 }
 
 
+function filter_id_callback($val) {
+    if ($val != null){
+	return true;
+}
+}
+
+function get_values_for_id_keys($mapping, $keys) {
+    foreach($keys as $key) {
+        $output_arr[] = $mapping[$key];
+    }
+    return $output_arr;
+}
+
 
 
 
@@ -84,18 +97,24 @@ $maxperPage=$options['maxperPage'];
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
 
-$thisCategory=$post_options['category'];
 
-if (!isset($post_options['category'])){
-	$thisCategory=0;
+
+
+$wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback');
+
+
+
+if (!empty($wpcatids)){
+	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));
+}else{
+	$catArray=array(0);
+	
 }
-$catArray=array($thisCategory);
 
 
-$wpcategory=$post_options['wpcategory'];  // this is the wordpress category the feed should be entered into - tag_id
-if (!isset($post_options['wpcategory'])){
-	$wpcategory=0;
-}
+
+
+
 
 
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
@@ -145,15 +164,15 @@ if ($floatType=='1'){
 	$key =key($option_items);
 	
 
+$rssCatID=$option_items[$key]; 
 
 
-
-if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
-
+if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {  //makes sure only desired categories are included
 
 
-   $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
-	
+	$myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL,"FeedCatID"=>$rssCatID); //with Feed Category ID
+
+
 }
    
 $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));  // for backward compatibility
@@ -206,30 +225,62 @@ if (empty($myfeeds)){
 	$maxfeed= $feed->get_item_quantity(0);  
 
 
-//SORT DEPENDING ON SETTINGS
+	//SORT DEPENDING ON SETTINGS
 
-	if($sortDir==1){
+		if($sortDir==1){
 
-		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
-			$item = $feed->get_item($i);
-			 if (empty($item))	continue;
-		
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
+			for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
+				$item = $feed->get_item($i);
+				 if (empty($item))	continue;
+
+
+
+
+							if ($enclosure = $item->get_enclosure()){
+								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+									$mediaImage=$item->get_enclosure()->get_thumbnail();
+								}else if (!IS_NULL($item->get_enclosure()->get_link())){
+									$mediaImage=$item->get_enclosure()->get_link();	
+								}
+
+							}
+
+							$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+					
+							unset($mediaImage);
+				}
+
+			}else{	
+
+			for ($i=0;$i<=$maxposts-1;$i++){
+					$item = $feed->get_item($i);
+					if (empty($item))	continue;	
+
+
+
+
+
+				if ($enclosure = $item->get_enclosure()){
+
+					if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+						$mediaImage=$item->get_enclosure()->get_thumbnail();
+					}else if (!IS_NULL($item->get_enclosure()->get_link())){
+						$mediaImage=$item->get_enclosure()->get_link();	
+					}
+
+				}
+
+
+					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+
+				
+							unset($mediaImage);
+
+					}	
 			}
 
-		}else{	
 
-		for ($i=0;$i<=$maxposts-1;$i++){
-				$item = $feed->get_item($i);
-				if (empty($item))	continue;	
-				
-					
-					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
-				}	
 		}
-
-
-	}
 
 
 
@@ -304,10 +355,18 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
 	
 	}
   	$post['post_content'] = $thisContent;
-	$post['post_category'] = array($wpcategory);  // category number goes here - tag_id
-    $post_id = wp_insert_post($post);
+
+	$mycatid=$items["mycatid"];
+
+	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
+	
+	$blogcatid=array($post_options['categoryid']['wpcatid'][$catkey]);
+	
+	$post['post_category'] =$blogcatid;
+	
+   	$post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $items["mylink"]);
-	//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )
+				//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )
 	unset($post);
 }
 

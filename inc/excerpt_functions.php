@@ -55,8 +55,14 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&nbsp;", " ", $content);
 		$content=str_replace("&#160;&#187;","",$content);
 		$content=str_replace("&#160;","",$content);
+		$content=str_replace("&#173;","",$content);
+		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem
 
-$content =_decodeAccented($content);
+		
+		$content =_decodeAccented($content);
+		
+
+
 		
 	return 	$content;
 	}

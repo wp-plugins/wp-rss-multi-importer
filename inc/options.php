@@ -709,8 +709,7 @@ function wp_rss_multi_importer_post_page() {
 <OPTION VALUE="private" <?php if($post_options['post_status']=="private"){echo 'selected';} ?>>private</OPTION>
 </SELECT></p>
 
-<p><label class='o_textinput' for='wpcategory'><?php _e("What Wordpress blog post category, if any, do you want these posts to enter as?  Enter the ID number of this category.", 'wp-rss-multi-importer')?></label>
-	<input id="wpcategory" type="text" value="<?php echo $post_options['wpcategory']?>" name="rss_post_options[wpcategory]" size="2" maxlength="3"><a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank"><?php _e("How to find this ID number.", 'wp-rss-multi-importer')?></a></p>
+
 
 
 
@@ -777,16 +776,45 @@ function wp_rss_multi_importer_post_page() {
 <p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
 </p>
 
+
 <?php
+
+
+
 $catOptions= get_option( 'rss_import_categories' ); 
 
 	if ( !empty($catOptions) ) {
+		echo "<h3><label class='o_textinput' for='category'>".__('Restrict feeds to one of your defined RSS Multi Importer categories and place them in your blog categories', 'wp-rss-multi-importer')."</label></h3>";
+			echo "<p>".__('Choose a category and enter 0 if you want this to go into an uncategorized category on your blog, or enter the ID number of the blog category you want the posts to go into. <a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a>', 'wp-rss-multi-importer')."</p>";
+				
+
+
+echo '<div class="ftpost_head">Category</div><div class="ftpost_head">Blog Category ID</div><div style="clear:both;"></div>';	
+		$catsize = count($catOptions);
+		$postoptionsize= $catsize/2;
+		for ( $q=1; $q<=$postoptionsize; $q++ ){
+			
+		
+			
+			if ($post_options['categoryid']['wpcatid'][$q]<>'' || $q==1){
+			echo "<div class='category_id_options' id='$q'>";
+		
+			}else{	
+			echo "<div class='category_id_options' id='$q' style='display:none'>";
+			}
 ?>
-<p><label class='o_textinput' for='category'><?php _e("Restrict feeds to one of your defined RSS Multi Importer categories", 'wp-rss-multi-importer')?></label>
-	<SELECT NAME="rss_post_options[category]">
+
+<p><span class="ftpost_l"><SELECT NAME="rss_post_options[categoryid][plugcatid][<?php echo $q ?>]">
 <OPTION VALUE='0'>All</OPTION>
 <?php
-	$catsize = count($catOptions);
+
+
+
+
+
+
+
+
 
 
 
@@ -801,7 +829,7 @@ next( $catOptions );
 	$IDValue=$catOptions[$catkey];
 
 
-	 if($post_options['category']==$IDValue){
+	 if($post_options['categoryid']['plugcatid'][$q]==$IDValue){
 		$sel='selected  ';
 
 		} else {
@@ -813,7 +841,22 @@ echo "<OPTION " .$sel.  "VALUE=".$IDValue.">".$nameValue."</OPTION>";
 next( $catOptions );
 
 }
-echo "</SELECT>";
+echo "</SELECT></span><span class='ftpost_r'>";
+echo "<input id='wpcategory' type='text' name='rss_post_options[categoryid][wpcatid][$q]' size='2' maxlength='3' value=".$post_options['categoryid']['wpcatid'][$q]." ></span></p></div>";
+reset($catOptions);
+
+}
+
+echo "<a href='javascript:void(0)' class='add_cat_id'>Add another category</a>";
+
+
+
+
+
+
+
+
+
 }else{
 	
 	echo __("<b>NOTE: If you set up categories (in Category Options) you can restrict only feeds in that category to go into blog posts.</b> ", 'wp-rss-multi-importer');
@@ -835,6 +878,7 @@ echo "</SELECT>";
 </div></div></div>
 <?php
 }
+
 
 
 

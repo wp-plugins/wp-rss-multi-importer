@@ -4,7 +4,7 @@
     padding-bottom: 10px;
     padding-left: 10px;
     padding-top: 10px;
-    width: 800px;
+    width: 820px;
 }
 
 .wprss-input p { line-height: 28px; }
@@ -58,5 +58,37 @@
 
 .save_warning{
 	color:red !important;
+}
+
+
+#element_to_pop_up {
+    background-color:#fff;
+    border-radius:15px;
+    color:#000;
+    display:none;
+    padding:20px;
+    min-width:400px;
+    min-height: 180px;
+max-width:450px;
+}
+.bClose{
+    cursor:pointer;
+    position:absolute;
+    right:10px;
+    top:5px;
+}
+
+.ftpost_head{
+	float:left;
+	margin-right:30px;
+	margin-left:20px;
+	font-weight:bold;
+}
+
+.ftpost_l{
+	margin:10px;
+}
+.ftpost_r{
+	margin:10px;
 }
 	

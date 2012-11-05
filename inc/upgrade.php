@@ -38,12 +38,31 @@ function upgrade_db() {
 	$post_settings = array(
 		'active'=> 0,
 		'post_status' => 'draft',
+		'maxperfetch' => 5,
 		'maxfeed' => 5,
 		'category' => 0			
 	);
 	
 		update_option( 'rss_post_options', $post_settings );
 	}
+	
+	//this is for adding multiple categories to the feed to post feature (version 2.47)
+	
+	if (!isset($post_options['categoryid']['plugcatid'])|| $post_options['categoryid']['plugcatid']==='') {
+		echo "true";
+		
+		foreach ( $post_options as $key => $value) {
+			$post_settings[ $key ] = $value;
+		}
+	
+		$post_settings['categoryid']['plugcatid'][1]=$post_options['category'];
+		$post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
+			update_option( 'rss_post_options', $post_settings );
+	}
+
+	
+	
+	
 	
 	//for resetting the admin message
 	if ($plugin_version<2.40){
@@ -52,7 +71,7 @@ function upgrade_db() {
 	//update_option( 'wprssmi_admin_options', $post_settings );
 	}
 	
-
+	//var_dump($option_settings);
 	
 	if (empty($option_settings)){
 
@@ -77,9 +96,6 @@ function upgrade_db() {
 	
 	
 }
-
-
-
 
 
 

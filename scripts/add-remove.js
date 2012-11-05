@@ -142,12 +142,24 @@ jQuery(function() { // when document has loaded
 	jQuery(document).on('change', '#wpcategory',function() {
 		var chkstr=add_remove_parms;
 		var intRegex = /^\d+$/;
-		if(!intRegex.test(this.value)){
+		this.value = this.value.replace(/ /g,'');
+		if(!intRegex.test(this.value)&& this.value!=''){
 		alert(chkstr.intcheck);
-		
+		jQuery("#wpcategory").val('');
 		} 		
 	});
 	
+	
+	
+	jQuery(document).ready( function( $ ){		
+		jQuery(".add_cat_id").click(function() {
+	var p= $('div.category_id_options:not([style*="display:none"])').length;
+
+	        var $id =p+1;
+
+			jQuery('#'+$id).show("slow");	
+	    });
+			});
 	
 	
 	///testing stuff here on
@@ -170,4 +182,4 @@ jQuery(function() { // when document has loaded
 	        });
 	
 	
-		
+	
