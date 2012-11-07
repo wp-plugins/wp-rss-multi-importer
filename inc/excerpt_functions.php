@@ -94,6 +94,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink){
 		$leadmatch=0;	
+		global $YTmatch;
 		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image if it exists
 		
 		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image if it exists
@@ -115,21 +116,22 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			}else{
 				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$matches[2]."</div>";
 			}
-			
+		
 			
 				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
 
 				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
-				
-					if ($leadmatch==1){  //replace leading link with link to web page - ensures this works, especially for youtube
+			
+					if ($leadmatch==1 and $YTmatch==1){  //replace leading link with link to web page - ensures this works, especially for youtube
 
-						$content=str_replace($matches[1], $thisLink, $content);
+						$content=str_replace($matches[1], $thisLink, $content, $limit=1);  ///works with youtube
+			
 					}
 
 				$content=str_replace("<a ","<a ".$openWindow." " , $content,  $count = 1);  // add window open to leading image, if it exists
-
+	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
-			
+
 			$mediaImage="<img src=\"$mediaImage\">";
 			
 				if ($adjustImageSize==1){
@@ -156,6 +158,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	function verifyimage($imageURL) {
 		$imageURL = preg_replace('/\?.*/', '', $imageURL);
+	
 	    if( preg_match('#^http:\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
 	    {
 	        $msg = TRUE; 

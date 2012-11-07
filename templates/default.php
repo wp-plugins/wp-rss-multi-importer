@@ -51,6 +51,8 @@ if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
 	    $video_id = $match[1];
 		$items["mylink"]='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
 		$openWindow='class="rssmi_youtube"';
+		global $YTmatch;
+		$YTmatch=1;
 	}
 }
 
