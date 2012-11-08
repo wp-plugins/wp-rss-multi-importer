@@ -48,8 +48,11 @@ function upgrade_db() {
 	
 	//this is for adding multiple categories to the feed to post feature (version 2.47)
 	
+		$post_options = get_option('rss_post_options');
+		
+		
 	if (!isset($post_options['categoryid']['plugcatid'])|| $post_options['categoryid']['plugcatid']==='') {
-
+	
 		
 		foreach ( $post_options as $key => $value) {
 			$post_settings[ $key ] = $value;
@@ -96,6 +99,9 @@ function upgrade_db() {
 	
 	
 }
+
+
+
 
 
 
