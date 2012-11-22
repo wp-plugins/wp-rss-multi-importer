@@ -14,7 +14,7 @@ add_action('init', 'rssmi_rss');
 function rssmi_rss(){
 	$feed_options = get_option('rss_feed_options', 'option not found');
 	global $wp_rewrite;
-	$wp_rewrite->flush_rules();
+	//$wp_rewrite->flush_rules();
 	
 	if (!empty($feed_options)){
 	
