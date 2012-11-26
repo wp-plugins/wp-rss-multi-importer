@@ -18,5 +18,12 @@ function delete_db_transients() {
 }
 
 
+function list_the_plugins() {
+    $plugins = get_option ( 'active_plugins', array () );
+    foreach ( $plugins as $plugin ) {
+        echo "<li>$plugin</li>";
+    }
+}
+
 
 ?>

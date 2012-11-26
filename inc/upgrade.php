@@ -71,10 +71,10 @@ function upgrade_db() {
 	if ($plugin_version<2.40){
 	$wprssmi_admin_options = get_option( 'rss_admin_options' );
 	$wprssmi_admin_options['dismiss_slug'] ='false';
-	//update_option( 'wprssmi_admin_options', $post_settings );
+
 	}
 	
-	//var_dump($option_settings);
+
 	
 	if (empty($option_settings)){
 

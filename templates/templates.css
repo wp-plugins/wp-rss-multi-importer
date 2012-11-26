@@ -1,13 +1,24 @@
 /*
-    CSS FOR THE TEMPLATES
+    CSS FOR THE WIDGET */
+
+div.news a{
+	/*color:#cccccc;  */  /* change to any color you want for the feed item title */
+}
+
+.widgettitle a {
+	/*  color:#cccccc !important; */    /* change to any color you want for the wdiget title */
+	
+}
    
-*/
+/* End */
+
+
 
 /*  DEFAULT AND DATE ABOVE TEMPLATES - START */
 div.rss-output {
 	
 	padding: 1.025em;
-/*float: left; */  /*  uncomment to float all posts to the left */
+//float: left; */  /*  uncomment to float all posts to the left */
 	
 
 }

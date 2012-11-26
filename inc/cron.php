@@ -3,19 +3,83 @@
 
 add_action('wp', 'wp_rss_multi_activation');
 
-add_action('wp_rss_multi_event', 'wp_rss_multi_cron');
 
 function wp_rss_multi_activation() {
+	
 	if ( !wp_next_scheduled( 'wp_rss_multi_event' ) ) {
 		wp_schedule_event( time(), 'hourly', 'wp_rss_multi_event');
 	}
+	
+	$post_schedule_options = get_option('rss_post_options');
+		if(	$post_schedule_options['active']==1){
+			
+			if (isset($post_schedule_options['fetch_schedule'])){
+					$periodnumber=$post_schedule_options['fetch_schedule'];
+				}else{
+			   		$periodnumber = 1;
+			}
+
+		switch ($periodnumber) {
+			case 1: $display_period='hourly'; break;
+			case 2: $display_period='tenminutes'; break;
+			case 12: $display_period='twicedaily'; break;
+			case 24: $display_period='daily'; break;
+			case 168: $display_period='weekly'; break;
+		}	
+					
+							
+	
+	
+	if( !wp_next_scheduled( 'wp_rss_multi_event_feedtopost' ) ){
+	     wp_schedule_event( time(), $display_period, 'wp_rss_multi_event_feedtopost' );
+	  }	
+	
+	}else{
+		wp_rss_multi_deactivation();
+	}
 }
+
+add_action('wp_rss_multi_event', 'wp_rss_multi_cron');
+
+add_action('wp_rss_multi_event_feedtopost', 'wp_rss_multi_cron_feedtopost');
+
+add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule' );
+
+function cron_add_wprssmi_schedule( $schedules ) {  //add a weekly schedule to cron
+	
+	$period=168*3600;
+	$schedules['weekly'] = array(
+		'interval' => $period,
+		'display' => __( 'Once Weekly' )
+	);
+	return $schedules;	
+}
+
+
+
+add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule_10' );
+
+function cron_add_wprssmi_schedule_10( $schedules ) {  //add a 10 min schedule to cron
+	
+	$period=600;
+	$schedules['tenminutes'] = array(
+		'interval' => $period,
+		'display' => __( 'Once Every 10 Minutes' )
+	);
+	return $schedules;	
+}
+
+
 
 function wp_rss_multi_cron() {
 	find_db_transients();
-	rssmi_import_feed_post();
-
 }
+
+
+function wp_rss_multi_cron_feedtopost() {
+	rssmi_import_feed_post();
+}
+
 
 
 function find_db_transients() {
@@ -37,7 +101,7 @@ function find_db_transients() {
 register_deactivation_hook(__FILE__, 'wp_rss_multi_deactivation');
 
 function wp_rss_multi_deactivation() {
-	wp_clear_scheduled_hook('wp_rss_multi_event');
+	wp_clear_scheduled_hook('wp_rss_multi_event_feedtopost');
 }
 
 

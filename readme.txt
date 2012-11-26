@@ -2,10 +2,10 @@
 Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
-Requires at least: 2.9
+Requires at least: 3.0
 Tested up to: 3.4.2
-Stable tag: 2.47
-Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images. 
+Stable tag: 2.50
+Imports and merges multiple RSS and Atom Feeds. Include excerpts with images, 8 templates, categorize, feed to post option, limit feeds/page by category. 
 
 == Description ==
 
@@ -66,7 +66,7 @@ These features are all available in the admin panel.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
-You can also use other parameters for the DEFAULT template which can be customized in the shortcode...this includes:
+You can also use other about 18 other parameters for the DEFAULT template which can be customized in the shortcode...these include:
 
 * Headline font size
 * Headline bold weight
@@ -119,6 +119,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.50 =
+* Many features added, including improved image handling, selecting window option and more cron scheduling options when using Feed to Post, fixed problem with custom posts, ability to choose different templates on different pages (via shortcode), more shortcode pararmeters added, suppress beacon images in feeds, fixed Bing resulting in duplicate entries in Feed to Post, YouTube now opens in lightbox in Feed to Post, and several other bug fixes.
 = Version 2.47 =
 * Added more options to put Feed to Post entries into your blog categories. Added more shortcode parameters and fixed various bugs.
 = Version 2.46 =

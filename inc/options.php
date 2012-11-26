@@ -66,12 +66,13 @@ function check_feed($url){
 
 		if (is_wp_error( $feed ) ) {
 			return "<span class=chk_feed>".__('This feed has errors', 'wp-rss-multi-importer')."</span>";
+			return $feed->get_error_message();
 		//	$error_msg=$feed->get_error_message();
-		//	return "<span  ><button id=my-button class=chk_feed >Error: Click to see</button></span>
-		//	<div id=element_to_pop_up>
-		//	    <a class=bClose>x<a/>
-		//	   This feed is causing errors - this is the error message: '.$error_msg.'
-		//	</div>";
+			//return "<span  ><button id=my-button class=chk_feed >Error: Click to see</button></span>
+			//<div id=element_to_pop_up>
+			  //  <a class=bClose>x<a/>
+			 //  This feed is causing errors - this is the error message: '.$error_msg.'
+			//</div>";
 		}
 		
 }
@@ -271,10 +272,14 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 <OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
-<h4><?php _e("Image Handling", 'wp-rss-multi-importer')?></h4>
+<h3><?php _e("Image Handling", 'wp-rss-multi-importer')?></h3>
+<p><?php _e("An attempt will be made to select an image for your post.  Usually this is the first image in the content or in a feed enclosure, but you have the option - if those are not available - to get the first image in the content.", 'wp-rss-multi-importer')?>
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripAll]" Value="1" <?php if ($options['stripAll']==1){echo 'checked="checked"';} ?></label>
 </p>
-<p><?php _e("You can adjust the leading image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.", 'wp-rss-multi-importer')?></p>
+<p><label class='o_textinput' for='anyimage'><?php _e("Check to use any image in the content if possible", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[anyimage]" Value="1" <?php if ($options['anyimage']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+<p><?php _e("You can adjust the image, if it exists.  Note that including images in your feed may slow down how quickly it renders on your site, so you'll need to experiment with these settings.", 'wp-rss-multi-importer')?></p>
 <p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'><?php _e("If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
 	
 <p style="padding-left:15px"><label class='o_textinput' for='floatType'><?php _e("Float images to the left (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
@@ -307,6 +312,11 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 
 
 <p ><label class='o_textinput' for='cb'><?php _e("Check if you are having colorbox conflict problems.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if ($options['cb']==1){echo 'checked="checked"';} ?></label></p>
+
+
+<p ><label class='o_textinput' for='cb'><?php _e("Check if you want to suppress warning messages.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[warnmsg]" Value="1" <?php if ($options['warnmsg']==1){echo 'checked="checked"';} ?></label></p>
+
+
 <input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='<?php echo WP_RSS_MULTI_VERSION ?>' />
 
 </div></div>
@@ -438,7 +448,7 @@ echo "<SELECT NAME=".$selectName." id='feed_cat'>";
 echo "<OPTION VALUE='0'>NONE</OPTION>";
 	$catsize = count($catOptions);
 
-echo $options[$key];
+//echo $options[$key];
 
 	for ( $k=1; $k<=$catsize; $k++ ) {   
 
@@ -653,6 +663,7 @@ function wp_rss_multi_importer_feed_page() {
 	if (!empty($options['feedslug'])){
 
 		echo "<h3>". __("Your RSS feed is here:", 'wp-rss-multi-importer'). "<br><br><a href=".$url."?feed=".$options['feedslug']." target='_blank'>".$url."?feed=".$options['feedslug']."</a></h3>";
+		echo "<p>". __("To activate this feature, you may need to save your permalinks again by going to Settings -> Permalinks and clicking Save Changes.", 'wp-rss-multi-importer'). "</p>";
 	}else{
 		
 		echo "<h3>". __("Your RSS feed is here:", 'wp-rss-multi-importer')." <br><br>".$url."?feed=[this is your slug]</h3>";
@@ -676,7 +687,7 @@ function wp_rss_multi_importer_post_page() {
   <h2><?php _e("Put Your RSS Feed Into Blog Posts", 'wp-rss-multi-importer')?></h2>
 <p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.", 'wp-rss-multi-importer')?></p>
 <p><?php _e("You can delete any post created by this plugin by simply deleting the post.", 'wp-rss-multi-importer')?></p>
-<p><?php _e("The feed will update into posts every hour.  You must check to activate this feature.", 'wp-rss-multi-importer')?></p>
+<p><?php _e("Choose how often you want feeds to go into your blog posts.  You must check to activate this feature.", 'wp-rss-multi-importer')?></p>
 
        <div id="options">
 
@@ -684,8 +695,12 @@ function wp_rss_multi_importer_post_page() {
 
        <?php
 
+
+
       settings_fields('wp_rss_multi_importer_post_options');
       $post_options = get_option('rss_post_options');    
+
+
 
        ?>
 
@@ -699,6 +714,25 @@ function wp_rss_multi_importer_post_page() {
 
 <p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label>
 </p>
+<?php
+if ($post_options['active']==1){
+wp_rss_multi_deactivation();
+wp_rss_multi_activation();
+}else{	
+wp_rss_multi_deactivation();
+}
+?>
+
+<p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (to change the fetch schedule, first deactivate, then change, then activate again)", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[fetch_schedule]" id="post_status">
+<OPTION VALUE="2" <?php if($post_options['fetch_schedule']=="2"){echo 'selected';} ?>>Every 10 Min.</OPTION>
+<OPTION VALUE="1" <?php if($post_options['fetch_schedule']=="1"){echo 'selected';} ?>>Hourly</OPTION>
+<OPTION VALUE="12" <?php if($post_options['fetch_schedule']=="12"){echo 'selected';} ?>>Twice Daily</OPTION>
+<OPTION VALUE="24" <?php if($post_options['fetch_schedule']=="24"){echo 'selected';} ?>>Daily</OPTION>
+<OPTION VALUE="168" <?php if($post_options['fetch_schedule']=="168"){echo 'selected';} ?>>Weekly</OPTION>
+</SELECT></p>
+
+
 
 <p><label class='o_textinput' for='post_status'><?php _e("Default status of posts", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[post_status]" id="post_status">
@@ -713,7 +747,7 @@ function wp_rss_multi_importer_post_page() {
 
 
 
-<p><label class='o_textinput' for='maxfeed'><?php _e("Number of Entries per Feed", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxfeed'><?php _e("Number of Entries per Feed to Fetch", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maxfeed]">
 <OPTION VALUE="1" <?php if($post_options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($post_options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
@@ -727,7 +761,7 @@ function wp_rss_multi_importer_post_page() {
 
 
 
-<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Post Entries per Hourly Fetch", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (should be much greater than the number of entries per feed)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maxperfetch]">
 <OPTION VALUE="1" <?php if($post_options['maxperfetch']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($post_options['maxperfetch']==2){echo 'selected';} ?>>2</OPTION>
@@ -737,9 +771,16 @@ function wp_rss_multi_importer_post_page() {
 <OPTION VALUE="10" <?php if($post_options['maxperfetch']==10){echo 'selected';} ?>>10</OPTION>
 <OPTION VALUE="15" <?php if($post_options['maxperfetch']==15){echo 'selected';} ?>>15</OPTION>
 <OPTION VALUE="20" <?php if($post_options['maxperfetch']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="100" <?php if($post_options['maxperfetch']==100){echo 'selected';} ?>>100</OPTION>
 </SELECT></p>
 
 
+<p><label class='o_textinput' for='targetWindow'><?php _e("Target Window (when link clicked, where should it open?)", 'wp-rss-multi-importer')?></label>
+	<SELECT NAME="rss_post_options[targetWindow]" id="targetWindow">
+	<OPTION VALUE="0" <?php if($post_options['targetWindow']==0){echo 'selected';} ?>><?php _e("Use LightBox", 'wp-rss-multi-importer')?></OPTION>
+	<OPTION VALUE="1" <?php if($post_options['targetWindow']==1){echo 'selected';} ?>><?php _e("Open in Same Window", 'wp-rss-multi-importer')?></OPTION>
+	<OPTION VALUE="2" <?php if($post_options['targetWindow']==2){echo 'selected';} ?>><?php _e("Open in New Window", 'wp-rss-multi-importer')?></OPTION>
+	</SELECT>
 
 
 <p><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)", 'wp-rss-multi-importer')?></label>
@@ -756,10 +797,13 @@ function wp_rss_multi_importer_post_page() {
 
 
 
+
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maximgwidth]">
 <OPTION VALUE="150" <?php if($post_options['maximgwidth']==150){echo 'selected';} ?>>150px</OPTION>
 <OPTION VALUE="250" <?php if($post_options['maximgwidth']==250){echo 'selected';} ?>>250px</OPTION>
+<OPTION VALUE="350" <?php if($post_options['maximgwidth']==350){echo 'selected';} ?>>350px</OPTION>
+<OPTION VALUE="500" <?php if($post_options['maximgwidth']==500){echo 'selected';} ?>>500px</OPTION>
 <OPTION VALUE="900" <?php if($post_options['maximgwidth']==900){echo 'selected';} ?>><?php _e("unrestricted", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
@@ -767,7 +811,8 @@ function wp_rss_multi_importer_post_page() {
 
 
 
-
+<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if ($post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
+</p>
 
 
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripAll]" Value="1" <?php if ($post_options['stripAll']==1){echo 'checked="checked"';} ?></label>
@@ -787,33 +832,37 @@ $catOptions= get_option( 'rss_import_categories' );
 		echo "<h3><label class='o_textinput' for='category'>".__('Restrict feeds to one of your defined RSS Multi Importer categories and place them in your blog categories', 'wp-rss-multi-importer')."</label></h3>";
 			echo "<p>".__('Choose a category and enter 0 if you want this to go into an uncategorized category on your blog, or enter the ID number of the blog category you want the posts to go into. <a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a>', 'wp-rss-multi-importer')."</p>";
 				
+	//if (count(array_filter($post_options['categoryid']['wpcatid'],'chk_zero_callback')) == 0){
 
+//	echo "<h3>".__('You must select at least one category (or all) and an integer ID of your blog category for this to work...enter 0 if not sure.')."</h3>";
+//	}
 
 echo '<div class="ftpost_head">Category</div><div class="ftpost_head">Blog Category ID</div><div style="clear:both;"></div>';	
 		$catsize = count($catOptions);
 		$postoptionsize= $catsize/2;
 		for ( $q=1; $q<=$postoptionsize; $q++ ){
 			
-		
+
 			
 			if ($post_options['categoryid']['wpcatid'][$q]<>'' || $q==1){
 			echo "<div class='category_id_options' id='$q'>";
-		
+			$selclear=0; // added
 			}else{	
 			echo "<div class='category_id_options' id='$q' style='display:none'>";
+			$selclear=1; // added
 			}
 ?>
 
 <p><span class="ftpost_l"><SELECT NAME="rss_post_options[categoryid][plugcatid][<?php echo $q ?>]">
+	<?php if ($selclear==1){  // added
+	?>
+	<OPTION selected VALUE=''>None</OPTION>
+	<?php
+}
+	?>
+	
 <OPTION VALUE='0'>All</OPTION>
 <?php
-
-
-
-
-
-
-
 
 
 
@@ -829,7 +878,7 @@ next( $catOptions );
 	$IDValue=$catOptions[$catkey];
 
 
-	 if($post_options['categoryid']['plugcatid'][$q]==$IDValue){
+	 if($post_options['categoryid']['plugcatid'][$q]==$IDValue && $selclear==0){  // selclear added
 		$sel='selected  ';
 
 		} else {
@@ -879,8 +928,25 @@ echo "<a href='javascript:void(0)' class='add_cat_id'>Add another category</a>";
 <?php
 }
 
+/*
+function filter_callback($val) {
+    if ($val != null){
+	return true;
+}
+}
 
-
+function get_values_for_keys($mapping, $keys) {
+    foreach($keys as $key) {
+        $output_arr[] = $mapping[$key];
+    }
+    return $output_arr;
+}
+*/
+function chk_zero_callback($val) {
+    if ($val != null){
+	return true;
+}
+}
 
 
 ?>

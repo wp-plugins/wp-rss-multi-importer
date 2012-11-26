@@ -51,6 +51,17 @@ function get_values_for_id_keys($mapping, $keys) {
 }
 
 
+function strip_qs_var($sourcestr,$url,$key){
+	if (strpos($url,$sourcestr)>0){
+		return preg_replace( '/('.$key.'=.*?)&/', '', $url );
+	}else{
+		return $url;
+	}		
+}
+
+
+
+
 
 
 function wp_rss_multi_importer_post(){
@@ -71,6 +82,9 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
 	$post_options = get_option('rss_post_options', 'option not found');
+	
+	
+
 
 	if ($option_items==false) return "You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds";
 
@@ -104,8 +118,11 @@ $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callbac
 
 
 
+
+
 if (!empty($wpcatids)){
-	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));
+	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //orig
+//	$catArray=array_filter($post_options['categoryid']['plugcatid'],'filter_id_callback');
 }else{
 	$catArray=array(0);
 	
@@ -114,10 +131,7 @@ if (!empty($wpcatids)){
 
 
 
-
-
-
-$targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
+$targetWindow=$post_options['targetWindow'];  // 0=LB, 1=same, 2=new
 
 if(empty($options['sourcename'])){
 	$attribution='';
@@ -131,7 +145,7 @@ $descNum=$post_options['descnum'];
 $stripAll=$post_options['stripAll'];
 $maxperfetch=$post_options['maxperfetch'];
 $showsocial=$post_options['showsocial'];
-$targetWindow=2;	
+$overridedate=$post_options['overridedate'];
 $adjustImageSize=1;
 $noFollow=0;
 $floatType=1;
@@ -337,18 +351,56 @@ foreach($myarray as $items) {
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
+	
+	
+	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
+	
+	
+	
+	//  YouTube change for lightbox window
+	if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
+		
+
+		if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $items["mylink"], $match)) {
+			
+		    $video_id = $match[1];
+			$items["mylink"]='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
+		
+			$openWindow='class="rssmi_youtube"';
+			global $YTmatch;
+			$YTmatch=1;
+		}
+	}
+	
+	
+	
+
+	
 	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
 	$thisContent='';
 if (empty( $mypostids )){  //only post if it hasn't been posted before
   	$post = array();  
   	$post['post_status'] = $post_status;
+
+if ($overridedate==1){
+	$post['post_date'] = date("Y-m-d H:i:s", time());  
+}else{
   	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
+}
+
+
   	$post['post_title'] = trim($items["mytitle"]);
-//	$thisContent .= strip_tags($items["mydesc"],'<a><img>');
+
 	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
 
-	$thisContent .= ' <br>Source: <a href='.$items["mylink"].' target=_blank>'.$items["myGroup"].'</a>';
+	$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
+	
+
+	
+	
+	
+	
 	
 	if ($showsocial==1){
 	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a></span>';
@@ -358,14 +410,18 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
 
 	$mycatid=$items["mycatid"];
 
+
+
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
 	
+	
 	$blogcatid=array($post_options['categoryid']['wpcatid'][$catkey]);
+
 	
 	$post['post_category'] =$blogcatid;
-	
-   	$post_id = wp_insert_post($post);
-	add_post_meta($post_id, 'rssmi_source_link', $items["mylink"]);
+
+  	$post_id = wp_insert_post($post);
+	add_post_meta($post_id, 'rssmi_source_link', $thisLink);
 				//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )
 	unset($post);
 }

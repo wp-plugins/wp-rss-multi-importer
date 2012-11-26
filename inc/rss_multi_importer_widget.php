@@ -58,6 +58,13 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$showimage= $instance['showimage'];
 		
 		
+		global $isMobileDevice;
+		if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
+			$targetwindow=2;
+
+			}
+		
+		
 		if (!empty($linktitle)){
 			$title = '<a href="'.$linktitle.'">'.$title.'</a>';	
 		}
@@ -161,7 +168,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 		if (empty($myfeeds)){
 
-			echo "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
+			return "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
 			exit;
 		}
 
@@ -220,6 +227,11 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 			}
 
+			if (!isset($myarray) || empty($myarray)){
+
+				return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
+					exit;
+			}
 
 
 		//$myarrary sorted by mystrdate
@@ -302,7 +314,7 @@ echo '	<div class="news-contents">';
 
 
 			echo '<div style="top: 101px;margin-left:5px;" class="news">';
-			echo '<p class="rss-output" style="margin-right:5px">';
+			echo '<p class="widget-rss-output" style="margin-right:5px">';
 			
 			
 			
@@ -544,7 +556,7 @@ echo '	<div class="news-contents">';
 					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?', 'wp-rss-multi-importer'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
-						$myoptions = array('2','5','6','7', '8', '10', '15','20');
+						$myoptions = array('2','5','6','7', '8', '10', '15','20','50');
 						foreach ($myoptions as $myoption) {
 							echo '<option value="' . $myoption . '" id="' . $myoption . '"', $numoption == $myoption ? ' selected="selected"' : '', '>', $myoption, '</option>';
 						}

@@ -1,18 +1,18 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
-  Description: Imports and merges multiple RSS Feeds. 8 templates, customize, sort, feed to post option, limit feeds/page by category, include excerpts with images and much more. 
-  Version: 2.47
+  Description: Imports and merges multiple RSS and Atom Feeds. Include excerpts with images, 8 templates, categorize, feed to post option, limit feeds/page by category. 
+  Version: 2.50
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.47 );
+define( 'WP_RSS_MULTI_VERSION', 2.50 );
 
  /* Set constant path to the plugin directory. */
-define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
+define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
 
  /* Set constant url to the plugin directory. */
 define( 'WP_RSS_MULTI_URL', plugin_dir_url( __FILE__ ) );
@@ -93,7 +93,9 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
-
+//if ($_GET["rssvn"]==q){
+//	echo WP_RSS_MULTI_VERSION;  //  maybe use in future for getting version number
+//}
 	
 add_action('wp_footer','footer_scripts');
 
@@ -126,6 +128,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'pinterest'=>0,
 		'maxperpage' =>0,
 		'noimage' => 0,
+		'mytemplate' =>'',
+		'showmore'=>NULL,
 		'morestyle' =>'[...]'
 		), $atts);
 	
@@ -137,10 +141,12 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$catArray=explode(",",$thisCat);
 	$showdate=$parms['showdate'];
 	$showgroup=$parms['showgroup'];
+	$pshowmore=$parms['showmore'];
 	$hdweight = $parms['hdweight'];
 	$testyle = $parms['testyle'];
 	global $morestyle;
     $morestyle = $parms['morestyle'];
+	$warnmsg= $parms['warnmsg'];
 	global $maximgwidth;
 	$maximgwidth = $parms['maximgwidth'];
 	$thisfeed = $parms['thisfeed'];  // max posts per feed
@@ -151,6 +157,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$pinterest=$parms['pinterest'];
 	$parmmaxperpage=$parms['maxperpage'];
 	$noimage=$parms['noimage'];
+	$mytemplate=$parms['mytemplate'];
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -180,13 +187,9 @@ $adjustImageSize=$options['adjustImageSize'];
 $showDesc=$options['showdesc'];  // 1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
-
 $showcategory=$options['showcategory'];
 $cacheMin=$options['cacheMin'];
 $maxposts=$options['maxfeed'];
-
-if ($thisfeed!='') $maxposts=$thisfeed;
-
 $showsocial=$options['showsocial'];
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
@@ -195,6 +198,11 @@ $showmore=$options['showmore'];
 $cb=$options['cb'];  // 1 if colorbox should not be loaded
 $pag=$options['pag'];  // 1 if pagination
 $perPage=$options['perPage'];
+global $anyimage;
+$anyimage=$options['anyimage'];
+
+if (!is_null($pshowmore)) {$showmore=$pshowmore;} 
+
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
@@ -207,9 +215,11 @@ if ($floatType=='1'){
 	$float="none";	
 }
 
+
 if ($parmfloat!='') $float=$parmfloat;
 if($parmmaxperpage!=0) $maxperPage=$parmmaxperpage;
 if ($noimage==1) $stripAll=1;
+if ($thisfeed!='') $maxposts=$thisfeed;
 
 if ($pinterest==1){
 		$divfloat="left";
@@ -217,9 +227,7 @@ if ($pinterest==1){
 		$divfloat='';	
 	}
 
-if ($cacheMin==''){
-$cacheMin=0;  //set caching minutes	
-}
+if ($cacheMin==''){$cacheMin=0;}  //set caching minutes	
 
 
 if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
@@ -227,11 +235,15 @@ if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes wi
 
 
 
-if ($cb!=='1'){
+if ($cb!=='1' && $targetWindow==0){
 add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+
+
    }
 
 $template=$options['template'];
+if ($mytemplate!='') $template=$mytemplate;
+
 
 
 timer_start();  //TIMER START - for testing purposes
@@ -299,6 +311,7 @@ if (empty($myfeeds)){
 
 
 if ($dumpthis==1){
+list_the_plugins();
 	echo "<strong>Feeds</strong><br>";
 	var_dump($myfeeds);
 }
@@ -363,7 +376,7 @@ if (empty($url)) {continue;}
 
 						}
 						
-						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
 				
 						unset($mediaImage);
 			}
@@ -389,7 +402,7 @@ if (empty($url)) {continue;}
 			}
 				
 	
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
 				
 					
 						unset($mediaImage);
@@ -426,8 +439,9 @@ if ($dumpthis==1){
 	exit;
 }
 if (!isset($myarray) || empty($myarray)){
-	
+	if(!$warnmsg==1){
 	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
+	}
 		exit;
 }
 

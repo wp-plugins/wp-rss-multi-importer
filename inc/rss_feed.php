@@ -1,24 +1,29 @@
 <?php
 
 
+
+
 //  RSS FEED FUNCTIONS
 
 function rssmi_feed() {
-
+	
 
 wp_rss_multi_importer_feed();
 }
+
+
 
 add_action('init', 'rssmi_rss');
 
 function rssmi_rss(){
 	$feed_options = get_option('rss_feed_options', 'option not found');
-	global $wp_rewrite;
-	//$wp_rewrite->flush_rules();
-	
+
+
+
 	if (!empty($feed_options)){
-	
+
 add_feed($feed_options['feedslug'], 'rssmi_feed');	
+
 	}
 }
 
@@ -113,7 +118,6 @@ $cacheMin=0;  //set caching minutes
 
 
 if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
-
 
 
 
@@ -271,7 +275,6 @@ if (!isset($myarray) || empty($myarray)){
 
 
 
-
 //$myarrary sorted by mystrdate
 
 foreach ($myarray as $key => $row) {
@@ -288,7 +291,7 @@ if($sortDir==1){
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
 
-//header("Content-Type: application/rss+xml; charset=UTF-8");
+
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 ?>
 <rss version="2.0">
@@ -297,8 +300,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <link></link>
 <description><?php echo $feed_options['feeddesc'] ?></description>
 <language>en-us</language>
-<?php	
+<?php
+	$total=0;	
 foreach($myarray as $items) {
+		$total = $total +1;
+			if ($total>20) break;
 	?>	
 <item>		
 <title><?php echo $items["mytitle"]?></title>	

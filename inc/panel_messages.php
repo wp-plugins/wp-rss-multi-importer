@@ -17,7 +17,7 @@ function wp_section_text() {
 		<H4><?php _e("Step 3 (only relevant if you're not using the Feed to Post feature):", 'wp-rss-multi-importer')?></H4><p><?php _e("Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.", 'wp-rss-multi-importer')?></p>
 		
 
-<p>You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category="2"] (or [wp_rss_multi_importer category="1,2"] to have two categories) on the page you wish to have only show feeds from those categories.</p>
+<p><?php _e("You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category=\"2\"] (or [wp_rss_multi_importer category=\"1,2\"] to have two categories) on the page you wish to have only show feeds from those categories.")?></p>
 
 </div></div>
 
@@ -88,6 +88,12 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in settings option</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
 
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in settings option</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
+<tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in settings option</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
+<tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in settings option</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
+	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, date_above.php</span>
+	
+	</td></tr>
+
 	
 </table>
 

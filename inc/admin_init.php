@@ -27,10 +27,24 @@ add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprs
 
 }
 
-add_action('init', 'ilc_farbtastic_script');
+add_action('admin_init', 'ilc_farbtastic_script');
+
 function ilc_farbtastic_script() {
   wp_enqueue_style( 'farbtastic' );
   wp_enqueue_script( 'farbtastic' );
+}
+
+
+
+add_action('init', 'wp_rss_multi_importer_post_to_feed');
+
+function wp_rss_multi_importer_post_to_feed(){
+  $post_options = get_option('rss_post_options'); 
+	if (!empty($post_options)) {
+		if ($post_options['targetWindow']==0 && $post_options['active']==1){
+			add_action('wp_footer','colorbox_scripts');
+		}
+	}
 }
 
 
@@ -134,8 +148,9 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Category Options", 'wp-rss-multi-importer')?></a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=shortcode_parameters" class="nav-tab <?php echo $active_tab == 'shortcode_parameters' ? 'nav-tab-active' : ''; ?>"><?php  _e("Shortcode Parameters", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options", 'wp-rss-multi-importer')?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export Feed Options", 'wp-rss-multi-importer')?></a>
 					<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Options", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export RSS Options", 'wp-rss-multi-importer')?></a>
+				
 				<a href="?page=wp_rss_multi_importer_admin&tab=more_options" class="nav-tab <?php echo $active_tab == 'more_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Help & More...", 'wp-rss-multi-importer')?></a>
 		</h2>
 
