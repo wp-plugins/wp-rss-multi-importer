@@ -5,7 +5,7 @@ Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 3.0
 Tested up to: 3.4.2
 Stable tag: 2.50
-Imports & merges multiple RSS and Atom Feeds. Include excerpts w/ images, 8 templates, feed to post option, categorize and more.
+Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
 
