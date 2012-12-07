@@ -16,10 +16,14 @@
 	
 	
 	$readable .= '<div class="wprssmi-cs-items">';
-	$readable .= '<div class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
+//	$readable .= '<div class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
 	
+$readable .= '<div class="title"><a '.$openWindow.' href='.$items["mylink"].' title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
 
 
+if(!empty($items["myAuthor"])){
+ $readable .=  '<br><span style="font-style:italic; font-size:16px;">from <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  ///this is testing
+	}
 	
 	if ($showmore==1 && $showDesc==1){
 		

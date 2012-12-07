@@ -235,7 +235,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 
 
 
-<p><label class='o_textinput' for='sourcename'><?php _e("Attribution Label", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='sourcename'><?php _e("Feed Source Attribution Label", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[sourcename]">
 <OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>><?php _e("Source", 'wp-rss-multi-importer')?></OPTION>
 <OPTION VALUE="Via" <?php if($options['sourcename']=='Via'){echo 'selected';} ?>><?php _e("Via", 'wp-rss-multi-importer')?></OPTION>
@@ -243,6 +243,9 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>><?php _e("Sponsor", 'wp-rss-multi-importer')?></OPTION>
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>><?php _e("No Attribution", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
+
+<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[addAuthor]" Value="1" <?php if ($options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
+
 
 <h3><?php _e("What Shows - EXCERPTS", 'wp-rss-multi-importer')?></h3>
 
@@ -795,7 +798,7 @@ wp_rss_multi_deactivation();
 </SELECT></p>
 
 
-
+<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if ($post_options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
 
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
@@ -897,7 +900,6 @@ reset($catOptions);
 }
 
 echo "<a href='javascript:void(0)' class='add_cat_id'>Add another category</a>";
-
 
 
 

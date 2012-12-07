@@ -23,17 +23,22 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		global $morestyle;
     $content=CleanHTML($content);
 
-
+	
 	if ($stripAll==1){
 			$content=strip_tags(html_entity_decode($content));	
 			$content= limitwords($maxchars,$content);	
 	}else{
 		$content=strip_tags(html_entity_decode($content),'<a><img>');
 			if($maxchars !=99){
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink);	
+		
+			
+		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow);	
 					}
 }	
-		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.'' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
+
+		$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow  ' :'' ) , $content);  
+
+		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 	}
 	
 
@@ -66,9 +71,17 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&laquo;","\"",$content);
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem		
 
-		$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
 
+
+
+	$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
+
+	
+	
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
+		
+		
+		
 	
 		$content =_decodeAccented($content);
 
@@ -100,10 +113,13 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink){
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow){
 		$leadmatch=0;	
 		global $YTmatch;
 		global $anyimage;
+
+		$anchorLink="<a href=".$thisLink." >";//construct hyperlink for image
+		
 		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image if it exists
 		
 		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image if it exists
@@ -118,27 +134,30 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$leadmatch=3;
 	}
 	
-
+		
 
 	if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
-
+		//	if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){  //matches a leading image
 
 
 			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($matches[2])."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($matches[2])."</a></div>";
 			}else{
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$matches[2]."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$matches[2]."</a></div>";
 			}
 		
 			
 				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
 
 				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
+				
+				
+		
 			
 					if ($leadmatch==1 and $YTmatch==1){  //replace leading link with link to web page - ensures this works, especially for youtube
 
 						$content=str_replace($matches[1], $thisLink, $content, $limit=1);  ///works with youtube
-			
+									
 					}
 
 				$content=str_replace("<a ","<a ".$openWindow." " , $content,  $count = 1);  // add window open to leading image, if it exists
@@ -148,9 +167,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$mediaImage="<img src=\"$mediaImage\">";
 			
 				if ($adjustImageSize==1){
-					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($mediaImage)."</div>";
+					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
 				}else{
-					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
+					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
 				}	
 			
 			$content = limitwords($maxchars,strip_tags($content));
@@ -162,10 +181,12 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 		$firstImage=$matches[2];
 		
+
+		
 			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".resize_image($firstImage)."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($firstImage)."</a></div>";
 			}else{
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$firstImage."</div>";
+				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$firstImage."</a></div>";
 			}	
 		
 		$content = limitwords($maxchars,strip_tags($content));
@@ -186,8 +207,8 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	function verifyimage($imageURL) {
 		$imageURL = preg_replace('/\?.*/', '', $imageURL);
-	
-	    if( preg_match('#^http:\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
+
+	    if( preg_match('#^(http|https):\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
 	    {
 	        $msg = TRUE; 
 	    }
@@ -195,6 +216,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	    {
 	        $msg = FALSE; 
 	    }
+
 	    return $msg; 
 	}
 	

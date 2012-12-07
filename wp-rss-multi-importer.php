@@ -1,15 +1,18 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
-  Description: Imports and merges multiple RSS and Atom Feeds. Include excerpts with images, 8 templates, categorize, feed to post option, limit feeds/page by category. 
-  Version: 2.50
+  Description: Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
+  Version: 2.51
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
 */
 
+
+
+
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.50 );
+define( 'WP_RSS_MULTI_VERSION', 2.51 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -72,6 +75,15 @@ require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
     //wp_rss_multi_importer_post(); // testing
 
+
+
+
+
+
+
+
+
+
    
    /**
    *  Shortcode setup and call (shortcode is [wp_rss_multi_importer]) with options
@@ -130,9 +142,11 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'noimage' => 0,
 		'mytemplate' =>'',
 		'showmore'=>NULL,
+		'authorPrep'=>'by',
 		'morestyle' =>'[...]'
 		), $atts);
-	
+		
+	$authorPrep=$parms['authorPrep'];
 	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
@@ -200,6 +214,7 @@ $pag=$options['pag'];  // 1 if pagination
 $perPage=$options['perPage'];
 global $anyimage;
 $anyimage=$options['anyimage'];
+$addAuthor=$options['addAuthor'];
 
 if (!is_null($pshowmore)) {$showmore=$pshowmore;} 
 
@@ -355,6 +370,12 @@ if (empty($url)) {continue;}
 
 	$maxfeed= $feed->get_item_quantity(0);  
 
+	if ($feedAuthor = $feed->get_author())
+	{
+		$feedAuthor=$feed->get_author()->get_name();
+	}
+	
+
 
 //SORT DEPENDING ON SETTINGS
 
@@ -373,12 +394,24 @@ if (empty($url)) {continue;}
 							}else if (!IS_NULL($item->get_enclosure()->get_link())){
 								$mediaImage=$item->get_enclosure()->get_link();	
 							}
-
 						}
 						
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+						
+						if ($itemAuthor = $item->get_author())
+						{
+							$itemAuthor=$item->get_author()->get_name();
+						}else if (!IS_NULL($feedAuthor)){
+							$itemAuthor=$feedAuthor;
+							
+						}
+						
+						
+						
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
 				
 						unset($mediaImage);
+						unset($itemAuthor);
+					
 			}
 
 		}else{	
@@ -386,10 +419,7 @@ if (empty($url)) {continue;}
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
 				if (empty($item))	continue;	
-				
-					
-		
-				
+									
 				
 			if ($enclosure = $item->get_enclosure()){
 
@@ -397,16 +427,25 @@ if (empty($url)) {continue;}
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
 				}else if (!IS_NULL($item->get_enclosure()->get_link())){
 					$mediaImage=$item->get_enclosure()->get_link();	
-				}
+				}	
+			}
+			
+			
+			if ($itemAuthor = $item->get_author())
+			{
+				$itemAuthor=$item->get_author()->get_name();
+			}else if (!IS_NULL($feedAuthor)){
+				$itemAuthor=$feedAuthor;
 				
 			}
-				
+			
+					
 	
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
 				
 					
 						unset($mediaImage);
-					
+						unset($itemAuthor);
 				}	
 		}
 

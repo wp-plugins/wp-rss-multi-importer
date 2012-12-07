@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 3.0
 Tested up to: 3.4.2
-Stable tag: 2.50
+Stable tag: 2.51
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -119,6 +119,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.51 =
+* Images are now hyperlinked in excerpts. Images that are on secure servers now work. Feed or item author now available for use in templates and Feed to Post (if the feed has the author).
 = Version 2.50 =
 * Many features added, including improved image handling, selecting window option and more cron scheduling options when using Feed to Post, fixed problem with custom posts, ability to choose different templates on different pages (via shortcode), more shortcode pararmeters added, suppress beacon images in feeds, fixed Bing resulting in duplicate entries in Feed to Post, YouTube now opens in lightbox in Feed to Post, and several other bug fixes.
 = Version 2.47 =

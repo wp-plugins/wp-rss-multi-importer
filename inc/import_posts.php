@@ -110,6 +110,14 @@ $maxperPage=$options['maxperPage'];
 
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
+$addAuthor=$post_options['addAuthor'];
+//$thisCategory=$post_options['category'];
+
+
+//if (!isset($post_options['category'])){
+//	$thisCategory=0;
+//}
+//$catArray=array($thisCategory);  //this is the plugin categories
 
 
 
@@ -128,7 +136,14 @@ if (!empty($wpcatids)){
 	
 }
 
+//echo var_dump($catArray);
+//exit;
 
+
+//$wpcategory=$post_options['wpcategory'];  // this is the wordpress category the feed should be entered into - tag_id
+//if (!isset($post_options['wpcategory'])){
+//	$wpcategory=0;
+//}
 
 
 $targetWindow=$post_options['targetWindow'];  // 0=LB, 1=same, 2=new
@@ -237,6 +252,14 @@ if (empty($myfeeds)){
 	}
 
 	$maxfeed= $feed->get_item_quantity(0);  
+	
+	
+	if ($feedAuthor = $feed->get_author())
+	{
+		$feedAuthor=$feed->get_author()->get_name();
+	}
+
+
 
 
 	//SORT DEPENDING ON SETTINGS
@@ -256,12 +279,24 @@ if (empty($myfeeds)){
 								}else if (!IS_NULL($item->get_enclosure()->get_link())){
 									$mediaImage=$item->get_enclosure()->get_link();	
 								}
+							}
+
+
+							if ($itemAuthor = $item->get_author())
+							{
+								$itemAuthor=$item->get_author()->get_name();
+							}else if (!IS_NULL($feedAuthor)){
+								$itemAuthor=$feedAuthor;
 
 							}
 
-							$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
-					
+
+
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+
 							unset($mediaImage);
+							unset($itemAuthor);
+
 				}
 
 			}else{	
@@ -271,32 +306,36 @@ if (empty($myfeeds)){
 					if (empty($item))	continue;	
 
 
-
-
-
 				if ($enclosure = $item->get_enclosure()){
 
 					if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
 						$mediaImage=$item->get_enclosure()->get_thumbnail();
 					}else if (!IS_NULL($item->get_enclosure()->get_link())){
 						$mediaImage=$item->get_enclosure()->get_link();	
-					}
+					}	
+				}
+
+
+				if ($itemAuthor = $item->get_author())
+				{
+					$itemAuthor=$item->get_author()->get_name();
+				}else if (!IS_NULL($feedAuthor)){
+					$itemAuthor=$feedAuthor;
 
 				}
 
 
-					$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
 
-				
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+
+
 							unset($mediaImage);
-
+							unset($itemAuthor);
 					}	
 			}
 
 
 		}
-
-
 
 
 
@@ -353,11 +392,8 @@ foreach($myarray as $items) {
 	$thisLink=trim($items["mylink"]);
 	
 	
-	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
-	
-	
-	//  YouTube change for lightbox window
+	//  YouTube  //  NEEDS WORK
 	if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
 		
 
@@ -374,11 +410,23 @@ foreach($myarray as $items) {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
+	
 
 	
 	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
 	$thisContent='';
+	
 if (empty( $mypostids )){  //only post if it hasn't been posted before
+	
+
+	
   	$post = array();  
   	$post['post_status'] = $post_status;
 
@@ -390,6 +438,12 @@ if ($overridedate==1){
 
 
   	$post['post_title'] = trim($items["mytitle"]);
+
+$authorPrep="By ";
+
+		if(!empty($items["myAuthor"]) && $addAuthor==1){
+		 $thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  
+			}
 
 	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);

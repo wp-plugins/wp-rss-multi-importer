@@ -89,7 +89,9 @@ function wp_rss_multi_importer_style_tags(){
 
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in settings option</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in settings option</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
+<tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorPrep</td><td>By</td><td>[wp_rss_multi_importer authorPrep="from"]</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in settings option</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
+	
 	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, date_above.php</span>
 	
 	</td></tr>
