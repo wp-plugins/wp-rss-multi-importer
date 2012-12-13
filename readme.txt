@@ -3,13 +3,13 @@ Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication
 Requires at least: 3.0
-Tested up to: 3.4.2
-Stable tag: 2.51
+Tested up to: 3.5
+Stable tag: 2.52
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
 
-An extremely flexible plugin that imports RSS feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 5 things (separately or at the same time):
+An extremely flexible plugin that imports RSS feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 4 things (separately or at the same time):
 
 
 <blockquote>
@@ -89,6 +89,9 @@ assign the feed to a category, then use this shortcode on your page or post:
 Assign multiple categories using a comma delimited list:
 [wp_rss_multi_importer category="#,#,#"]
 
+Use the Feed to Post option and turn the feed articles into blog posts. 
+
+
 Use the widget.  If your theme allows for widgets, you'll find the RSS Multi Importer Widget there.
 Configure your feeds in the administration panel, then choose the categories, number of posts, sorting method, optional scrolling, and more in the widget admin.
 
@@ -119,6 +122,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.52 =
+* Added more options for Feed to Post users including ability to specify user_id and suppress the source. Clearer admin interface. Image recognition improved. Class added to stylize image in Feed to Post. Small bug fixes. 
 = Version 2.51 =
 * Images are now hyperlinked in excerpts. Images that are on secure servers now work. Feed or item author now available for use in templates and Feed to Post (if the feed has the author).
 = Version 2.50 =
@@ -198,5 +203,5 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Upgrade Notice ==
 
-= 2.40 =
-This version includes feed to post option and fixes several bugs
+= 2.50 =
+This version includes several improvements and bug fixes for the Feed to Post option and added improved flexibility for the shortcode option.
