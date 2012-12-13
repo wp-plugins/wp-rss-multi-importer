@@ -79,6 +79,91 @@ function check_feed($url){
 
 
 
+function wp_rss_multi_importer_intro_page() {
+	?>
+	
+	<div class="wrap">
+						
+			
+	                                <div class="postbox-container" style="min-width:400px; max-width:600px; padding: 0 20px 0 0;">	<h2>Put RSS Feeds on Your Site in 3 Different Ways</h2>
+					<div class="metabox-holder">	
+						<div class="postbox-container">
+							<H3 class="info_titles">1. Display the feed items in one of 8 customizable templates</H3>
+							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then use shortcode and put it on the page where you want to display the feed articles.  Select the templates and change the settings in the Settings tab. Use shortcode parameters (Shortcode Parameters tab) to put more customization onto your feed presentation.", 'wp-rss-multi-importer')?></p>
+							<H3 class="info_titles">2. Create blog posts from the feed items (Feed to Post)</H3>
+							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then click on the Feed to Post tab and set the options.", 'wp-rss-multi-importer')?></p>
+							<H3 class="info_titles">3. Display the aggregated feed items in a widget</H3>
+							<p class="info_text"><?php _e("If your theme supports widgets, then start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then go to Appearance->Widgets, add the RSS Multi-Importer widget, configure the options and click Save..", 'wp-rss-multi-importer')?></p>
+							<p><?php _e("You don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>
+						</div>
+					</div>
+				</div>
+					<div class="postbox-container" style="width:25%;min-width:200px;max-width:350px;">
+			<div id="sidebar" class="MP_box">
+					<div >
+			<h2 class="MP_title">Improve Your Marketing Know-How</h2>
+		</div>
+		
+		
+											
+												
+													<div class="txtorange">Join MarketingProfs.com</div>
+														<div class="txtwhite">Over 488,000 have already</div>
+													<div class="txtorange">Your Free Membership Includes:</div>
+													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
+														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
+														<li style="margin:3px;"><b>FREE</b> community forum use</li>
+														<li style="margin:3px;"><b>FREE</b> weekly newsletters</li>
+													</ul>
+													<form style="padding-bottom:4px;" onsubmit="validateEmail(document.getElementById('e'));" action="https://www.marketingprofs.com/login/signup.asp" method="POST">
+																				<div class="center width_full"><input type="text" onfocus="this.value=''" value="you@company.com" style="width:225px;color:#444;" id="e" name="e"></div>
+																				<div class="center width_full"><input type="image" style="margin-top:4px;" src="http://www.mpdailyfix.com/wp-content/themes/mpdailyfix/images/signup_blue.gif" id="btnsignup" name="btnsignup"></div>
+																				<input type="hidden" value="amwplugin" name="adref">
+																				<script type="text/javascript">
+																					function validateEmail(emailField){
+																							var re = /^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+																							if (re.test(emailField.value) == false) 
+																							{
+																								alert('Oops! That email address doesn\'t look quite right.\n\nPlease make sure it was typed correctly and try again.');
+																								return false;
+																							}
+																							return true;
+																					}				
+																				</script>
+																			</form>
+																		<span class="MP_title">	<a class="button-primary" style="text-align:center" href="https://www.marketingprofs.com/login/join?adref=amwplugin" target="_blank">Learn more »</a></span>
+																
+							
+			
+			
+			
+			</div>
+			
+			<div id="sidebar" class="MP_box">
+				<div >
+		<h2 class="MP_title">Need Help?</h2>
+	</div>
+	
+	<p><a href="http://www.allenweiss.com/wp_plugin/" target="_blank" style="color:white">Go here</a> to find FAQs, our discussion board, template examples, and more.</p>
+				
+				
+				</div>
+			
+			
+		</div>
+				
+				</div>
+	
+	
+	<?php
+	
+}
+
+
+
+
+
+
 
 
 function wp_rss_multi_importer_options_page() {
@@ -90,6 +175,7 @@ delete_db_transients();
        ?>
 
        <div class="wrap">
+	<h2><?php _e("Settings for Displaying Feed Items Using Shortcode", 'wp-rss-multi-importer')?></h2>
 	<div id="poststuff">
 
        <?php screen_icon(); 
@@ -129,7 +215,8 @@ delete_db_transients();
       
       
 
-<div class="postbox"><h3><label for="title"><?php _e("Options Settings", 'wp-rss-multi-importer')?></label></h3>
+<div class="postbox"><h3><label for="title"><?php _e("Options Settings for Displaying the Feed Items", 'wp-rss-multi-importer')?></label></h3>
+	<p style="margin-left:20px">These are settings for the option to display the feed items on your site.  If you want the settings for the Feed to Post option, use that tab instead.</p>
 <div class="inside">
 
 <h3><?php _e("Template", 'wp-rss-multi-importer')?></h3>
@@ -247,6 +334,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[addAuthor]" Value="1" <?php if ($options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
 
 
+
 <h3><?php _e("What Shows - EXCERPTS", 'wp-rss-multi-importer')?></h3>
 
 <p><label class='o_textinput' for='showdesc'><?php _e("<b>Show Excerpt</b>", 'wp-rss-multi-importer')?></label>
@@ -351,8 +439,9 @@ function wp_rss_multi_importer_items_page() {
        ?>
 
        <div class="wrap">
+	 <h2>RSS Feeds Admin</h2>
 	<div id="poststuff">
-  <h2>RSS Multi-Importer Admin</h2>
+ 
        <?php screen_icon(); 
 
 do_settings_sections( 'wprssimport' );
@@ -512,9 +601,14 @@ echo check_feed($url_esc);  // needs style
 
        </form>
 
+	
+
+
+
       <div class="postbox"><h3><label for="title">   <?php _e("Help Others", 'wp-rss-multi-importer')?></label></h3><div class="inside"><?php _e("If you find this plugin helpful, let others know by <a href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\" target=\"_blank\">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.", 'wp-rss-multi-importer')?></div></div> 
 
        </div>
+
 </div>
        </div>
 
@@ -546,6 +640,7 @@ function wp_rss_multi_importer_category_page() {
 
        ?>
       <div class="wrap">
+		 <h2>Categories Admin</h2>
 	<div id="poststuff">
   
 
@@ -612,10 +707,11 @@ function wp_rss_multi_importer_feed_page() {
        ?>
 
        <div class="wrap">
+	  <h2><?php _e("Export Your RSS Feed", 'wp-rss-multi-importer')?></h2>
 	<div id="poststuff">
-  <h2><?php _e("Export Your RSS Feed", 'wp-rss-multi-importer')?></h2>
+
   
-<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.", 'wp-rss-multi-importer')?></p>
+<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.  Please note this feature is in beta and is not supported as much as the other features.", 'wp-rss-multi-importer')?></p>
 
 
        <div id="options">
@@ -631,6 +727,7 @@ function wp_rss_multi_importer_feed_page() {
 
 
 <div class="postbox">
+	
 <div class="inside">
 
 
@@ -686,8 +783,9 @@ function wp_rss_multi_importer_post_page() {
        ?>
 
        <div class="wrap">
+	 <h2><?php _e("Put Your RSS Feed Into Blog Posts", 'wp-rss-multi-importer')?></h2>
 	<div id="poststuff">
-  <h2><?php _e("Put Your RSS Feed Into Blog Posts", 'wp-rss-multi-importer')?></h2>
+  
 <p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.", 'wp-rss-multi-importer')?></p>
 <p><?php _e("You can delete any post created by this plugin by simply deleting the post.", 'wp-rss-multi-importer')?></p>
 <p><?php _e("Choose how often you want feeds to go into your blog posts.  You must check to activate this feature.", 'wp-rss-multi-importer')?></p>
@@ -775,6 +873,8 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="15" <?php if($post_options['maxperfetch']==15){echo 'selected';} ?>>15</OPTION>
 <OPTION VALUE="20" <?php if($post_options['maxperfetch']==20){echo 'selected';} ?>>20</OPTION>
 <OPTION VALUE="100" <?php if($post_options['maxperfetch']==100){echo 'selected';} ?>>100</OPTION>
+<OPTION VALUE="200" <?php if($post_options['maxperfetch']==200){echo 'selected';} ?>>200</OPTION>
+<OPTION VALUE="300" <?php if($post_options['maxperfetch']==300){echo 'selected';} ?>>300</OPTION>
 </SELECT></p>
 
 
@@ -799,6 +899,14 @@ wp_rss_multi_deactivation();
 
 
 <p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if ($post_options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
+
+
+<p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if ($post_options['addSource']==1){echo 'checked="checked"';} ?></label></p>
+
+
+
+
+<p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
 
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
@@ -930,20 +1038,7 @@ echo "<a href='javascript:void(0)' class='add_cat_id'>Add another category</a>";
 <?php
 }
 
-/*
-function filter_callback($val) {
-    if ($val != null){
-	return true;
-}
-}
 
-function get_values_for_keys($mapping, $keys) {
-    foreach($keys as $key) {
-        $output_arr[] = $mapping[$key];
-    }
-    return $output_arr;
-}
-*/
 function chk_zero_callback($val) {
     if ($val != null){
 	return true;

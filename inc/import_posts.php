@@ -107,10 +107,12 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 $size = count($option_items);
 $sortDir=0;  // 1 is ascending
 $maxperPage=$options['maxperPage'];
-
+$addSource=$post_options['addSource'];
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
 $addAuthor=$post_options['addAuthor'];
+$bloguserid=$post_options['bloguserid'];
+
 //$thisCategory=$post_options['category'];
 
 
@@ -140,10 +142,7 @@ if (!empty($wpcatids)){
 //exit;
 
 
-//$wpcategory=$post_options['wpcategory'];  // this is the wordpress category the feed should be entered into - tag_id
-//if (!isset($post_options['wpcategory'])){
-//	$wpcategory=0;
-//}
+
 
 
 $targetWindow=$post_options['targetWindow'];  // 0=LB, 1=same, 2=new
@@ -448,8 +447,9 @@ $authorPrep="By ";
 	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
 
+	if ($addSource==1){
 	$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
-	
+	}
 
 	
 	
@@ -473,6 +473,9 @@ $authorPrep="By ";
 
 	
 	$post['post_category'] =$blogcatid;
+	
+	$post['post_author'] =$bloguserid;
+
 
   	$post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $thisLink);

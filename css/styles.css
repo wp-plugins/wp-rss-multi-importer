@@ -91,4 +91,38 @@ max-width:450px;
 .ftpost_r{
 	margin:10px;
 }
+
+.info_titles{
+font-size:18px 	!important;
+}
 	
+p.info_text{
+border-bottom: 1px solid #DDDDDD;
+padding-bottom:8px;	
+	
+}
+
+.MP_box{
+	border: 1px solid #CCC;
+	border-radius: 25px 25px;
+	margin: 10px 0 10px 0;
+	padding: 10px 15px;	
+	background:#1F88C9;
+	
+}
+.MP_title{
+color:white !important;	
+text-align:center;
+}
+
+.txtorange{
+	color: #FF6600;
+	font-size:15px;
+	text-align:center;
+}
+
+.txtwhite{
+	color: #FFFFFF;
+	font-size:15px;
+	text-align:center;
+}

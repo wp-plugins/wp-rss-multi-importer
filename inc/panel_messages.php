@@ -28,8 +28,9 @@ function wp_section_text() {
 function wp_rss_multi_importer_template_page(){
    ?>	
 	   <div class="wrap">
+		<h2><label for="title"><?php _e("How to Use Templates", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
-<div class="postbox"><h3><label for="title"><?php _e("How to Use Templates", 'wp-rss-multi-importer')?></label></h3>
+<div class="postbox">
 
 <div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Options Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
 	
@@ -63,10 +64,11 @@ save_template_function($thistemplate);
 function wp_rss_multi_importer_style_tags(){
    ?>	
 	   <div class="wrap">
+		<h2><label for="title"><?php _e("Shortcode Parameters", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
 
 
-<div class="postbox"><h3><label for="title"><?php _e("Shortcode Parameters", 'wp-rss-multi-importer')?></label></h3><div class="inside"><h2><?php _e("Customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:", 'wp-rss-multi-importer')?></h2>
+<div class="postbox"><div class="inside"><h2><?php _e("Customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:", 'wp-rss-multi-importer')?></h2>
 
 
 <table class="widefat">

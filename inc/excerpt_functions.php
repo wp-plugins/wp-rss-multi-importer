@@ -28,7 +28,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$content=strip_tags(html_entity_decode($content));	
 			$content= limitwords($maxchars,$content);	
 	}else{
-		$content=strip_tags(html_entity_decode($content),'<a><img>');
+		$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 			if($maxchars !=99){
 		
 			
@@ -117,14 +117,21 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$leadmatch=0;	
 		global $YTmatch;
 		global $anyimage;
-
+		global $ftp;
+		
+		if ($ftp==1){
+			$imagefix="ftpimagefix";
+		}else{
+			$imagefix="imagefix";	
+		}
+		
 		$anchorLink="<a href=".$thisLink." >";//construct hyperlink for image
+
+		$strmatch='^\s*(?:<p>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 		
-		$strmatch='^\s*\<a.*href="(.*)">\s*(<img.*src=".*" \/?>)[^\<]*<\/a\>\s*(.*)$'; //match leading hyperlinked image if it exists
-		
-		$strmatch2='^(\s*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading non-hyperlinked image if it exists
-		
-		$strmatch3='(.*)(<img.*src=".*"\s*?\/>)\s*(.*)$';  //match leading first image if it exists
+		$strmatch2='^(\s*)(?:<p>)?(<img.*src=".*"\s*?\/?>)\s*(.*)$';
+
+		$strmatch3='^(.*)(<img.*src=".*"\s*?\/?>)\s*(.*)$';  //match first image if it exists
 		
 	if (preg_match("/$strmatch/sU", $content, $matches)) { //matches a leading hperlinked image
 		$leadmatch=1;
@@ -134,16 +141,16 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$leadmatch=3;
 	}
 	
-		
+
 
 	if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
 		//	if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){  //matches a leading image
 
 
 			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($matches[2])."</a></div>";
+				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($matches[2])."</a></div>";
 			}else{
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$matches[2]."</a></div>";
+				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$matches[2]."</a></div>";
 			}
 		
 			
@@ -167,9 +174,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$mediaImage="<img src=\"$mediaImage\">";
 			
 				if ($adjustImageSize==1){
-					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
+					$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
 				}else{
-					$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
+					$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
 				}	
 			
 			$content = limitwords($maxchars,strip_tags($content));
@@ -184,9 +191,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 		
 			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($firstImage)."</a></div>";
+				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($firstImage)."</a></div>";
 			}else{
-				$tabledImage= "<div class=\"imagefix\" style=\"float:".$float.";\">".$anchorLink.$firstImage."</a></div>";
+				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$firstImage."</a></div>";
 			}	
 		
 		$content = limitwords($maxchars,strip_tags($content));

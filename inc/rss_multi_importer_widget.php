@@ -270,10 +270,10 @@ $total = -1;
 
 
 if ($simplelist==1){
-	
+
 	echo '<ul class="wprssmi_widget_list">';
 	
-	
+
 	
 		foreach($myarray as $items) {
 
@@ -281,9 +281,12 @@ if ($simplelist==1){
 			
 		if ($count>0 && $total>=$count) break;
 	
-		echo '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["mytitle"].'</a>  <span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span></li>';
-	
-
+		echo '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["mytitle"].'</a>';
+		if (!empty($items["mystrdate"])  && $showdate==1){
+		echo '<span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
+	}
+		
+		echo '</li>';
 
 	}  	//  don't mess with this php code
 	
@@ -346,6 +349,8 @@ echo '	<div class="news-contents">';
 
 			if (!empty($items["mystrdate"])  && $showdate==1){
 			 echo  date_i18n("D, M d, Y",$items["mystrdate"]).'<br />';
+		
+			
 			}
 				if (!empty($items["myGroup"])){
 		    echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';

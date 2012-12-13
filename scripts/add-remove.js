@@ -150,6 +150,17 @@ jQuery(function() { // when document has loaded
 	});
 	
 	
+	jQuery(document).on('change', '#bloguserid',function() {
+		var chkstr=add_remove_parms;
+		var intRegex = /^\d+$/;
+		this.value = this.value.replace(/ /g,'');
+		if(!intRegex.test(this.value)&& this.value!=''){
+		alert(chkstr.intcheck);
+		jQuery("#bloguserid").val('');
+		} 		
+	});
+	
+	
 	
 	jQuery(document).ready( function( $ ){		
 		jQuery(".add_cat_id").click(function() {
