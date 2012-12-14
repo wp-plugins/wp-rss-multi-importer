@@ -27,9 +27,9 @@ An extremely flexible plugin that imports RSS feeds to show on your Wordpress si
 
 [youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
 
-= See the various templates included =
+= See how the Feed to Post option works =
 
-[youtube http://www.youtube.com/watch?v=fZvCfoidN6A]
+[youtube http://www.youtube.com/watch?v=2QsE_em93Go]
 
 
 = Features =
