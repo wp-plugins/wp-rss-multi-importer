@@ -9,7 +9,7 @@ Imports & merges multiple feeds. Make blog posts or display on a page, excerpts 
 
 == Description ==
 
-An extremely flexible plugin that imports RSS feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS feeds and can then do 4 things (separately or at the same time):
+An extremely flexible plugin that imports and merges RSS and Atom feeds to show on your Wordpress site.  WP RSS Multi Importer imports and aggregates RSS and Atom feeds and can then do 4 things (separately or at the same time):
 
 
 <blockquote>
