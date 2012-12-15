@@ -27,7 +27,7 @@ An extremely flexible plugin that imports and merges RSS and Atom feeds to show 
 
 [youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
 
-= See how the Feed to Post option works =
+= See How The Feed To Post Option Works =
 
 [youtube http://www.youtube.com/watch?v=2QsE_em93Go]
 
@@ -51,6 +51,7 @@ An extremely flexible plugin that imports and merges RSS and Atom feeds to show 
 * Set caching time for faster page loading
 * Export all the feeds as a single RSS feed
 * Add social links (Twitter and Facebook)
+* Over 15 shortcode parameters you can use to further customize the output
 
 These features are all available in the admin panel.
 
