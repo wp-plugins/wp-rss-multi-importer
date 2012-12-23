@@ -9,7 +9,7 @@ Imports & merges multiple feeds. Make blog posts or display on a page, excerpts 
 
 == Description ==
 
-All-in-one solution for importing and merging RSS and Atom feeds to show on your Wordpress site.  Imports and aggregates RSS and Atom feeds and can then do 4 things (separately or at the same time):
+All-in-one solution for importing and merging RSS and Atom feeds to show on your Wordpress site.  Imports and aggregates RSS and Atom feeds and can then do 5 things (separately or at the same time):
 
 
 <blockquote>
@@ -36,6 +36,7 @@ All-in-one solution for importing and merging RSS and Atom feeds to show on your
 
 * Templates - choose from 8 different templates, create and style your own and save it
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
+* Set a default image to show for each category
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
 * Select number of posts on a page of your web site (when not in pagination mode)
