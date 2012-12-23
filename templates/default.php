@@ -2,6 +2,8 @@
 //  this is the default template
 
 foreach($myarray as $items) {
+	
+
 
 if ($pag!==1){ 	
 	$total = $total +1;
@@ -85,7 +87,8 @@ if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
 		}
 		
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+
 	
 	$readable .=  '</div>';	
 
@@ -97,6 +100,10 @@ if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
 	if (!empty($items["mystrdate"]) && $showdate==1){
 	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use this instead if you want time to show
 	$readable .=  '<span class="date" style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
+	
+//	$readable .=  '<span class="date" style="'.$datestyle.'">'. getDateSince($items["mystrdate"],time()).'</span><br />';  // use this to show published how long ago
+
+	
 	}
 		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span class="source" style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';

@@ -1,6 +1,108 @@
 <?php
 
 
+
+//  Categories Page
+
+function wp_rss_multi_importer_category_images_page() {
+
+
+       ?>
+      <div class="wrap">
+		 <h2>Categories Default Images Admin</h2>
+	<div id="poststuff">
+  
+
+
+     <form action="options.php" method="post"  >  
+	
+		<div class="postbox">
+		<div class="inside">
+	<h3><?php _e("Set a Default Image for Your Categories (Optional) - the full URL is required", 'wp-rss-multi-importer')?></h3>
+	<?php
+	
+	settings_fields( 'wp_rss_multi_importer_categories_images' );
+
+
+	$options = get_option('rss_import_categories' ); 
+	$options_images = get_option('rss_import_categories_images' ); 
+
+	if ( !empty($options) ) {
+		$size = count($options);
+
+
+		for ( $i=1; $i<=$size; 	$i++ ) {   
+		   
+if( $i % 2== 0 ) continue;
+
+  
+					
+				   $key = key( $options );
+
+	$j = cat_get_id_number($key);
+	$textUpper=strtoupper($options[$key]);
+	$cat_default_image=	$options_images[$j];
+
+	
+echo "<div class='default-list-name'>".$textUpper.":</div>";
+
+
+	next( $options );
+   	$key = key( $options );
+
+
+ 
+
+echo "<div class='default-list-image'><input class='default-cat-image'  size='70' name='rss_import_categories_images[$j]' type='text' value='$cat_default_image' /></div>";
+	next( $options );	
+}
+
+		 
+
+}
+	?>
+
+<p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
+</div></div>	          
+</form>
+</div></div>
+
+<?php
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	function wprssmi_convert_key( $key ) { 
 
      if ( strpos( $key, 'feed_name_' ) === 0 ) { 
@@ -65,14 +167,15 @@ function check_feed($url){
 					$feed = fetch_feed($url);
 
 		if (is_wp_error( $feed ) ) {
-			return "<span class=chk_feed>".__('This feed has errors', 'wp-rss-multi-importer')."</span>";
-			return $feed->get_error_message();
-		//	$error_msg=$feed->get_error_message();
-			//return "<span  ><button id=my-button class=chk_feed >Error: Click to see</button></span>
-			//<div id=element_to_pop_up>
-			  //  <a class=bClose>x<a/>
-			 //  This feed is causing errors - this is the error message: '.$error_msg.'
-			//</div>";
+			return "<span class=chk_feed>".__('This feed has errors', 'wp-rss-multi-importer')."</span>";			
+			
+		/*	$error_msg=$feed->get_error_message();
+			return $error_msg;
+			return "<span  ><button id=my-button class=chk_feed >Error: Click to see</button></span>
+		<div id=element_to_pop_up>
+			   <a class=bClose>x<a/>
+			  This feed is causing errors - this is the error message: '.$error_msg.'
+			</div>"; */
 		}
 		
 }
@@ -80,6 +183,7 @@ function check_feed($url){
 
 
 function wp_rss_multi_importer_intro_page() {
+		$feed = fetch_feed("http://rss.marketingprofs.com/marketingprofs");
 	?>
 	
 	<div class="wrap">
@@ -89,11 +193,11 @@ function wp_rss_multi_importer_intro_page() {
 					<div class="metabox-holder">	
 						<div class="postbox-container">
 							<H3 class="info_titles">1. Display the feed items in one of 8 customizable templates</H3>
-							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then use shortcode and put it on the page where you want to display the feed articles.  Select the templates and change the settings in the Settings tab. Use shortcode parameters (Shortcode Parameters tab) to put more customization onto your feed presentation.", 'wp-rss-multi-importer')?></p>
+							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then use shortcode and put it on the page where you want to display the feed articles.  Select the templates and change the settings in the Settings tab. Use shortcode parameters (Shortcode Parameters tab) to put more customization onto your feed presentation.", 'wp-rss-multi-importer')?></p>
 							<H3 class="info_titles">2. Create blog posts from the feed items (Feed to Post)</H3>
-							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then click on the Feed to Post tab and set the options.", 'wp-rss-multi-importer')?></p>
+							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then click on the Feed to Post tab and set the options.", 'wp-rss-multi-importer')?></p>
 							<H3 class="info_titles">3. Display the aggregated feed items in a widget</H3>
-							<p class="info_text"><?php _e("If your theme supports widgets, then start by adding feeds (RSS Feeds tab), adding Categories (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then go to Appearance->Widgets, add the RSS Multi-Importer widget, configure the options and click Save..", 'wp-rss-multi-importer')?></p>
+							<p class="info_text"><?php _e("If your theme supports widgets, then start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then go to Appearance->Widgets, add the RSS Multi-Importer widget, configure the options and click Save..", 'wp-rss-multi-importer')?></p>
 							<p><?php _e("You don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>
 						</div>
 					</div>
@@ -108,7 +212,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 488,000 have already</div>
+														<div class="txtwhite">Over 491,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -139,13 +243,35 @@ function wp_rss_multi_importer_intro_page() {
 			
 			</div>
 			
+			
+			<?php
+				if (!is_wp_error( $feed ) ){
+		?>
+			
+			<h3 style="text-align:center;"><?php print 'Latest '.$feed->get_title(); ?></h3>
+			<ul>
+			<?php foreach ($feed->get_items(0, 5) as $item): ?>
+			    <li>
+			        <a href="<?php print $item->get_permalink(); ?>" target="_blank">
+			        <?php print $item->get_title(); ?></a>
+			    </li>
+			<?php endforeach; ?>
+			</ul>
+			<?php	
+			}
+			
+			?>
+			
+	
+			
+			
 			<div id="sidebar" class="MP_box">
 				<div >
-		<h2 class="MP_title">Need Help?</h2>
+		<h2 class="MP_title">Need Plugin Help?</h2>
 	</div>
 	
 	<p><a href="http://www.allenweiss.com/wp_plugin/" target="_blank" style="color:white">Go here</a> to find FAQs, our discussion board, template examples, and more.</p>
-				
+	<p><a href="http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>			
 				
 				</div>
 			
@@ -271,6 +397,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 
 <p><label class='o_textinput' for='maxperPage'><?php _e("Number of Entries per Page of Output", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
+<OPTION VALUE="5" <?php if($options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
 <OPTION VALUE="20" <?php if($options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
 <OPTION VALUE="30" <?php if($options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
@@ -375,6 +502,18 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 	
 <p style="padding-left:15px"><label class='o_textinput' for='floatType'><?php _e("Float images to the left (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
 </span>
+
+
+	<p style="padding-left:15px"><label class='o_textinput' for='RSSdefaultImage'><?php _e("Default category image setting", 'wp-rss-multi-importer')?></label>
+	<SELECT NAME="rss_import_options[RSSdefaultImage]" id="RSSdefaultImage">
+	<OPTION VALUE="0" <?php if($options['RSSdefaultImage']==0){echo 'selected';} ?>>Process normally</OPTION>
+	<OPTION VALUE="1" <?php if($options['RSSdefaultImage']==1){echo 'selected';} ?>>Use default image for category</OPTION>
+	<OPTION VALUE="2" <?php if($options['RSSdefaultImage']==2){echo 'selected';} ?>>Replace articles with no image with default category image</OPTION>
+
+	</SELECT></p>
+
+
+
 
 <h3><?php _e("Get Social", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showsocial]" Value="1" <?php if ($options['showsocial']==1){echo 'checked="checked"';} ?></label>
@@ -485,9 +624,9 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($options));
 
            $size = count($options);  
 
-           for ( $i=1; $i<=$size; $i++ ) {            
+           for ( $i=1; $i<=$size; $i++) {            
 
-               if( $i % $modnumber == 0 ) continue;
+               //if( $i % $modnumber == 0 ) continue;
 
 
                $key = key( $options );
@@ -633,6 +772,7 @@ echo check_feed($url_esc);  // needs style
 
 
 
+
 //  Categories Page
 
 function wp_rss_multi_importer_category_page() {
@@ -640,43 +780,43 @@ function wp_rss_multi_importer_category_page() {
 
        ?>
       <div class="wrap">
-		 <h2>Categories Admin</h2>
+	 <h2>Categories Admin</h2>	
 	<div id="poststuff">
-  
+
 
 
      <form action="options.php" method="post"  >  
-	
+
 		<div class="postbox">
 		<div class="inside">
 	<h3><?php _e("RSS Multi-Importer Categories (and their shortcodes)", 'wp-rss-multi-importer')?></h3>
 	<?php
-	
+
 	settings_fields( 'wp_rss_multi_importer_categories' );
 
 	$options = get_option('rss_import_categories' ); 
-	
-	
+
+
 	if ( !empty($options) ) {
 		$size = count($options);
 
 
 		for ( $i=1; $i<=$size; $i++ ) {   
-			   
+
 if( $i % 2== 0 ) continue;
 
-  
-					
+
+
 				   $key = key( $options );
 
 	$j = cat_get_id_number($key);
 		$textUpper=strtoupper($options[$key]);
  			echo "<div class='cat-input' id='$j'>";
 	echo "<p><label class='textinput' for='Category ID'>" . wprssmi_convert_key( $key ) . "</label>
-	
 
 
-       <input id='5'  size='20' name='rss_import_categories[$key]' type='text' value='$textUpper' />  [wp_rss_multi_importer category=\"".$j."\"]";
+
+       <input id='5' class='cat-input' size='20' name='rss_import_categories[$key]' type='text' value='$textUpper' />  [wp_rss_multi_importer category=\"".$j."\"]";
 next( $options );
    $key = key( $options );
 
@@ -685,7 +825,7 @@ next( $options );
 	next( $options );	
 }
 
-		 
+
 
 }
 	?>
@@ -698,7 +838,6 @@ next( $options );
 <?php
 
 }
-
 
 
 
@@ -785,7 +924,6 @@ function wp_rss_multi_importer_post_page() {
        <div class="wrap">
 	 <h2><?php _e("Put Your RSS Feed Into Blog Posts", 'wp-rss-multi-importer')?></h2>
 	<div id="poststuff">
-  
 <p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them.  You configure some options for this here.", 'wp-rss-multi-importer')?></p>
 <p><?php _e("You can delete any post created by this plugin by simply deleting the post.", 'wp-rss-multi-importer')?></p>
 <p><?php _e("Choose how often you want feeds to go into your blog posts.  You must check to activate this feature.", 'wp-rss-multi-importer')?></p>
@@ -842,6 +980,18 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="pending" <?php if($post_options['post_status']=="pending"){echo 'selected';} ?>>pending</OPTION>
 <OPTION VALUE="future" <?php if($post_options['post_status']=="future"){echo 'selected';} ?>>future</OPTION>
 <OPTION VALUE="private" <?php if($post_options['post_status']=="private"){echo 'selected';} ?>>private</OPTION>
+</SELECT></p>
+
+
+<p><label class='o_textinput' for='post_format'><?php _e("Default post format", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[post_format]" id="post_format">
+<OPTION VALUE="standard" <?php if($post_options['post_format']=="standard"){echo 'selected';} ?>>Standard</OPTION>
+<OPTION VALUE="aside" <?php if($post_options['post_format']=="aside"){echo 'selected';} ?>>Aside</OPTION>
+<OPTION VALUE="gallery" <?php if($post_options['post_format']=="gallery"){echo 'selected';} ?>>Gallery</OPTION>
+<OPTION VALUE="link" <?php if($post_options['post_format']=="link"){echo 'selected';} ?>>Link</OPTION>
+<OPTION VALUE="image" <?php if($post_options['post_format']=="image"){echo 'selected';} ?>>Image</OPTION>
+<OPTION VALUE="quote" <?php if($post_options['post_format']=="quote"){echo 'selected';} ?>>Quote</OPTION>
+<OPTION VALUE="status" <?php if($post_options['post_format']=="status"){echo 'selected';} ?>>Status</OPTION>
 </SELECT></p>
 
 
@@ -904,7 +1054,7 @@ wp_rss_multi_deactivation();
 <p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if ($post_options['addSource']==1){echo 'checked="checked"';} ?></label></p>
 
 
-
+<p ><label class='o_textinput' for='postTags'><?php _e("Comma delimited list of tags", 'wp-rss-multi-importer')?>   <input  id='postTags' type="text" size='20'  Name="rss_post_options[postTags]" Value="<?php echo $post_options['postTags'] ?>">(if left blank, no tags will be used)</label></p>
 
 <p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
 
@@ -918,7 +1068,13 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="900" <?php if($post_options['maximgwidth']==900){echo 'selected';} ?>><?php _e("unrestricted", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
+<p style="padding-left:15px"><label class='o_textinput' for='RSSdefaultImage'><?php _e("Default category image setting", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[RSSdefaultImage]" id="RSSdefaultImage">
+<OPTION VALUE="0" <?php if($post_options['RSSdefaultImage']==0){echo 'selected';} ?>>Process normally</OPTION>
+<OPTION VALUE="1" <?php if($post_options['RSSdefaultImage']==1){echo 'selected';} ?>>Use default image for category</OPTION>
+<OPTION VALUE="2" <?php if($post_options['RSSdefaultImage']==2){echo 'selected';} ?>>Replace articles with no image with default category image</OPTION>
 
+</SELECT></p>
 
 
 
@@ -978,7 +1134,7 @@ echo '<div class="ftpost_head">Category</div><div class="ftpost_head">Blog Categ
 
 
 
-	for ( $k=1; $k<=$catsize; $k++ ) {   
+	for ( $k=1; $k<=$catsize; $k++) {   
 
 if( $k % 2== 0 ) continue;
 
@@ -1037,7 +1193,6 @@ echo "<a href='javascript:void(0)' class='add_cat_id'>Add another category</a>";
 </div></div></div>
 <?php
 }
-
 
 function chk_zero_callback($val) {
     if ($val != null){

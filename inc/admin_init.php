@@ -3,6 +3,10 @@
 
 
 
+
+
+
+
 //ON INIT
 
 add_action('admin_init','wp_rss_multi_importer_start');
@@ -17,7 +21,8 @@ register_setting('wp_rss_multi_importer_item_options', 'rss_import_options');
 register_setting('wp_rss_multi_importer_template_item', 'rss_template_item');	 
 register_setting('wp_rss_multi_importer_feed_options', 'rss_feed_options');	 
 register_setting('wp_rss_multi_importer_post_options', 'rss_post_options');	 
-register_setting('wp_rss_multi_importer_admin_options', 'rss_admin_options');	 
+register_setting('wp_rss_multi_importer_admin_options', 'rss_admin_options');
+register_setting('wp_rss_multi_importer_categories_images', 'rss_import_categories_images');	 
 add_settings_section( 'wp_rss_multi_importer_main', '', 'wp_section_text', 'wprssimport' );  
 
 
@@ -116,7 +121,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 ?>
 		<div id="icon-themes" class="icon32"></div>
 		<h2><?php  _e("WP RSS Multi-Importer Options", 'wp-rss-multi-importer')?></h2>
-		<?php settings_errors(); ?>
+		<?php //settings_errors(); ?>
 		
 		<?php if( isset( $_GET[ 'tab' ] ) ) {
 			$active_tab = $_GET[ 'tab' ];
@@ -143,7 +148,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			<a href="?page=wp_rss_multi_importer_admin&tab=items_list" class="nav-tab <?php echo $active_tab == 'items_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feeds", 'wp-rss-multi-importer')?></a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=category_options" class="nav-tab <?php echo $active_tab == 'category_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Categories", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=setting_options" class="nav-tab <?php echo $active_tab == 'setting_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Shortcode Settings", 'wp-rss-multi-importer')?></a>
-				<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post", 'wp-rss-multi-importer')?></a>
+				<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Settings", 'wp-rss-multi-importer')?></a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=shortcode_parameters" class="nav-tab <?php echo $active_tab == 'shortcode_parameters' ? 'nav-tab-active' : ''; ?>"><?php  _e("Shortcode Parameters", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options", 'wp-rss-multi-importer')?></a>
 				
@@ -165,6 +170,8 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		} else if ( $active_tab == 'category_options' ) {
 			
 			wp_rss_multi_importer_category_page();
+		wp_rss_multi_importer_category_images_page();
+		
 			
 		} else if ( $active_tab == 'shortcode_parameters' ) {
 			

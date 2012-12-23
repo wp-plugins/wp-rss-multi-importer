@@ -105,7 +105,9 @@ function restore_template(){
 	
 
 	
-	if ($templateOptions['template_name']!=0 && $templateOptions['template_code']!=0){
+	if (!$templateOptions['template_name']==0 && !$templateOptions['template_code']==0){
+		
+	
 	
 	file_put_contents(WP_RSS_MULTI_TEMPLATES .$templateOptions['template_name'], $templateOptions['template_code']);
 	

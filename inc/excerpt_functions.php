@@ -3,6 +3,49 @@
 // Helper functions
 
 
+function getDateSince($postDate,$nowDate){
+	
+	
+	$dateDiff    = $nowDate - $postDate;
+	$fullDays    = floor($dateDiff/(60*60*24));
+	$fullHours   = floor(($dateDiff-($fullDays*60*60*24))/(60*60));
+	$fullMinutes = floor(($dateDiff-($fullDays*60*60*24)-($fullHours*60*60))/60);
+	
+	$timeSince="published " ;
+	
+	if($fullDays>0){
+		$timeSince.=$fullDays." days ";
+	}
+	if($fullHours>0){
+		if ($fullHours==1){
+		$timeSince.=$fullHours." hour ";	
+		}else{
+		$timeSince.=$fullHours." hours ";
+	}
+	}
+	if($fullMinutes>0){
+		$timeSince.=$fullMinutes." min ";
+	}
+	$timeSince.=" ago";
+	return $timeSince;
+}
+
+
+function getDefaultCatImage($catID){
+		$option_category_images = get_option('rss_import_categories_images');
+		if(!empty($option_category_images)){
+		$defaultCatImage=$option_category_images[$catID];
+		if(verifyimage($defaultCatImage)==True){
+			return array(True,$defaultCatImage);
+		}else{
+			return array(False,'');
+		}
+	}
+}
+
+
+
+
 function getCategoryName($catID){  //  Get the category name from the category ID
 
 	$catOptions=get_option('rss_import_categories');
@@ -16,30 +59,36 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage)  //show excerpt function
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0)  //show excerpt function
 	{
 		
-
-		global $morestyle;
+	global $ftp;	
+	global $morestyle;
     $content=CleanHTML($content);
 
-	
+
 	if ($stripAll==1){
 			$content=strip_tags(html_entity_decode($content));	
 			$content= limitwords($maxchars,$content);	
 	}else{
-		$content=strip_tags(html_entity_decode($content),'<a><img><p>');
-			if($maxchars !=99){
+			if ($ftp==1){
+				$content=strip_tags(html_entity_decode($content),'<a><img><p><strong><i><em>');
+			}else{
+				$content=strip_tags(html_entity_decode($content),'<a><img><p>');
+			}
 		
-			
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow);	
-					}
-}	
+			if($maxchars !=99){
+				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID);	
+			}
+		}	
 
-		$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow  ' :'' ) , $content);  
+	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow  ' :'' ) , $content);  
 
-		return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
+	return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
 	}
+	
+	
+	
 	
 
 	function limitwords($maxchars,$content){
@@ -71,18 +120,10 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&laquo;","\"",$content);
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem		
 
-
-
-
-	$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
-
-	
+		$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
 	
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
 		
-		
-		
-	
 		$content =_decodeAccented($content);
 
 	return 	$content;
@@ -113,11 +154,35 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow){
+	
+	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage){
+		
+		
+		if ($adjustImageSize==1){
+			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
+		}else{
+			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
+		}	
+	
+	$content = limitwords($maxchars,strip_tags($content));
+	
+	$content=$tabledImage."".$content;
+	return 	$content;
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID){
 		$leadmatch=0;	
 		global $YTmatch;
 		global $anyimage;
 		global $ftp;
+		global $RSSdefaultImage;
 		
 		if ($ftp==1){
 			$imagefix="ftpimagefix";
@@ -141,68 +206,40 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$leadmatch=3;
 	}
 	
+	
+	$catImageArray= getDefaultCatImage($catID);
+	
+	if($RSSdefaultImage==1 && $catImageArray[0]==True){
 
-
-	if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
-		//	if (preg_match("/$strmatch/sU", $content, $matches) || preg_match("/$strmatch2/sU", $content, $matches)){  //matches a leading image
-
-
-			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($matches[2])."</a></div>";
-			}else{
-				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$matches[2]."</a></div>";
-			}
+		$mediaImage="<img src=\"$catImageArray[1]\">";	
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
 		
-			
-				$content=str_replace($matches[2], $tabledImage, $content); //format the leading image if it exists
-
-				$content=str_replace($matches[3], limitwords($maxchars,strip_tags($matches[3])), $content); //strip away all tags after the leading image
-				
-				
+	}
+	
+	else if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
 		
-			
-					if ($leadmatch==1 and $YTmatch==1){  //replace leading link with link to web page - ensures this works, especially for youtube
-
-						$content=str_replace($matches[1], $thisLink, $content, $limit=1);  ///works with youtube
-									
-					}
-
-				$content=str_replace("<a ","<a ".$openWindow." " , $content,  $count = 1);  // add window open to leading image, if it exists
+		$mediaImage = $matches[2];
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
 	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
-			$mediaImage="<img src=\"$mediaImage\">";
+		$mediaImage="<img src=\"$mediaImage\">";		
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
 			
-				if ($adjustImageSize==1){
-					$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
-				}else{
-					$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
-				}	
-			
-			$content = limitwords($maxchars,strip_tags($content));
-			
-			$content=$tabledImage."".$content;
-			
-
 	}else if ($leadmatch==3 && $anyimage==1){
 
-		$firstImage=$matches[2];
-		
-
-		
-			if ($adjustImageSize==1){
-				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($firstImage)."</a></div>";
-			}else{
-				$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$firstImage."</a></div>";
-			}	
-		
-		$content = limitwords($maxchars,strip_tags($content));
-		
-		$content=$tabledImage."".$content;
+		$mediaImage=$matches[2];	
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
 	
+	}else if($RSSdefaultImage==2 && $catImageArray[0]==True){
+
+		$mediaImage="<img src=\"$catImageArray[1]\">";		
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
 	
 	}else{
-			$content = limitwords($maxchars,strip_tags($content));  //matches no leading image or media enclosure
+		
+		$content = limitwords($maxchars,strip_tags($content));  //matches no leading image or media enclosure and no default category image
+		
 		}
 		
 	return $content;

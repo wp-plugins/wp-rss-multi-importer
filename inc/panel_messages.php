@@ -32,7 +32,7 @@ function wp_rss_multi_importer_template_page(){
 	<div id="poststuff">
 <div class="postbox">
 
-<div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Options Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
+<div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Shortcode Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
 	
 <p>Some kind users have shown me other nice layouts, and so I've included those in the templates folder and are available in the pull down menu.  You might give those a try.</p>
 
@@ -91,9 +91,10 @@ function wp_rss_multi_importer_style_tags(){
 
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in settings option</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in settings option</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
-<tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorPrep</td><td>By</td><td>[wp_rss_multi_importer authorPrep="from"]</td></tr>
+<tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorprep</td><td>By</td><td>[wp_rss_multi_importer authorprep="from"]</td></tr>
+<tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in settings option</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
+<tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in settings option</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in settings option</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
-	
 	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, date_above.php</span>
 	
 	</td></tr>

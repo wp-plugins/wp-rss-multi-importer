@@ -45,7 +45,7 @@ if (!empty($items["mydesc"]) && $showDesc==1){
 	}
 	
 	
-$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
+$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
 
 $readable .=  '</div>';	
 	

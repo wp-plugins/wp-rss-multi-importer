@@ -126,3 +126,11 @@ text-align:center;
 	font-size:15px;
 	text-align:center;
 }
+
+.default-list-name{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+.default-list-image{
+	margin-bottom:10px;
+}

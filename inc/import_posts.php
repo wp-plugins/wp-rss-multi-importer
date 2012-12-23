@@ -112,14 +112,10 @@ $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
 $addAuthor=$post_options['addAuthor'];
 $bloguserid=$post_options['bloguserid'];
-
-//$thisCategory=$post_options['category'];
-
-
-//if (!isset($post_options['category'])){
-//	$thisCategory=0;
-//}
-//$catArray=array($thisCategory);  //this is the plugin categories
+$post_format=$post_options['post_format'];
+$postTags=$post_options['postTags'];
+global $RSSdefaultImage;
+$RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
 
 
 
@@ -138,10 +134,6 @@ if (!empty($wpcatids)){
 	
 }
 
-//echo var_dump($catArray);
-//exit;
-
-
 
 
 
@@ -152,6 +144,8 @@ if(empty($options['sourcename'])){
 }else{
 	$attribution=$options['sourcename'].': ';
 }
+global $ftp;
+$ftp=1;  //identify pass to excerpt_functions comes from feed to post
 
 global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
@@ -429,11 +423,16 @@ if (empty( $mypostids )){  //only post if it hasn't been posted before
   	$post = array();  
   	$post['post_status'] = $post_status;
 
+
+
 if ($overridedate==1){
+	//date_default_timezone_set('America/Los_Angeles');  //  Set to your time zone if running into problems
 	$post['post_date'] = date("Y-m-d H:i:s", time());  
 }else{
   	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
 }
+
+
 
 
   	$post['post_title'] = trim($items["mytitle"]);
@@ -445,7 +444,7 @@ $authorPrep="By ";
 			}
 
 	
-	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
+	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
 
 	if ($addSource==1){
 	$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
@@ -475,11 +474,19 @@ $authorPrep="By ";
 	$post['post_category'] =$blogcatid;
 	
 	$post['post_author'] =$bloguserid;
+	
 
+	$post['post_format'] =$post_format;
+
+
+
+if($postTags!=''){
+	$post['tags_input'] =$postTags;
+}
 
   	$post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $thisLink);
-				//wp_set_post_terms( $post_id, $terms, $taxonomy, $append )
+		
 	unset($post);
 }
 

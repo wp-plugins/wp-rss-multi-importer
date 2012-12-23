@@ -69,7 +69,7 @@ if ($nodays==0){
 		}
 		
 		
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"]);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
 	
 	$readable .=  '</div>';	
 
@@ -97,5 +97,5 @@ if ($nodays==0){
 	
 	
 		}
-	//  This is the end of the regular template
+	//  This is the end of the default template
 ?>

@@ -103,6 +103,36 @@ jQuery(function() { // when document has loaded
         return regexp.test(url);
     }
 
+
+
+
+
+
+
+
+
+
+ jQuery(document).on('change', '.default-cat-image', function() {
+
+
+this.value = jQuery.trim(this.value);
+
+//alert(isValidImage(jQuery(this).val()));
+
+  });
+
+	function isValidImage(url) {
+      var regexp = /^(http|https):\/\/(.*)\.(gif|png|jpg|jpeg)?/;
+      return regexp.test(url);
+  }
+
+
+
+
+
+
+
+
 	jQuery(document).on('click', '.btnDeleteNew', function() {  //this removes any new feeds not saved
 	var $id =this.id;
        jQuery('div').remove('#'+$id); 
@@ -191,6 +221,5 @@ jQuery(function() { // when document has loaded
 	            });
 
 	        });
-	
 	
 	

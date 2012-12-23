@@ -1,8 +1,8 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
-  Description: Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.52
+  Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
+  Version: 2.53
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.52 );
+define( 'WP_RSS_MULTI_VERSION', 2.53 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -78,6 +78,7 @@ require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
 
 
+
    
    /**
    *  Shortcode setup and call (shortcode is [wp_rss_multi_importer]) with options
@@ -134,13 +135,17 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'pinterest'=>0,
 		'maxperpage' =>0,
 		'noimage' => 0,
+		'sortOrder' => NULL,
+		'defaultimage' => NULL,
 		'mytemplate' =>'',
 		'showmore'=>NULL,
-		'authorPrep'=>'by',
+		'authorprep'=>'by',
 		'morestyle' =>'[...]'
 		), $atts);
 		
-	$authorPrep=$parms['authorPrep'];
+	$defaultImage=$parms['defaultimage'];
+	$sortOrder=$parms['sortOrder'];	
+	$authorPrep=$parms['authorprep'];
 	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
 	$hdsize = $parms['hdsize'];
@@ -169,6 +174,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
+	$option_category_images = get_option('rss_import_categories_images','option not found');
 
 	if ($option_items==false) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds", 'wp-rss-multi-importer');
 
@@ -187,6 +193,8 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
    if(!empty($option_items)){
 	
 //GET PARAMETERS  
+global $RSSdefaultImage;
+$RSSdefaultImage=$options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
 $size = count($option_items);
 $sortDir=$options['sortbydate'];  // 1 is ascending
 $stripAll=$options['stripAll'];
@@ -209,6 +217,13 @@ $perPage=$options['perPage'];
 global $anyimage;
 $anyimage=$options['anyimage'];
 $addAuthor=$options['addAuthor'];
+
+if(!is_null($defaultImage)){$RSSdefaultImage=$defaultImage;}
+
+
+
+
+if(!is_null($sortOrder)){$sortDir=$sortOrder;}
 
 if (!is_null($pshowmore)) {$showmore=$pshowmore;} 
 
@@ -415,6 +430,8 @@ if (empty($url)) {continue;}
 				if (empty($item))	continue;	
 									
 				
+		
+				
 			if ($enclosure = $item->get_enclosure()){
 
 				if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
@@ -423,14 +440,16 @@ if (empty($url)) {continue;}
 					$mediaImage=$item->get_enclosure()->get_link();	
 				}	
 			}
+		
+			
+			
 			
 			
 			if ($itemAuthor = $item->get_author())
 			{
 				$itemAuthor=$item->get_author()->get_name();
 			}else if (!IS_NULL($feedAuthor)){
-				$itemAuthor=$feedAuthor;
-				
+				$itemAuthor=$feedAuthor;	
 			}
 			
 					
@@ -577,7 +596,7 @@ $readable .='<div class="pag_box">';
 
 if($numPages > $currentPage && ($currentPage + 1) < $numPages)  
     $readable .=  '<a href="http://'.$currentURL.'pg=' . ($currentPage + 1) . '" class="more-prev">'.__('Next page', 'wp-rss-multi-importer').' »</a>';
-
+ //$readable .=$numPages;
 	if($currentPage > 0 && $currentPage < $numPages)  
 	    $readable .= '<a href="http://'.$currentURL.'pg=' . ($currentPage - 1) . '" class="more-prev">« '.__('Previous page', 'wp-rss-multi-importer').'</a>';  
 

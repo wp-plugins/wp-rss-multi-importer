@@ -324,7 +324,7 @@ echo '	<div class="news-contents">';
 			
 			if($showimage==1 && $addmotion!=1){
 			
-			echo showexcerpt($items["mydesc"],0,0,0,$items["mylink"],1,0,0,$items["myimage"]);
+			echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,0,0,$items["myimage"]);
 			
 			}
 			
@@ -342,8 +342,9 @@ echo '	<div class="news-contents">';
 						if ( '[...]' == substr( $desc, -5 ) )
 							$desc = substr( $desc, 0, -5 ) . '[&hellip;]';
 							elseif ( '[&hellip;]' != substr( $desc, -10 ) )
-								$desc .= ' [&hellip;]';
-							$desc = esc_html( $desc );
+								//$desc .= ' [&hellip;]';
+								$desc .= '<a '.$openWindow.' href='.$items["mylink"].'>[&hellip;]</a>';
+							//$desc = esc_html( $desc );
 			echo $desc.'<br/>';
 			}
 
