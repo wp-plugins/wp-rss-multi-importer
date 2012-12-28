@@ -75,7 +75,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-				$content=strip_tags(html_entity_decode($content),'<a><img><p><strong><i><em>');
+				$content=strip_tags(html_entity_decode($content),'<a><img><p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
 			}else{
 				$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 			}
@@ -170,7 +170,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		}	
 	
 	if($ftp==1){  
-		$content = limitwords($maxchars,strip_tags($content,'<p><strong><i><em>'));
+		$content = limitwords($maxchars,strip_tags($content,'<p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>'));
 	}else{
 		$content = limitwords($maxchars,strip_tags($content));
 	}
