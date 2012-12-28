@@ -539,6 +539,8 @@ $authorPrep="By ";
 
 	$post['post_category'] =$blogcatid;
 	
+			if (is_null($bloguserid) || empty($bloguserid)){$bloguserid=0;}  //check that userid isn't empty else give it admin status
+	
 	$post['post_author'] =$bloguserid;
 	
 	$post['post_format'] =$post_format;
