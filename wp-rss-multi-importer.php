@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.53
+  Version: 2.54
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.53 );
+define( 'WP_RSS_MULTI_VERSION', 2.54 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -68,10 +68,15 @@ require_once ( WP_RSS_MULTI_INC . 'scripts.php' );
 /* Load the feed files. */
 require_once ( WP_RSS_MULTI_INC . 'rss_feed.php' );
 
-require_once(  WP_RSS_MULTI_INC . 'import_posts.php');  // testing
+require_once(  WP_RSS_MULTI_INC . 'import_posts.php');  
 
 /* Load the admin_init files. */
 require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
+
+ 
+
+
+
 
 
 
@@ -135,16 +140,18 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'pinterest'=>0,
 		'maxperpage' =>0,
 		'noimage' => 0,
-		'sortOrder' => NULL,
+		'sortorder' => NULL,
 		'defaultimage' => NULL,
+		'showdesc' => NULL,
 		'mytemplate' =>'',
 		'showmore'=>NULL,
 		'authorprep'=>'by',
 		'morestyle' =>'[...]'
 		), $atts);
 		
+	$showThisDesc=$parms['showdesc'];	
 	$defaultImage=$parms['defaultimage'];
-	$sortOrder=$parms['sortOrder'];	
+	$sortOrder=$parms['sortorder'];	
 	$authorPrep=$parms['authorprep'];
 	$anchorcolor=$parms['anchorcolor'];
 	$datestyle=$parms['datestyle'];
@@ -222,6 +229,7 @@ if(!is_null($defaultImage)){$RSSdefaultImage=$defaultImage;}
 
 
 
+if(!is_null($showThisDesc)){$showDesc=$showThisDesc;}
 
 if(!is_null($sortOrder)){$sortDir=$sortOrder;}
 
@@ -240,34 +248,32 @@ if ($floatType=='1'){
 }
 
 
-if ($parmfloat!='') $float=$parmfloat;
-if($parmmaxperpage!=0) $maxperPage=$parmmaxperpage;
-if ($noimage==1) $stripAll=1;
-if ($thisfeed!='') $maxposts=$thisfeed;
+	if ($parmfloat!='') $float=$parmfloat;
+	if($parmmaxperpage!=0) $maxperPage=$parmmaxperpage;
+	if ($noimage==1) $stripAll=1;
+	if ($thisfeed!='') $maxposts=$thisfeed;
 
-if ($pinterest==1){
+	if ($pinterest==1){
 		$divfloat="left";
 	}else{
 		$divfloat='';	
 	}
 
-if ($cacheMin==''){$cacheMin=0;}  //set caching minutes	
+	if ($cacheMin==''){$cacheMin=0;}  //set caching minutes	
 
 
-if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
+	if (!is_null($cachetime)) {$cacheMin=$cachetime;}  //override caching minutes with shortcode parameter	
 
 
 
-
-if ($cb!=='1' && $targetWindow==0){
-add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
-
-
-   }
+	if (is_null($cb) && $targetWindow==0){
+			add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+   		}
 
 $template=$options['template'];
 if ($mytemplate!='') $template=$mytemplate;
 
+//	END PARAMETERS
 
 
 timer_start();  //TIMER START - for testing purposes
@@ -355,6 +361,8 @@ if (empty($url)) {continue;}
 
 
 	$url = esc_url_raw(strip_tags($url));
+	
+
 
 
 				$feed = fetch_feed($url);

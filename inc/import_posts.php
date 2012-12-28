@@ -1,9 +1,67 @@
 <?php
 
 
-
-
 //  POST FEED FUNCTIONS
+
+
+function deleteArticles(){
+
+	
+	global $wpdb;
+
+  $mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_key LIKE '%rssmi_source_link%");
+
+
+    foreach( $mypostids as $mypost ) {
+	
+	//	delete_post_meta($mypost->ID, 'rssmi_source_link');
+ 
+
+    }
+}
+
+
+function setFeaturedImage($post_id,$url,$featuredImageTitle){  
+	
+    // Download file to temp location and setup a fake $_FILE handler
+    // with a new name based on the post_id
+    $tmp_name = download_url( $url );
+//								echo $tmp_name;
+    $file_array['name'] = $post_id. '-thumb.jpg';  // new filename based on slug
+    $file_array['tmp_name'] = $tmp_name;
+
+
+
+    // If error storing temporarily, unlink
+    if ( is_wp_error( $tmp_name ) ) {
+        @unlink($file_array['tmp_name']);
+        $file_array['tmp_name'] = '';
+    }
+
+    // do validation and storage .  Make a description based on the Post_ID
+    $attachment_id = media_handle_sideload( $file_array, $post_id, 'Thumbnail for ' .$post_id);
+
+
+
+    // If error storing permanently, unlink
+    if ( is_wp_error($attachment_id) ) {
+	$error_string = $attachment_id->get_error_message();
+        @unlink($file_array['tmp_name']);
+        return;
+    }
+
+
+    // Set as the post attachment
+   $post_result= add_post_meta( $post_id, '_thumbnail_id', $attachment_id, true );
+
+//					echo $post_result);
+		
+}
+
+
+
+
+
 
 function rssmi_import_feed_post() {
 	
@@ -67,6 +125,10 @@ function strip_qs_var($sourcestr,$url,$key){
 function wp_rss_multi_importer_post(){
 	
 
+	
+require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+require_once(ABSPATH . "wp-admin" . '/includes/image.php');
 
 if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 0; }  // no caching of RSS feed
@@ -107,6 +169,8 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 $size = count($option_items);
 $sortDir=0;  // 1 is ascending
 $maxperPage=$options['maxperPage'];
+global $setFeaturedImage;
+$setFeaturedImage=$post_options['setFeaturedImage'];
 $addSource=$post_options['addSource'];
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
@@ -116,6 +180,7 @@ $post_format=$post_options['post_format'];
 $postTags=$post_options['postTags'];
 global $RSSdefaultImage;
 $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
+
 
 
 
@@ -146,6 +211,8 @@ if(empty($options['sourcename'])){
 }
 global $ftp;
 $ftp=1;  //identify pass to excerpt_functions comes from feed to post
+//global $anyimage;  // uncomment to identify any image
+//$anyimage=1;
 
 global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
@@ -285,7 +352,7 @@ if (empty($myfeeds)){
 
 
 
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
 
 							unset($mediaImage);
 							unset($itemAuthor);
@@ -319,7 +386,7 @@ if (empty($myfeeds)){
 
 
 
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
 
 
 							unset($mediaImage);
@@ -344,10 +411,6 @@ if (!isset($myarray) || empty($myarray)){
 	return "There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.";
 		exit;
 }
-
-
-
-
 
 //$myarrary sorted by mystrdate
 
@@ -377,7 +440,15 @@ if($targetWindow==0){
 
 	$total=0;
 
-global $wpdb;
+
+
+global $wpdb; // get all links that have been previously processed
+$existing_permalinks = $wpdb->get_col("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link'");
+
+
+//$msg = implode(",", $existing_permalinks);
+
+
 foreach($myarray as $items) {
 	
 	$total = $total +1;
@@ -412,14 +483,13 @@ foreach($myarray as $items) {
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
 
-	
-	$mypostids = $wpdb->get_results("select * from $wpdb->postmeta where meta_value='$thisLink'");
 	$thisContent='';
-	
-if (empty( $mypostids )){  //only post if it hasn't been posted before
 	
 
 	
+	 if (   (! in_array( $thisLink, $existing_permalinks ) )  ) { 
+	
+
   	$post = array();  
   	$post['post_status'] = $post_status;
 
@@ -440,14 +510,14 @@ if ($overridedate==1){
 $authorPrep="By ";
 
 		if(!empty($items["myAuthor"]) && $addAuthor==1){
-		 $thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  
+		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  
 			}
 
 	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
 
 	if ($addSource==1){
-	$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
+		$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
 	}
 
 	
@@ -457,36 +527,41 @@ $authorPrep="By ";
 	
 	if ($showsocial==1){
 	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a></span>';
-	
 	}
+	
   	$post['post_content'] = $thisContent;
 
 	$mycatid=$items["mycatid"];
 
-
-
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
-	
 	
 	$blogcatid=array($post_options['categoryid']['wpcatid'][$catkey]);
 
-	
 	$post['post_category'] =$blogcatid;
 	
 	$post['post_author'] =$bloguserid;
 	
-
 	$post['post_format'] =$post_format;
 
+	if($postTags!=''){
+		$post['tags_input'] =$postTags;
+	}
 
+ 	$post_id = wp_insert_post($post);
 
-if($postTags!=''){
-	$post['tags_input'] =$postTags;
-}
-
-  	$post_id = wp_insert_post($post);
 	add_post_meta($post_id, 'rssmi_source_link', $thisLink);
-		
+	
+	
+
+	if ($setFeaturedImage==1 || $setFeaturedImage==2){
+		global $featuredImage;
+			if (isset($featuredImage)){
+				$featuredImageTitle=trim($items["mytitle"]);	
+				setFeaturedImage($post_id,$featuredImage,$featuredImageTitle);
+				unset($featuredImage);
+				}
+			}
+
 	unset($post);
 }
 

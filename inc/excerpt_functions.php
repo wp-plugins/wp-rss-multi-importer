@@ -3,6 +3,9 @@
 // Helper functions
 
 
+
+
+
 function getDateSince($postDate,$nowDate){
 	
 	
@@ -121,7 +124,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem		
 
 		$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
-	
+
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
 		
 		$content =_decodeAccented($content);
@@ -156,6 +159,8 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage){
+		global $ftp;
+		global $setFeaturedImage;
 		
 		
 		if ($adjustImageSize==1){
@@ -164,9 +169,20 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
 		}	
 	
-	$content = limitwords($maxchars,strip_tags($content));
+	if($ftp==1){  
+		$content = limitwords($maxchars,strip_tags($content,'<p><strong><i><em>'));
+	}else{
+		$content = limitwords($maxchars,strip_tags($content));
+	}
 	
-	$content=$tabledImage."".$content;
+	if($ftp!=1){  //  only return if not Feed to Post
+		$content=$tabledImage."".$content;
+	}else{
+		if($setFeaturedImage!=2){  //  check for condition if Feed to Post
+			$content=$tabledImage."".$content;
+		}
+			}
+
 	return 	$content;
 		
 		
@@ -183,6 +199,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		global $anyimage;
 		global $ftp;
 		global $RSSdefaultImage;
+		global $featuredImage;
 		
 		if ($ftp==1){
 			$imagefix="ftpimagefix";
@@ -207,34 +224,40 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	}
 	
 	
+	
 	$catImageArray= getDefaultCatImage($catID);
 	
 	if($RSSdefaultImage==1 && $catImageArray[0]==True){
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";	
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
-		
+		$featuredImage=$catImageArray[1];
 	}
 	
 	else if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
 		
 		$mediaImage = $matches[2];
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
+		$featuredImage=$mediaImage;
 		$mediaImage="<img src=\"$mediaImage\">";		
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		
 			
 	}else if ($leadmatch==3 && $anyimage==1){
 
 		$mediaImage=$matches[2];	
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if($RSSdefaultImage==2 && $catImageArray[0]==True){
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";		
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$featuredImage=$catImageArray[1];
 	
 	}else{
 		

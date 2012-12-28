@@ -147,6 +147,17 @@ this.value = jQuery.trim(this.value);
 		jQuery('span#secret').hide()};
  });
 
+
+   jQuery(document).on('change', '#stripAll', function() {       
+    if(jQuery(this).val() == 1){
+		jQuery('span#stripAllsecret').hide();
+	}else{
+		jQuery('span#stripAllsecret').show()};
+ });
+
+
+
+
   jQuery(document).on('change', '#pagination', function() {       
      if(jQuery('#pagination').val() == 1){
 //alert("hello");
@@ -221,5 +232,6 @@ this.value = jQuery.trim(this.value);
 	            });
 
 	        });
+	
 	
 	

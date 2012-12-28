@@ -1,10 +1,10 @@
 === WP RSS Multi Importer ===
 Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
-Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, automatic
+Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 2.53
+Stable tag: 2.54
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -23,6 +23,10 @@ All-in-one solution for importing and merging RSS and Atom feeds to show on your
 </blockquote>
 
 
+= Newest Feature =
+
+Feed to Post now has option to make the image into a Featured Image.
+
 = See How It Works =
 
 [youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
@@ -36,6 +40,7 @@ All-in-one solution for importing and merging RSS and Atom feeds to show on your
 
 * Templates - choose from 8 different templates, create and style your own and save it
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
+* When posting to your blog, have the image be the Featured Image which you can use in the most current themes
 * Set a default image to show for each category
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
@@ -124,6 +129,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.54 =
+* Added option to make images in Feed to Post be the featured image.
 = Version 2.53 =
 * Added default category image option, set post format for Feed to Post option and other options added, preserves more tags in Feed to Post option, added more shortcode parameters and fixed several bugs.
 = Version 2.52 =
