@@ -1087,7 +1087,7 @@ wp_rss_multi_deactivation();
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
 	
 	
-	<p ><label class='o_textinput' for='stripSome'><?php _e("Preserve limited tags (p,strong,b,br,i,em,li,ul,pre,code,sup,sub>,u>,h2,h3>,h4)   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if ($post_options['stripSome']==1){echo 'checked="checked"';} ?></label>   (leave unchecked for all html to be preserved)</p>
+	<p ><label class='o_textinput' for='stripSome'><?php _e("Preserve limited tags (p,strong,b,br,i,em,li,ul,pre,code,sup,sub,u,h2,h3,h4)   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if ($post_options['stripSome']==1){echo 'checked="checked"';} ?></label>   (leave unchecked for all html to be preserved)</p>
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maximgwidth]">
