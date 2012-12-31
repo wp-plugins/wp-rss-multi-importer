@@ -16,7 +16,7 @@ All-in-one solution for importing and merging RSS and Atom feeds to show on your
 <ul>
 <li>Display the aggregated feed items in one of **8 different templates that you can customize** </li>
 <li>**Categorize the feeds** so that you can show different feeds on different pages</li>
-<li>**Create blog posts** from the feed items so readers can comment on them</li>
+<li>**Create blog posts (autoblog)** from the feed items so readers can comment on them</li>
 <li>**Output an RSS feed** so that your users can consume the aggregated feeds you create</li>
 <li>Display the aggregated feed items in a widget, in one of 3 different ways</li>
 </ul>
@@ -29,7 +29,7 @@ Feed to Post now has option to make the image into a Featured Image.
 
 = See How It Works =
 
-[youtube http://www.youtube.com/watch?v=Yl7SJfrl_GY]
+[youtube http://www.youtube.com/watch?v=9v8gIfcBia0]
 
 = See How The Feed To Post Option Works =
 
