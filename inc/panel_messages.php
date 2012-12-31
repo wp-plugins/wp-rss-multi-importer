@@ -10,14 +10,14 @@ function wp_section_text() {
 	<div class="inside"><H4><?php _e("Step 1:", 'wp-rss-multi-importer')?></H4>
 		<p><?php _e("Enter a name and the full URL (with http://) for each of your feeds. The name will be used to identify which feed produced the link (see the Attribution Label option below). Click Save Settings.", 'wp-rss-multi-importer')?></p>
 		
-		<H4><?php _e("Step 2 (how to present the feeds):", 'wp-rss-multi-importer')?></H4><p><?php _e("First, decide whether you want to have the feeds go into blog posts, so people can comment on them.  If so, you can go directly to the Feed to Post Options, set them and you are done.", 'wp-rss-multi-importer')?></p>
+		<H4><?php _e("Step 2 (how to present the feeds):", 'wp-rss-multi-importer')?></H4><p><?php _e("First, decide whether you want to have the feeds go into blog posts, so people can comment on them.  If so, you can go directly to the Feed to Post Settings, set them and you are done.", 'wp-rss-multi-importer')?></p>
 		
-		<p><?php _e("If you'd rather have the feeds show up in a more typical way (and use templates to customize how they look), go to the tab called", 'wp-rss-multi-importer')?> <a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options"><?php _e("Setting Options", 'wp-rss-multi-importer')?></a>, <?php _e("choose options and click Save Settings.", 'wp-rss-multi-importer')?></p>
+		<p><?php _e("If you'd rather have the feeds show up in a more typical way (and use templates to customize how they look), go to the tab called", 'wp-rss-multi-importer')?> <a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options"><?php _e("Shortcode Settings", 'wp-rss-multi-importer')?></a>, <?php _e("choose options and click Save Settings.", 'wp-rss-multi-importer')?></p>
 		
 		<H4><?php _e("Step 3 (only relevant if you're not using the Feed to Post feature):", 'wp-rss-multi-importer')?></H4><p><?php _e("Put this shortcode, [wp_rss_multi_importer], on the page you wish to have the feed.", 'wp-rss-multi-importer')?></p>
 		
 
-<p><?php _e("You can also assign each feed to a category. Go to the Category Options tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category=\"2\"] (or [wp_rss_multi_importer category=\"1,2\"] to have two categories) on the page you wish to have only show feeds from those categories.")?></p>
+<p><?php _e("You can also assign each feed to a category. Go to the Categories tab, enter as many categories as you like.</p><p>Then you can restrict what shows up on a given page by using this shortcode, like [wp_rss_multi_importer category=\"2\"] (or [wp_rss_multi_importer category=\"1,2\"] to have two categories) on the page you wish to have only show feeds from those categories.")?></p>
 
 </div></div>
 
@@ -34,8 +34,6 @@ function wp_rss_multi_importer_template_page(){
 
 <div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Shortcode Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
 	
-<p>Some kind users have shown me other nice layouts, and so I've included those in the templates folder and are available in the pull down menu.  You might give those a try.</p>
-
 <p><a href="http://templates.allenweiss.com" target="_blank">Go here to see what various templates look like</a>.</p>
 
 <p>First, if you know some CSS you can change the styles of all the templates..and then save the CSS for use when the next update of the plugin happens.</p>
@@ -51,7 +49,7 @@ function wp_rss_multi_importer_template_page(){
 <p>Thank you.<br>Allen</p>
 	
 	</div></div></div></div>
-<h3>Save Your Template</h3>
+<h2>Save Your Template</h2>
 <?php
 $options = get_option( 'rss_import_options' ); 
 $thistemplate=$options['template'];

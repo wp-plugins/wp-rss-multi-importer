@@ -212,7 +212,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 491,000 have already</div>
+														<div class="txtwhite">Over 492,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -926,7 +926,7 @@ function wp_rss_multi_importer_post_page() {
        <div class="wrap">
 	 <h2><?php _e("Put Your RSS Feed Into Blog Posts", 'wp-rss-multi-importer')?></h2>
 	<div id="poststuff">
-<p><?php _e("You can have your RSS feed imported into blog posts, so people can comment on them. You can delete any post created by this plugin by simply deleting the post.", 'wp-rss-multi-importer')?></p>
+
 
        <div id="options">
 
@@ -941,11 +941,13 @@ function wp_rss_multi_importer_post_page() {
 
 
 <div class="postbox">
+<h3><label for="title"><?php _e("Feed to Post Options Settings", 'wp-rss-multi-importer')?></label></h3>
+
 <div class="inside">
 
+<h3><?php _e("Activation and Post Type Settings", 'wp-rss-multi-importer')?></h3>
 
 
-<h3><?php _e("Feed to Post Options Settings", 'wp-rss-multi-importer')?></h3>
 
 <p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label><?php if ($post_options['active']!=1){echo "   <span style=\"color:red\">This feature is not active</span>";}?>
 </p>
@@ -991,7 +993,17 @@ wp_rss_multi_deactivation();
 </SELECT></p>
 
 
+<p ><label class='o_textinput' for='postTags'><?php _e("Comma delimited list of tags", 'wp-rss-multi-importer')?>   <input  id='postTags' type="text" size='20'  Name="rss_post_options[postTags]" Value="<?php echo $post_options['postTags'] ?>">(if left blank, no tags will be used)</label></p>
 
+<p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
+
+<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if ($post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+<h3><?php _e("Fetch Quantity Settings", 'wp-rss-multi-importer')?></h3>
 
 
 <p><label class='o_textinput' for='maxfeed'><?php _e("Number of Entries per Feed to Fetch", 'wp-rss-multi-importer')?></label>
@@ -1024,6 +1036,9 @@ wp_rss_multi_deactivation();
 </SELECT></p>
 
 
+<h3><?php _e("Link Settings", 'wp-rss-multi-importer')?></h3>
+
+
 <p><label class='o_textinput' for='targetWindow'><?php _e("Target Window (when link clicked, where should it open?)", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rss_post_options[targetWindow]" id="targetWindow">
 	<OPTION VALUE="0" <?php if($post_options['targetWindow']==0){echo 'selected';} ?>><?php _e("Use LightBox", 'wp-rss-multi-importer')?></OPTION>
@@ -1045,23 +1060,18 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="99" <?php if($post_options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything", 'wp-rss-multi-importer')?></OPTION>
 </SELECT><?php _e("  NOTE: Choosing Give me everything will prohibit you from getting a Featured Image", 'wp-rss-multi-importer')?></p>
 
-
+<h3><?php _e("Author and Source Settings", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if ($post_options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
 
 
 <p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if ($post_options['addSource']==1){echo 'checked="checked"';} ?></label></p>
 
 
-<p ><label class='o_textinput' for='postTags'><?php _e("Comma delimited list of tags", 'wp-rss-multi-importer')?>   <input  id='postTags' type="text" size='20'  Name="rss_post_options[postTags]" Value="<?php echo $post_options['postTags'] ?>">(if left blank, no tags will be used)</label></p>
 
-<p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
+<h3><?php _e("HTML and Image Handling", 'wp-rss-multi-importer')?></h3>
 
-<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if ($post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
-</p>
 
-<h3><?php _e("Image Handling", 'wp-rss-multi-importer')?></h3>
-
-<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.", 'wp-rss-multi-importer')?>
+<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all html and images in the excerpt.", 'wp-rss-multi-importer')?>
 	<SELECT NAME="rss_post_options[stripAll]" id="stripAll">
 	<OPTION VALUE="1" <?php if($post_options['stripAll']==1){echo 'selected';} ?>><?php _e("Yes", 'wp-rss-multi-importer')?></OPTION>
 	<OPTION VALUE="0" <?php if($post_options['stripAll']==0){echo 'selected';} ?>><?php _e("No", 'wp-rss-multi-importer')?></OPTION>
@@ -1069,7 +1079,15 @@ wp_rss_multi_deactivation();
 </p>
 
 
+
+
+
+
+
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
+	
+	
+	<p ><label class='o_textinput' for='stripSome'><?php _e("Preserve limited tags (p,strong,b,br,i,em,li,ul,pre,code,sup,sub>,u>,h2,h3>,h4)   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if ($post_options['stripSome']==1){echo 'checked="checked"';} ?></label>   (leave unchecked for all html to be preserved)</p>
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maximgwidth]">
@@ -1077,7 +1095,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="250" <?php if($post_options['maximgwidth']==250){echo 'selected';} ?>>250px</OPTION>
 <OPTION VALUE="350" <?php if($post_options['maximgwidth']==350){echo 'selected';} ?>>350px</OPTION>
 <OPTION VALUE="500" <?php if($post_options['maximgwidth']==500){echo 'selected';} ?>>500px</OPTION>
-<OPTION VALUE="900" <?php if($post_options['maximgwidth']==900){echo 'selected';} ?>><?php _e("unrestricted", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="999" <?php if($post_options['maximgwidth']==999){echo 'selected';} ?>><?php _e("unrestricted", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
 <p ><label class='o_textinput' for='RSSdefaultImage'><?php _e("Default category image setting", 'wp-rss-multi-importer')?></label>
@@ -1102,8 +1120,7 @@ wp_rss_multi_deactivation();
 </span>
 
 
-<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
-</p>
+
 
 
 <?php
@@ -1116,10 +1133,15 @@ $catOptions= get_option( 'rss_import_categories' );
 		echo "<h3><label class='o_textinput' for='category'>".__('Restrict feeds to one of your defined RSS Multi Importer categories and place them in your blog categories', 'wp-rss-multi-importer')."</label></h3>";
 			echo "<p>".__('Choose a category and enter 0 if you want this to go into an uncategorized category on your blog, or enter the ID number of the blog category you want the posts to go into. <a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a>', 'wp-rss-multi-importer')."</p>";
 				
+	//if (count(array_filter($post_options['categoryid']['wpcatid'],'chk_zero_callback')) == 0){
+
+//	echo "<h3>".__('You must select at least one category (or all) and an integer ID of your blog category for this to work...enter 0 if not sure.')."</h3>";
+//	}
 
 echo '<div class="ftpost_head">Category</div><div class="ftpost_head">Blog Category ID</div><div style="clear:both;"></div>';	
 		$catsize = count($catOptions);
 		$postoptionsize= $catsize/2;
+
 		for ( $q=1; $q<=$postoptionsize; $q++ ){
 			
 

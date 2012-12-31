@@ -119,6 +119,22 @@ function strip_qs_var($sourcestr,$url,$key){
 
 
 
+//add_filter( 'the_title', 'ta_modified_post_title');  //uncomment this to change title links
+function ta_modified_post_title ($title) {
+  if ( in_the_loop() && !is_page() ) {
+	global $wp_query;
+	$postID=$wp_query->post->ID;
+	$myLink = get_post_meta($postID, 'rssmi_source_link' , true);
+		if (!empty($myLink)){
+			$myTitle=$wp_query->post->post_title;
+			$myLinkTitle='<a href='.$myLink.' class="colorbox">'.$myTitle.'</a>';  // change how the link opens here
+		return $myLinkTitle;					
+			}
+  }
+  return $title;
+}
+
+
 
 
 
@@ -136,10 +152,6 @@ function wprssmi_hourly_feed() { return 0; }  // no caching of RSS feed
 add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 
 
-
-
-
-	
   
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -164,6 +176,7 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 
     
    if(!empty($option_items)){
+
 	
 //GET PARAMETERS  
 $size = count($option_items);
@@ -180,7 +193,6 @@ $post_format=$post_options['post_format'];
 $postTags=$post_options['postTags'];
 global $RSSdefaultImage;
 $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
-
 
 
 
@@ -211,8 +223,8 @@ if(empty($options['sourcename'])){
 }
 global $ftp;
 $ftp=1;  //identify pass to excerpt_functions comes from feed to post
-//global $anyimage;  // uncomment to identify any image
-//$anyimage=1;
+global $anyimage;  // to identify any image in description 
+$anyimage=1;
 
 global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
@@ -505,16 +517,25 @@ if ($overridedate==1){
 
 
 
-  	$post['post_title'] = trim($items["mytitle"]);
+	$post['post_title'] = trim($items["mytitle"]);
+
+
 
 $authorPrep="By ";
 
 		if(!empty($items["myAuthor"]) && $addAuthor==1){
-		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  
+		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>  ';  
 			}
 
 	
+	
+
+	
+	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+	
+	
+
 
 	if ($addSource==1){
 		$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
@@ -539,7 +560,9 @@ $authorPrep="By ";
 
 	$post['post_category'] =$blogcatid;
 	
-			if (is_null($bloguserid) || empty($bloguserid)){$bloguserid=1;}  //check that userid isn't empty else give it admin status
+	
+		if (is_null($bloguserid) || empty($bloguserid)){$bloguserid=1;}  //check that userid isn't empty else give it admin status
+	
 	
 	$post['post_author'] =$bloguserid;
 	
@@ -548,6 +571,8 @@ $authorPrep="By ";
 	if($postTags!=''){
 		$post['tags_input'] =$postTags;
 	}
+	
+//exit;
 
  	$post_id = wp_insert_post($post);
 

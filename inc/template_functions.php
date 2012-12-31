@@ -1,11 +1,19 @@
 <?php
 
 
+
+function wp_rss_multi_importer_activate() {
+   restore_template(1);
+}
+
+
+
+
 function wprssmi_ajax_process_request() {
 	
 	if ($_POST["restore_var"]==1){
 		//echo $_POST["restore_var"];
-		restore_template();
+		restore_template(0);
 		
 		echo __("Your templates have been restored.  Go back to the settings options tab and select your template.", 'wp-rss-multi-importer');
 		die();
@@ -49,7 +57,7 @@ $myTemplateOptions = array(
 delete_option('rss_template_item');
 add_option('rss_template_item', $myTemplateOptions);
 
-echo "<p>".__("SUCCESS. Your template has been stored in the database.  After the next update of the plugin, simply come back to this page, hit RESTORE, and you'll have access to the same template again.</p><p>If you make changes to your template, just return to this page and save it again. It's that simple.", 'wp-rss-multi-importer')."</p>";
+echo "<p>".__("SUCCESS. YOUR TEMPLATE AND CSS FILE HAS BEEN STORED IN THE DATABASE AND WILL BE AUTOMATICALLY RESTORED AFTER UPDATES TO THE PLUGIN.</p><p>At any time you come back to this page, hit RESTORE, and you'll have access to the same template again.</p><p>If you make changes to your template, just return to this page and save it again. It's that simple.", 'wp-rss-multi-importer')."</p>";
 
 
 	}else{
@@ -80,7 +88,7 @@ function save_css(){
 			delete_option('rss_template_item');
 			add_option('rss_template_item', $myTemplateOptions);
 
-	echo __('Only the CSS template was saved.', 'wp-rss-multi-importer');
+	echo __('SUCCESS. YOUR CSS FILE HAS BEEN STORED IN THE DATABASE AND WILL BE AUTOMATICALLY RESTORED AFTER UPDATES TO THE PLUGIN.', 'wp-rss-multi-importer');
 	
 	
 }
@@ -98,7 +106,12 @@ function view_template(){
 }
 
 
-function restore_template(){
+
+
+
+
+
+function restore_template($s){
 	
 	$path=str_replace('utils','templates',plugin_dir_path( __FILE__));	
 	$templateOptions=get_option('rss_template_item');
@@ -115,10 +128,15 @@ function restore_template(){
 
 file_put_contents(WP_RSS_MULTI_TEMPLATES .'templates.css', $templateOptions['template_css']);
 	
-	// delete_option('rss_template_item');
+
 	
-		echo __('Your files have been restored.  Note they are still saved in the database.', 'wp-rss-multi-importer');
+	if($s==0){  //  only show if not done on activation
+		echo __('YOUR FILES HAVE BEEN RESTORED.  NOTE THEY ARE STILL SAVED IN THE DATABASE.', 'wp-rss-multi-importer');
+	}
 }
+
+
+
 
 
 

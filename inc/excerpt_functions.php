@@ -4,6 +4,19 @@
 
 
 
+function pre_esc_html($content) {
+  return preg_replace_callback(
+    '#(<pre.*?>)(.*?)(</pre>)#imsu',
+    create_function(
+      '$i',
+      'return $i[1].htmlentities($i[2]).$i[3];'
+    ),
+    $content
+  );
+}
+
+
+
 
 
 function getDateSince($postDate,$nowDate){
@@ -62,12 +75,14 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0)  //show excerpt function
+	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0)  //show excerpt function
 	{
 		
+
 	global $ftp;	
 	global $morestyle;
     $content=CleanHTML($content);
+
 
 
 	if ($stripAll==1){
@@ -75,7 +90,15 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-				$content=strip_tags(html_entity_decode($content),'<a><img><p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
+				
+				$content=pre_esc_html($content);
+				
+					if ($stripSome==1){
+						$content = strip_tags($content,'<p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
+					}else{
+						$content=html_entity_decode($content);
+					}	
+			
 			}else{
 				$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 			}
@@ -114,6 +137,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	function CleanHTML($content){
+		
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
 		$content=str_replace("&#160;&#187;","",$content);
@@ -121,11 +145,52 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&#173;","",$content);
 		$content=str_replace("&#171;","'",$content);
 		$content=str_replace("&laquo;","\"",$content);
-		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem		
+		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem	
+					
+		preg_match_all('#<a.*?>(.*?)<\/a>#', $content, $matches);  //get all links
+			
+		foreach ($matches[0] as $val) {
+		
+					if (preg_match('/<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>/i',$val)){
 
-		$content = preg_replace('(<a.*href="(.*)">\s*(<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>)<\/a\>)', '', $content);  //clean bugs  
-
+						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
+					}
+										}
+										
+										
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
+		
+												
+										
+			/*  clean empty tables and divs */							
+										
+										
+		preg_match_all('#<table.*?>(.*?)<\/table>#', $content, $matches);  //get all tables							
+										
+		foreach ($matches[0] as $val) {						
+										
+					if (strip_tags($val)==''){
+
+						$content = str_replace($val, '', $content);  //clean empty tables
+					}
+
+									}					
+		preg_match_all('#<div.*?>(.*?)<\/div>#', $content, $matches);  //get all divs							
+
+		foreach ($matches[0] as $val) {						
+
+					if (strip_tags($val)==''){
+
+						$content = str_replace($val, '', $content);  //clean empty divs
+					}
+
+									}							
+						
+										
+			/* end clean tables and divs */
+			
+										
+
 		
 		$content =_decodeAccented($content);
 
@@ -158,7 +223,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	
 	
-	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage){
+	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch){
 		global $ftp;
 		global $setFeaturedImage;
 		
@@ -170,10 +235,29 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		}	
 	
 	if($ftp==1){  
-		$content = limitwords($maxchars,strip_tags($content,'<p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>'));
+		
+		
+
+	
+		$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
+	
+
+			$content = preg_replace("/<img.*?>/im","",$content,1);
+				
+
+		
+
+		$content = limitwords($maxchars,$content);
+		
+		
+		
+		
 	}else{
 		$content = limitwords($maxchars,strip_tags($content));
 	}
+	
+	
+	
 	
 	if($ftp!=1){  //  only return if not Feed to Post
 		$content=$tabledImage."".$content;
@@ -209,59 +293,72 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		
 		$anchorLink="<a href=".$thisLink." >";//construct hyperlink for image
 
-		$strmatch='^\s*(?:<p>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
+		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 		
-		$strmatch2='^(\s*)(?:<p>)?(<img.*src=".*"\s*?\/?>)\s*(.*)$';
+		$strmatch2='^(\s*)(?:<p.*>)?(<img.*src=".*"\s*?\/?>)\s*(.*)$';
 
 		$strmatch3='^(.*)(<img.*src=".*"\s*?\/?>)\s*(.*)$';  //match first image if it exists
 		
 	if (preg_match("/$strmatch/sU", $content, $matches)) { //matches a leading hperlinked image
-		$leadmatch=1;
+		$leadMatch=1;
 	}else if (preg_match("/$strmatch2/sU", $content, $matches)) {  //matches a leading non-hperlinked image
-		$leadmatch=2;	
+		$leadMatch=2;	
 	}else if (preg_match("/$strmatch3/sU", $content, $matches)) { //matches first image
-		$leadmatch=3;
+		$leadMatch=3;
 	}
 	
-	
+
 	
 	$catImageArray= getDefaultCatImage($catID);
 	
 	if($RSSdefaultImage==1 && $catImageArray[0]==True){
+		
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";	
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		$featuredImage=$catImageArray[1];
-	}
 	
-	else if (($leadmatch==1 || $leadmatch==2) && isbug($matches[2])==False){
-		
+	}else if (($leadMatch==1) && isbug($matches[2])==False){
+
 		$mediaImage = $matches[2];
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
+		
+	}else if (($leadMatch==2) && isbug($matches[2])==False){
+
+
+		$mediaImage = $matches[2];
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
+
 		$featuredImage=$mediaImage;
 		$mediaImage="<img src=\"$mediaImage\">";		
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		
 			
-	}else if ($leadmatch==3 && $anyimage==1){
+	}else if ($leadMatch==3 && $anyimage==1){
 
 		$mediaImage=$matches[2];	
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if($RSSdefaultImage==2 && $catImageArray[0]==True){
 
+
 		$mediaImage="<img src=\"$catImageArray[1]\">";		
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		$featuredImage=$catImageArray[1];
 	
-	}else{
+	}else{  //matches no leading image or media enclosure and no default category image
 		
-		$content = limitwords($maxchars,strip_tags($content));  //matches no leading image or media enclosure and no default category image
+			if($ftp==1){  
+				$content = limitwords($maxchars,$content);
+			}else{
+				$content = limitwords($maxchars,strip_tags($content));
+			}
 		
 		}
 		
@@ -308,10 +405,15 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 	function resize_image($imghtml){
 		global $maximgwidth;
+		global $ftp;
+		$imghtml= preg_replace('/style=\"[^\"]*\"/', '', $imghtml); //get rid of inline style
 		if (preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches)) {
 			if (!empty($matches[1])  && verifyimage($matches[1])){	
 				$thisWidth=getimagesize($matches[1]);
-					if ($thisWidth > $maxImgWidth){
+				
+					if ($ftp==1 && $maxImgWidth==999){
+							return str_replace("<img", "<img", remove_img_hw($imghtml));
+						}else if ($thisWidth > $maxImgWidth){
 							return str_replace("<img", "<img width=".$maximgwidth, remove_img_hw($imghtml));
 						}else{
 							return str_replace("<img", "<img width=".$thisWidth, remove_img_hw($imghtml));		

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 2.54
+Stable tag: 2.55
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -48,7 +48,7 @@ Feed to Post now has option to make the image into a Featured Image.
 * Separate out Today from Earlier posts
 * Sort by date (ascending or descending) 
 * Output feed name as (Source, Sponsor, Via, or Club)
-* Show an excerpt (and select the number of words to show - 50, 100, 200, 300)
+* Show an excerpt (and select the number of words to show)
 * Select how you would like the links to open (in a Lightbox, a new window, or the current window)
 * Set the links as no-follow or not
 * Suppress images in excerpts if you want
@@ -73,15 +73,7 @@ These features are all available in the admin panel.
 3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
-You can also use other about 18 other parameters for the DEFAULT template which can be customized in the shortcode...these include:
-
-* Headline font size
-* Headline bold weight
-* Style of the Today and Earlier tags
-* If using excerpt, symbol or word you want to indicate More..
-* Width of leading image in the excerpt
-* Suppress date or attribution from posts
-
+You can also use other over 20 other parameters for the DEFAULT template which can be customized in the shortcode.
 
 == Frequently Asked Questions ==
 = How can I output the feeds in my theme? =
@@ -129,6 +121,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.55 =
+* Added more options to Feed to Post, including ability to preserve all html, stored templates and css file now automatically restored on update, improved cleaning up html in imported feeds, fixed several bugs.
 = Version 2.54 =
 * Added option to make images in Feed to Post be the featured image.
 = Version 2.53 =
