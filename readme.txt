@@ -31,10 +31,6 @@ Feed to Post now has option to make the image into a Featured Image.
 
 [youtube http://www.youtube.com/watch?v=9v8gIfcBia0]
 
-= See How The Feed To Post Option Works =
-
-[youtube http://www.youtube.com/watch?v=2QsE_em93Go]
-
 
 = Features =
 
