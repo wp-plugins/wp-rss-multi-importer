@@ -50,7 +50,8 @@ function getDateSince($postDate,$nowDate){
 function getDefaultCatImage($catID){
 		$option_category_images = get_option('rss_import_categories_images');
 		if(!empty($option_category_images)){
-		$defaultCatImage=$option_category_images[$catID];
+		$defaultCatImage=$option_category_images[$catID]['imageURL'];
+		//echo $defaultCatImage;
 		if(verifyimage($defaultCatImage)==True){
 			return array(True,$defaultCatImage);
 		}else{
@@ -77,7 +78,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0)  //show excerpt function
 	{
-		
+
 
 	global $ftp;	
 	global $morestyle;
@@ -100,6 +101,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 					}	
 			
 			}else{
+				
 				$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 			}
 		
@@ -110,7 +112,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow  ' :'' ) , $content);  
 
-	return str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
+	$content= str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
+	
+	return $content;
 	}
 	
 	
@@ -118,14 +122,17 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	
 
 	function limitwords($maxchars,$content){
-
-		global $morestyle;
-		if($maxchars !=99){
 		
+		global $morestyle;
+		if($maxchars !=99 && $maxchars !=0) {
+		//echo $maxchars;
 		  $words = explode(' ', $content, ($maxchars + 1));
 	  			if(count($words) > $maxchars)
 		  				array_pop($words); 				
 						$content = implode(' ', $words)." ". $morestyle;
+		}else if ($maxchars==0) {
+			$content='';
+			
 		}else{
 			
 						$content=$content."";
@@ -165,23 +172,23 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			/*  clean empty tables and divs */							
 										
 										
-		preg_match_all('#<table.*?>(.*?)<\/table>#', $content, $matches);  //get all tables							
+		preg_match_all('#<table.*?><tr><td>(.*?)<\/td><\/tr><\/table>#', $content, $matches);  //get all tables							
 										
-		foreach ($matches[0] as $val) {						
+		foreach ($matches as $match) {						
 										
-					if (strip_tags($val)==''){
+					if ($match[1]==''){
 
-						$content = str_replace($val, '', $content);  //clean empty tables
+					//	$content = str_replace($match[0], '', $content);  //clean empty tables - still needs work
 					}
 
 									}					
-		preg_match_all('#<div.*?>(.*?)<\/div>#', $content, $matches);  //get all divs							
+		preg_match_all('#<div.*?>(.*?)<\/div>#', $content, $matches);  //get all divs - still needs work							
 
-		foreach ($matches[0] as $val) {						
+		foreach ($matches as $match) {						
 
-					if (strip_tags($val)==''){
-
-						$content = str_replace($val, '', $content);  //clean empty divs
+					if ($match[1]==''){
+					
+					//	$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
 
 									}							
@@ -284,6 +291,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		global $ftp;
 		global $RSSdefaultImage;
 		global $featuredImage;
+		$featuredImage='';
 		
 		if ($ftp==1){
 			$imagefix="ftpimagefix";
@@ -294,7 +302,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$anchorLink="<a href=".$thisLink." >";//construct hyperlink for image
 
 		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
-		
+
 		$strmatch2='^(\s*)(?:<p.*>)?(<img.*src=".*"\s*?\/?>)\s*(.*)$';
 
 		$strmatch3='^(.*)(<img.*src=".*"\s*?\/?>)\s*(.*)$';  //match first image if it exists
@@ -308,8 +316,10 @@ function getCategoryName($catID){  //  Get the category name from the category I
 	}
 	
 
-	
+
 	$catImageArray= getDefaultCatImage($catID);
+	
+	//var_dump($catImageArray);
 	
 	if($RSSdefaultImage==1 && $catImageArray[0]==True){
 		
@@ -345,7 +355,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
-	}else if($RSSdefaultImage==2 && $catImageArray[0]==True){
+	}else if($RSSdefaultImage==2 && $catImageArray[1]==True){
 
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";		
@@ -353,7 +363,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$featuredImage=$catImageArray[1];
 	
 	}else{  //matches no leading image or media enclosure and no default category image
-		
+
 			if($ftp==1){  
 				$content = limitwords($maxchars,$content);
 			}else{

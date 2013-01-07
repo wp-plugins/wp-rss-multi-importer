@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 2.55
+Stable tag: 2.56
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
 
-All-in-one solution for importing and merging RSS and Atom feeds to show on your Wordpress site.  Imports and aggregates RSS and Atom feeds and can then do 5 things (separately or at the same time):
+All-In-One solution for importing, merging and showing RSS and Atom feeds on your Wordpress site.  Using this plugin you do 5 things (separately or at the same time):
 
 
 <blockquote>
@@ -117,6 +117,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.56 =
+* Assign blog tags to each plugin category.  Using an outside cron service, can now update Feed to Post on individual feeds.  Mobile detection for Feed to Post option. Default category image option added to widget. Can change links to titles of feed posts to go directly to source.
 = Version 2.55 =
 * Added more options to Feed to Post, including ability to preserve all html, stored templates and css file now automatically restored on update, improved cleaning up html in imported feeds, fixed several bugs.
 = Version 2.54 =

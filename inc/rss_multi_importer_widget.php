@@ -29,6 +29,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		
 		global $maximgwidth;
 		$maximgwidth=100;
+		global $anyimage;  // to identify any image in description 
+		$anyimage=1;
 		require_once ( WP_RSS_MULTI_INC . 'excerpt_functions.php' );
 		
 		extract( $args );
@@ -56,8 +58,18 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$targetwindow= $instance['targetwindow'];
 		$simplelist= $instance['simplelist'];
 		$showimage= $instance['showimage'];
+		$showsource=$instance['showsource'];
+		$descNum=$instance['descnum'];
+		
+		global $anyimage;
+		$anyimage=1;
+		
+		global $RSSdefaultImage;
+		$RSSdefaultImage=$instance['rssdefaultimage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
+		//$RSSdefaultImage=1;
 		
 		
+
 		global $isMobileDevice;
 		if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
 			$targetwindow=2;
@@ -145,14 +157,14 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 			$key =key($options);
 
 
-
+ $rssCatID=$options[$key]; 
 
 
 	
 	if (((!in_array(0, $catArray ) && in_array($options[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {
 
 
-		   $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);   
+		   $myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL,"FeedCatID"=>$rssCatID);   
 
 		}
 
@@ -209,18 +221,44 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 				for ($i=$maxfeed;$i>=$maxfeed-$maxposts;$i--){
 					$item = $feed->get_item($i);
 					 if (empty($item))	continue;
+					
+					
+					
+							if ($enclosure = $item->get_enclosure()){
+								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+									$mediaImage=$item->get_enclosure()->get_thumbnail();
+								}else if (!IS_NULL($item->get_enclosure()->get_link())){
+									$mediaImage=$item->get_enclosure()->get_link();	
+								}
+							}
+					
 
-						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
+						$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+						
+							unset($mediaImage);
+						
 					}
 
 				}else{	
 
 				for ($i=0;$i<=$maxposts-1;$i++){
 						$item = $feed->get_item($i);
-						if (empty($item))	continue;	
+						if (empty($item))	continue;
+						
+						
+							if ($enclosure = $item->get_enclosure()){
+								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+									$mediaImage=$item->get_enclosure()->get_thumbnail();
+								}else if (!IS_NULL($item->get_enclosure()->get_link())){
+									$mediaImage=$item->get_enclosure()->get_link();	
+								}
+							}	
 
 
-							$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_description());
+							$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"]);
+							
+								unset($mediaImage);
+							
 						}	
 				}
 
@@ -251,6 +289,12 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		}
 
 		// HOW THE LINK OPENS
+		
+		
+		global $isMobileDevice;
+			if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
+				$targetWindow=2;
+				}
 
 		if($targetwindow==0){
 			$openWindow='class="colorbox"';
@@ -323,8 +367,9 @@ echo '	<div class="news-contents">';
 			
 			
 			if($showimage==1 && $addmotion!=1){
-			
-			echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,0,0,$items["myimage"]);
+							
+	
+			echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,0,0,$items["myimage"],$items["mycatid"]);
 			
 			}
 			
@@ -336,24 +381,35 @@ echo '	<div class="news-contents">';
 			
 			
 			if ($showdesc==1 && $addmotion!=1){
+
+							
+						$desc= esc_attr(strip_tags(@html_entity_decode($items["mydesc"], ENT_QUOTES, get_option('blog_charset'))));	
+						$desc= str_replace('[...]','',$desc);
+						
+					    $words = explode(" ",trim($desc));
+						
+						
+					   	$desc= implode(" ",array_splice($words,0,$descNum));	
+						
+								
+						$desc .= ' <a '.$openWindow.' href='.$items["mylink"].'>[&hellip;]</a>';
 			
-						$desc= esc_attr(strip_tags(@html_entity_decode($items["mydesc"], ENT_QUOTES, get_option('blog_charset'))));
-						$desc = wp_html_excerpt( $desc, 360 );
-						if ( '[...]' == substr( $desc, -5 ) )
-							$desc = substr( $desc, 0, -5 ) . '[&hellip;]';
-							elseif ( '[&hellip;]' != substr( $desc, -10 ) )
-								//$desc .= ' [&hellip;]';
-								$desc .= '<a '.$openWindow.' href='.$items["mylink"].'>[&hellip;]</a>';
-							//$desc = esc_html( $desc );
+							
 			echo $desc.'<br/>';
 			}
+			
+			
+			
+			
+			
+			
 
 			if (!empty($items["mystrdate"])  && $showdate==1){
 			 echo  date_i18n("D, M d, Y",$items["mystrdate"]).'<br />';
 		
 			
 			}
-				if (!empty($items["myGroup"])){
+				if (!empty($items["myGroup"]) && $showsource==1){
 		    echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 			}
 			 echo '</p>';
@@ -409,6 +465,9 @@ echo '	<div class="news-contents">';
 		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);
 		$instance['simplelist'] = strip_tags($new_instance['simplelist']);	
 		$instance['showimage'] = strip_tags($new_instance['showimage']);	
+		$instance['rssdefaultimage'] = strip_tags($new_instance['rssdefaultimage']);
+		$instance['showsource'] = strip_tags($new_instance['showsource']);
+		$instance['descnum'] = strip_tags($new_instance['descnum']);
 		return $instance;
 	}
 
@@ -437,14 +496,17 @@ echo '	<div class="news-contents">';
 			'linktitle' => '',
 			'targetwindow' => 0,
 			'showdesc' => 0,
+			'showsource'=>1,
+			'rssdefaultimage' =>0,
 			'showimage' => 0,
+			'descnum' =>10,
 			'background' => '#ffffff',
 		);
 		
 
 			$instance = wp_parse_args( (array) $instance, $defaults );
 		
-
+		$rssdefaultimage=esc_attr($instance['rssdefaultimage']);
 	    $title = esc_attr($instance['title']);
 		$checkbox = esc_attr($instance['checkbox']);
 		$numoption = esc_attr($instance['numoption']);	
@@ -458,6 +520,8 @@ echo '	<div class="news-contents">';
 		$targetwindow = esc_attr($instance['targetwindow']);
 		$simplelist= esc_attr($instance['simplelist']);
 		$showimage= esc_attr($instance['showimage']);
+		$showsource=esc_attr($instance['showsource']);
+		$descnum=esc_attr($instance['descnum']);
 		settings_fields( 'wp_rss_multi_importer_categories' );
 		$options = get_option('rss_import_categories' );
 		
@@ -518,6 +582,38 @@ echo '	<div class="news-contents">';
 	      	<input id="<?php echo $this->get_field_id('showimage'); ?>" name="<?php echo $this->get_field_name('showimage'); ?>" type="checkbox" value="1" <?php checked( '1', $showimage ); ?>/>
 	    	<label for="<?php echo $this->get_field_id('showimage'); ?>"><?php _e('Show image (will not show if scrolling)', 'wp-rss-multi-importer'); ?></label>
 	    </p>
+		
+		
+		<p>
+	      	<input id="<?php echo $this->get_field_id('showsource'); ?>" name="<?php echo $this->get_field_name('showsource'); ?>" type="checkbox" value="1" <?php checked( '1', $showsource ); ?>/>
+	    	<label for="<?php echo $this->get_field_id('showsource'); ?>"><?php _e('Show feed source)', 'wp-rss-multi-importer'); ?></label>
+	    </p>
+
+
+		<p >	<label for="<?php echo $this->get_field_id('rssdefaultimage'); ?>"><?php _e('Default category image setting', 'wp-rss-multi-importer'); ?></label>
+		<select name="<?php echo $this->get_field_name('rssdefaultimage'); ?>">	
+			
+		<OPTION VALUE="0" <?php if ($rssdefaultimage==0){echo 'selected';} ?>>Process normally</OPTION>
+		<OPTION VALUE="1" <?php if ($rssdefaultimage==1){echo 'selected';} ?>>Only use default image</OPTION>
+		<OPTION VALUE="2" <?php if ($rssdefaultimage==2){echo 'selected';} ?>>When no image, use default</OPTION>
+
+		</SELECT></p>
+
+
+		<p >	<label for="<?php echo $this->get_field_id('descnum'); ?>"><?php _e('Words in excerpt', 'wp-rss-multi-importer'); ?></label>
+		<select name="<?php echo $this->get_field_name('descnum'); ?>">	
+			
+		<OPTION VALUE="0" <?php if ($descnum==0){echo 'selected';} ?>>None</OPTION>
+		<OPTION VALUE="10" <?php if ($descnum==10){echo 'selected';} ?>>10</OPTION>
+		<OPTION VALUE="20" <?php if ($descnum==20){echo 'selected';} ?>>20</OPTION>
+		<OPTION VALUE="30" <?php if ($descnum==30){echo 'selected';} ?>>30</OPTION>
+		<OPTION VALUE="40" <?php if ($descnum==40){echo 'selected';} ?>>40</OPTION>
+		<OPTION VALUE="50" <?php if ($descnum==50){echo 'selected';} ?>>50</OPTION>
+		</SELECT></p>
+
+
+
+
 
 	
 		<p>

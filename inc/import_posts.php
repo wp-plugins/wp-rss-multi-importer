@@ -1,8 +1,23 @@
 <?php
 
 
-//  POST FEED FUNCTIONS
-
+$feedID=$_GET['rssmi_feedID'];
+$catID=$_GET['rssmi_catID'];
+if (!IS_NULL($feedID) || !IS_NULL($catID) ){	
+	$post_options = get_option('rss_post_options');
+	if($post_options['active']==1){
+		if (!IS_NULL($feedID)){
+			$result=wp_rss_multi_importer_post($feedID);  /// Used for external cron jobs	
+	}else{
+			$result=wp_rss_multi_importer_post($catID);	
+	}
+	
+		if ($result==True){
+			echo "success";
+		}
+			die();
+	}
+}
 
 function deleteArticles(){
 
@@ -119,7 +134,9 @@ function strip_qs_var($sourcestr,$url,$key){
 
 
 
-//add_filter( 'the_title', 'ta_modified_post_title');  //uncomment this to change title links
+//add_filter( 'the_title', 'ta_modified_post_title');  //uncomment this line to change title links
+// remove_filter( 'the_title', 'ta_modified_post_title' );  //this is for when/if this becomes an option
+
 function ta_modified_post_title ($title) {
   if ( in_the_loop() && !is_page() ) {
 	global $wp_query;
@@ -138,8 +155,10 @@ function ta_modified_post_title ($title) {
 
 
 
-function wp_rss_multi_importer_post(){
+function wp_rss_multi_importer_post($feedID=NULL,$catID=NULL){
 	
+ $postMsg = FALSE; 
+
 
 	
 require_once(ABSPATH . "wp-admin" . '/includes/media.php');
@@ -156,7 +175,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
 	$post_options = get_option('rss_post_options', 'option not found');
-	
+	$category_tags=get_option('rss_import_categories_images', 'option not found');
 	
 
 
@@ -174,7 +193,14 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 
 }
 
-    
+
+
+
+
+if(!IS_NULL($feedID)){
+	$feedIDArray=explode(",",$feedID);
+}
+ 
    if(!empty($option_items)){
 
 	
@@ -197,6 +223,7 @@ $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=u
 
 
 
+
 $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback');
 
 
@@ -209,6 +236,11 @@ if (!empty($wpcatids)){
 }else{
 	$catArray=array(0);
 	
+}
+
+
+if(!IS_NULL($catID)){
+		$catArray=array($catID);  //  change to category ID if using external CRON
 }
 
 
@@ -245,14 +277,15 @@ if ($floatType=='1'){
 
    for ($i=1;$i<=$size;$i=$i+1){
 
-	
+	//  condition here that id number is here
 
    			$key =key($option_items);
 				if ( !strpos( $key, '_' ) > 0 ) continue; //this makes sure only feeds are included here...everything else are options
 				
    			$rssName= $option_items[$key];
 
-   
+			$rssID=str_replace('feed_name_','',$key);  //get feed ID number
+
    			next($option_items);
    			
    			$key =key($option_items);
@@ -268,7 +301,18 @@ if ($floatType=='1'){
 $rssCatID=$option_items[$key]; 
 
 
-if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1) {  //makes sure only desired categories are included
+if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1 || !EMPTY($feedIDArray)) {  //makes sure only desired categories are included
+
+
+	if (!EMPTY($feedIDArray)){	//only pick up specific feed arrary if indicated in querystring
+		if (!in_array($rssID, $feedIDArray )) {
+			if (count($cat_array)>0) { // for backward compatibility
+		  		next($option_items); //skip feed category
+			}
+			continue;
+	}
+}
+
 
 
 	$myfeeds[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL,"FeedCatID"=>$rssCatID); //with Feed Category ID
@@ -292,6 +336,7 @@ if (empty($myfeeds)){
 	return "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
 	exit;
 }
+
 
 
 
@@ -553,6 +598,7 @@ $authorPrep="By ";
   	$post['post_content'] = $thisContent;
 
 	$mycatid=$items["mycatid"];
+	
 
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
 	
@@ -567,6 +613,8 @@ $authorPrep="By ";
 	$post['post_author'] =$bloguserid;
 	
 	$post['post_format'] =$post_format;
+	
+	$postTags=$category_tags[$mycatid]['tags'];
 
 	if($postTags!=''){
 		$post['tags_input'] =$postTags;
@@ -592,11 +640,12 @@ $authorPrep="By ";
 	unset($post);
 }
 
+$postMsg = TRUE; 
 
 }
 
 }
-
+return $postMsg;
 
   }
 

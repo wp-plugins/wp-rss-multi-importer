@@ -9,18 +9,19 @@ function wp_rss_multi_importer_category_images_page() {
 
        ?>
       <div class="wrap">
-		 <h2>Categories Default Images Admin</h2>
+		 <h2>Category Default Images and Tags Admin</h2>
 	<div id="poststuff">
   
 
 
-     <form action="options.php" method="post"  >  
+     <form action="options.php" method="post" class="catform" >  
 	
 		<div class="postbox">
 		<div class="inside">
-	<h3><?php _e("Set a Default Image for Your Categories (Optional) - the full URL is required", 'wp-rss-multi-importer')?></h3>
-	<?php
+	<h3><?php _e("Set a Default Image for Each Category and Category Tags for Feed to Post (both are optional)", 'wp-rss-multi-importer')?></h3>
+
 	
+	<?php
 	settings_fields( 'wp_rss_multi_importer_categories_images' );
 
 
@@ -28,6 +29,9 @@ function wp_rss_multi_importer_category_images_page() {
 	$options_images = get_option('rss_import_categories_images' ); 
 
 	if ( !empty($options) ) {
+		
+				echo '<div class="default-image-wrapper"><span class="default-image-text">Default Category Image</span><span class="default-tags-text">Category Tags</span><br>';
+				echo '<span class="default-image-text-more">(full URL required)</span><span class="default-tags-text-more">(comma delimited list)</span></div>';
 		$size = count($options);
 
 
@@ -35,34 +39,35 @@ function wp_rss_multi_importer_category_images_page() {
 		   
 if( $i % 2== 0 ) continue;
 
-  
-					
+				
 				   $key = key( $options );
 
 	$j = cat_get_id_number($key);
 	$textUpper=strtoupper($options[$key]);
-	$cat_default_image=	$options_images[$j];
-
+		if ( !empty($options_images) ) {
+	$cat_default_image=	$options_images[$j]['imageURL'];
+	$cat_default_tags=	$options_images[$j]['tags'];
+		}
 	
 echo "<div class='default-list-name'>".$textUpper.":</div>";
 
-
 	next( $options );
-   	$key = key( $options );
 
+echo "<div class='default-list-image'><input class='default-cat-image'  size='70' name='rss_import_categories_images[$j][imageURL]' type='text' value='$cat_default_image' /></div>";
 
- 
+echo "<div class='default-list-tags'><input id='default-cat-tags' class='default-cat-tags'  size='20' name='rss_import_categories_images[$j][tags]' type='text' value='$cat_default_tags' /></div>";
+		next( $options );
 
-echo "<div class='default-list-image'><input class='default-cat-image'  size='70' name='rss_import_categories_images[$j]' type='text' value='$cat_default_image' /></div>";
-	next( $options );	
 }
 
-		 
+echo "<br><p class='submit'><input type='submit' value='Save Settings' name='submit' class='button-primary'></p>";		 
 
+}else{
+	 _e("<br>Once you add categories (above), you'll be able to add default images and tags here.", 'wp-rss-multi-importer');
+	
 }
 	?>
 
-<p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 </div></div>	          
 </form>
 </div></div>
@@ -70,31 +75,6 @@ echo "<div class='default-list-image'><input class='default-cat-image'  size='70
 <?php
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -708,7 +688,7 @@ next( $catOptions );
 }
 echo "</SELECT></span>";
 }
-echo check_feed($url_esc);  // needs style
+//echo check_feed($url_esc);  // needs style
 
               echo " </p>";
 
@@ -831,7 +811,7 @@ next( $options );
 
 }
 	?>
-  <div id="category"><a href="#" id="addCat" class="addCategory"><img src="<?php echo WP_RSS_MULTI_IMAGES; ?>addCat.png"></a>  	
+  <div id="category"><a href="javascript:void(0)" id="addCat" class="addCategory"><img src="<?php echo WP_RSS_MULTI_IMAGES; ?>addCat.png"></a>  	
 <p class="submit"><input type="submit" value="Save Settings" name="submit" class="button-primary"></p>
 </div></div>	          
 </form>
@@ -960,7 +940,7 @@ wp_rss_multi_deactivation();
 }
 ?>
 
-<p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (to change the fetch schedule, first deactivate, then change, then activate again)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (<a href=\"http://www.allenweiss.com/faqs/how-to-have-more-control-over-scheduling-of-feteching-feeds//\" target=\"_blank\">click here to learn how to have more control over this</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[fetch_schedule]" id="post_status">
 <OPTION VALUE="2" <?php if($post_options['fetch_schedule']=="2"){echo 'selected';} ?>>Every 10 Min.</OPTION>
 <OPTION VALUE="1" <?php if($post_options['fetch_schedule']=="1"){echo 'selected';} ?>>Hourly</OPTION>
@@ -993,7 +973,6 @@ wp_rss_multi_deactivation();
 </SELECT></p>
 
 
-<p ><label class='o_textinput' for='postTags'><?php _e("Comma delimited list of tags", 'wp-rss-multi-importer')?>   <input  id='postTags' type="text" size='20'  Name="rss_post_options[postTags]" Value="<?php echo $post_options['postTags'] ?>">(if left blank, no tags will be used)</label></p>
 
 <p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
 
@@ -1193,7 +1172,7 @@ next( $catOptions );
 
 }
 echo "</SELECT></span><span class='ftpost_r'>";
-echo "<input id='wpcategory' type='text' name='rss_post_options[categoryid][wpcatid][$q]' size='2' maxlength='3' value=".$post_options['categoryid']['wpcatid'][$q]." ></span></p></div>";
+echo "<input id='wpcategory' type='text' name='rss_post_options[categoryid][wpcatid][$q]' size='5' maxlength='5' value=".$post_options['categoryid']['wpcatid'][$q]." ></span></p></div>";
 reset($catOptions);
 
 }

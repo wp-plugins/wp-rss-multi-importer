@@ -80,6 +80,7 @@ add_action( 'wp_enqueue_scripts', 'wprssmi_tempate_header' );
 function wprssmi_tempate_header(){
 
 		wp_enqueue_style( 'styles', plugins_url( 'templates/templates.css', dirname(__FILE__)) );
+	
 }
 
 
@@ -111,10 +112,18 @@ function footer_scripts(){
 function colorbox_scripts(){
 	wp_enqueue_style( 'wprssmi_colorbox', plugins_url( 'css/colorbox.css', dirname(__FILE__)) );
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', dirname(__FILE__)) );
+ wp_enqueue_script( 'wprssmi_detect_mobile', plugins_url( 'scripts/detect-mobile.js', dirname(__FILE__)) );
 	//echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
 	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344})});</script>";	
 	
 }
+
+
+
+
+
+
+
 
 
 function widget_footer_scripts(){
@@ -144,6 +153,9 @@ function vertical_scroll_footer_scripts(){
  }
 
 
+function cluetip_scripts(){
+		wp_enqueue_script( 'cluetip', plugins_url( 'scripts/jquery.cluetip.js', dirname(__FILE__)) , array('jquery'));  	
+}
 
 
 

@@ -128,9 +128,41 @@ text-align:center;
 }
 
 .default-list-name{
+
 	margin-top:5px;
 	margin-bottom:5px;
+	clear:both;
 }
 .default-list-image{
 	margin-bottom:10px;
+	float:left;
+}
+
+.default-list-tags{
+	float:left;
+	margin-left:10px;
+}
+.default-tags-text{
+	margin-left:180px;
+	font-size:18px;
+
+}
+.default-image-text{
+		font-size:18px;
+		margin-left:100px;
+		
+}
+.default-tags-text-more{
+	margin-left:220px;
+	font-size:12px;
+
+}
+.default-image-text-more{
+		font-size:12px;
+		margin-left:150px;
+		
+}
+
+.default-image-wrapper{
+	margin-top:15px;
 }
