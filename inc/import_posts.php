@@ -614,7 +614,9 @@ $authorPrep="By ";
 	
 	$post['post_format'] =$post_format;
 	
+if (!empty($category_tags[$mycatid]['tags'])) {	
 	$postTags=$category_tags[$mycatid]['tags'];
+}
 
 	if($postTags!=''){
 		$post['tags_input'] =$postTags;
