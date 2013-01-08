@@ -117,6 +117,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+
+= Version 2.57 =
+* Bug fixes
 = Version 2.56 =
 * Assign blog tags to each plugin category.  Using an outside cron service, can now update Feed to Post on individual feeds.  Mobile detection for Feed to Post option. Default category image option added to widget. Can change links to titles of feed posts to go directly to source.
 = Version 2.55 =
