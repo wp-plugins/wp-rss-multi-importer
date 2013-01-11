@@ -3,7 +3,7 @@
 
 
 function wp_rss_multi_importer_activate() {
-   restore_template(1);
+  // restore_template(1);
 }
 
 
