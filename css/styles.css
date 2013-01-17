@@ -143,7 +143,7 @@ text-align:center;
 	margin-left:10px;
 }
 .default-tags-text{
-	margin-left:180px;
+	margin-left:125px;
 	font-size:18px;
 
 }
@@ -152,6 +152,12 @@ text-align:center;
 		margin-left:100px;
 		
 }
+
+.default-filter-text{
+		font-size:18px;
+		margin-left:90px;
+		
+} 
 .default-tags-text-more{
 	margin-left:220px;
 	font-size:12px;
@@ -160,6 +166,18 @@ text-align:center;
 .default-image-text-more{
 		font-size:12px;
 		margin-left:150px;
+		
+}
+
+.default-tags-exclude-more{
+		font-size:12px;
+		margin-left:90px;
+		
+}
+
+.default-tags-filter-more{
+		font-size:12px;
+		margin-left:130px;
 		
 }
 

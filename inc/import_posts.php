@@ -245,7 +245,6 @@ if(!IS_NULL($catID)){
 
 
 
-
 $targetWindow=$post_options['targetWindow'];  // 0=LB, 1=same, 2=new
 
 if(empty($options['sourcename'])){
@@ -387,7 +386,7 @@ if (empty($myfeeds)){
 				$item = $feed->get_item($i);
 				 if (empty($item))	continue;
 
-
+					if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 
 
 
 							if ($enclosure = $item->get_enclosure()){
@@ -420,7 +419,9 @@ if (empty($myfeeds)){
 
 			for ($i=0;$i<=$maxposts-1;$i++){
 					$item = $feed->get_item($i);
-					if (empty($item))	continue;	
+					if (empty($item))	continue;
+					
+					if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 	
 
 
 				if ($enclosure = $item->get_enclosure()){
@@ -500,10 +501,10 @@ if($targetWindow==0){
 
 
 global $wpdb; // get all links that have been previously processed
-$existing_permalinks = $wpdb->get_col("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link'");
+
+$wpdb->show_errors = true;
 
 
-//$msg = implode(",", $existing_permalinks);
 
 
 foreach($myarray as $items) {
@@ -533,22 +534,18 @@ foreach($myarray as $items) {
 	
 	
 	
-	
-	
-	
-	
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
+		
 
-	$thisContent='';
-	
+			$wpdb->flush();
+			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
+		
+		if (empty( $mypostids ) && $mypostids !== false){ 
 
-	
-	 if (   (! in_array( $thisLink, $existing_permalinks ) )  ) { 
-	
-
-  	$post = array();  
-  	$post['post_status'] = $post_status;
+			$thisContent='';
+  			$post = array();  
+  			$post['post_status'] = $post_status;
 
 
 
@@ -566,7 +563,7 @@ if ($overridedate==1){
 
 
 
-$authorPrep="By ";
+	$authorPrep="By ";
 
 		if(!empty($items["myAuthor"]) && $addAuthor==1){
 		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>  ';  
@@ -614,9 +611,11 @@ $authorPrep="By ";
 	
 	$post['post_format'] =$post_format;
 	
-if (!empty($category_tags[$mycatid]['tags'])) {	
-	$postTags=$category_tags[$mycatid]['tags'];
-}
+
+	
+	if (!empty($category_tags[$mycatid]['tags'])) {	
+		$postTags=$category_tags[$mycatid]['tags'];
+	}
 
 	if($postTags!=''){
 		$post['tags_input'] =$postTags;
@@ -626,7 +625,7 @@ if (!empty($category_tags[$mycatid]['tags'])) {
 
  	$post_id = wp_insert_post($post);
 
-	add_post_meta($post_id, 'rssmi_source_link', $thisLink);
+	if(add_post_meta($post_id, 'rssmi_source_link', $thisLink)!=false){
 	
 	
 
@@ -638,6 +637,15 @@ if (!empty($category_tags[$mycatid]['tags'])) {
 				unset($featuredImage);
 				}
 			}
+			
+	}else{
+		
+	wp_delete_post($post_id);
+	unset($post);
+	continue;	
+		
+		
+	}
 
 	unset($post);
 }

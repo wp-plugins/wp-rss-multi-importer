@@ -2,6 +2,33 @@
 
 // Helper functions
 
+function include_post($catID,$content){
+	$msg=True;
+	$option_category = get_option('rss_import_categories_images');
+	if(!empty($option_category)){
+		$filterString=$option_category[$catID]['filterwords'];  //construct array from string
+		$exclude=$option_category[$catID]['exclude'];	
+		$filterWords=explode(',', $filterString);
+		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
+			foreach($filterWords as $filterWord){
+					if ($filterWord!=''){
+						if (strpos($content,$filterWord)==True){	
+							$msg=True;
+							break;	
+						}else{
+							$msg=False;
+						}
+					}
+			}
+		}	
+	}
+
+	if ($exclude==1) $msg=!$msg;
+
+	return $msg;
+}	
+
+
 
 
 function pre_esc_html($content) {
@@ -178,7 +205,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 										
 					if ($match[1]==''){
 
-					//	$content = str_replace($match[0], '', $content);  //clean empty tables - still needs work
+					$content = str_replace($match[0], '', $content);  //clean empty tables
 					}
 
 									}					
@@ -188,7 +215,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 					if ($match[1]==''){
 					
-					//	$content = str_replace($match[0], '', $content);  //clean empty divs
+					$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
 
 									}							

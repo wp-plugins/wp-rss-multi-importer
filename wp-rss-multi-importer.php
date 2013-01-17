@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.57
+  Version: 2.58
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.57 );
+define( 'WP_RSS_MULTI_VERSION', 2.58 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -400,8 +400,8 @@ if (empty($url)) {continue;}
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
 		
-			
-					
+		
+				if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 		
 					
 						if ($enclosure = $item->get_enclosure()){
 							if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
@@ -435,8 +435,8 @@ if (empty($url)) {continue;}
 				$item = $feed->get_item($i);
 				if (empty($item))	continue;	
 									
-				
-		
+	
+	if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 
 				
 			if ($enclosure = $item->get_enclosure()){
 

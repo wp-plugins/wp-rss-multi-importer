@@ -9,7 +9,7 @@ function wp_rss_multi_importer_category_images_page() {
 
        ?>
       <div class="wrap">
-		 <h2>Category Default Images and Tags Admin</h2>
+		 <h2>Category Default Images, Post Tags and Filter Words Admin</h2>
 	<div id="poststuff">
   
 
@@ -18,7 +18,7 @@ function wp_rss_multi_importer_category_images_page() {
 	
 		<div class="postbox">
 		<div class="inside">
-	<h3><?php _e("Set a Default Image for Each Category and Category Tags for Feed to Post (both are optional)", 'wp-rss-multi-importer')?></h3>
+	<h3><?php _e("Set a Default Feed Category Image, Post Category Tags and Category Word Filters (all are optional) - note: filters work for both shortcode and Feed to Post", 'wp-rss-multi-importer')?></h3>
 
 	
 	<?php
@@ -30,8 +30,9 @@ function wp_rss_multi_importer_category_images_page() {
 
 	if ( !empty($options) ) {
 		
-				echo '<div class="default-image-wrapper"><span class="default-image-text">Default Category Image</span><span class="default-tags-text">Category Tags</span><br>';
-				echo '<span class="default-image-text-more">(full URL required)</span><span class="default-tags-text-more">(comma delimited list)</span></div>';
+				echo '<div class="default-image-wrapper"><span class="default-image-text">Default Feed Category Image</span><span class="default-tags-text">Post Category Tags</span><span class="default-filter-text">Include Filter Words</span><br>';
+				echo '<span class="default-image-text-more">(full URL required)</span><span class="default-tags-text-more">(comma delimited list)</span><span class="default-tags-filter-more">(comma delimited list)</span><span class="default-tags-exclude-more">(check to exclude words)</span></div>';
+				
 		$size = count($options);
 
 
@@ -45,8 +46,11 @@ if( $i % 2== 0 ) continue;
 	$j = cat_get_id_number($key);
 	$textUpper=strtoupper($options[$key]);
 		if ( !empty($options_images) ) {
-	$cat_default_image=	$options_images[$j]['imageURL'];
-	$cat_default_tags=	$options_images[$j]['tags'];
+	$cat_default_image=$options_images[$j]['imageURL'];
+	$cat_default_tags=$options_images[$j]['tags'];
+	$cat_default_filterwords=$options_images[$j]['filterwords'];
+	$cat_default_filterwords_exclude=$options_images[$j]['exclude'];
+	if ($cat_default_filterwords_exclude==1) {$checkmsg='checked=checked';}else{$checkmsg='';}
 		}
 	
 echo "<div class='default-list-name'>".$textUpper.":</div>";
@@ -56,6 +60,7 @@ echo "<div class='default-list-name'>".$textUpper.":</div>";
 echo "<div class='default-list-image'><input class='default-cat-image'  size='70' name='rss_import_categories_images[$j][imageURL]' type='text' value='$cat_default_image' /></div>";
 
 echo "<div class='default-list-tags'><input id='default-cat-tags' class='default-cat-tags'  size='20' name='rss_import_categories_images[$j][tags]' type='text' value='$cat_default_tags' /></div>";
+echo "<div class='default-list-tags'><input id='default-cat-tags' class='default-cat-tags'  size='60' name='rss_import_categories_images[$j][filterwords]' type='text' value='$cat_default_filterwords' /><input type='checkbox' Name='rss_import_categories_images[$j][exclude]' Value='1' $checkmsg></div>";
 		next( $options );
 
 }
@@ -75,7 +80,6 @@ echo "<br><p class='submit'><input type='submit' value='Save Settings' name='sub
 <?php
 
 }
-
 
 
 
@@ -763,6 +767,8 @@ function wp_rss_multi_importer_category_page() {
        ?>
       <div class="wrap">
 	 <h2>Categories Admin</h2>	
+	
+
 	<div id="poststuff">
 
 
@@ -772,6 +778,8 @@ function wp_rss_multi_importer_category_page() {
 		<div class="postbox">
 		<div class="inside">
 	<h3><?php _e("RSS Multi-Importer Categories (and their shortcodes)", 'wp-rss-multi-importer')?></h3>
+	
+	
 	<?php
 
 	settings_fields( 'wp_rss_multi_importer_categories' );
@@ -1112,10 +1120,7 @@ $catOptions= get_option( 'rss_import_categories' );
 		echo "<h3><label class='o_textinput' for='category'>".__('Restrict feeds to one of your defined RSS Multi Importer categories and place them in your blog categories', 'wp-rss-multi-importer')."</label></h3>";
 			echo "<p>".__('Choose a category and enter 0 if you want this to go into an uncategorized category on your blog, or enter the ID number of the blog category you want the posts to go into. <a href="http://www.allenweiss.com/faqs/finding-the-id-number-for-feed-to-post-category" target=_"blank">How to find this ID number.</a>', 'wp-rss-multi-importer')."</p>";
 				
-	//if (count(array_filter($post_options['categoryid']['wpcatid'],'chk_zero_callback')) == 0){
 
-//	echo "<h3>".__('You must select at least one category (or all) and an integer ID of your blog category for this to work...enter 0 if not sure.')."</h3>";
-//	}
 
 echo '<div class="ftpost_head">Category</div><div class="ftpost_head">Blog Category ID</div><div style="clear:both;"></div>';	
 		$catsize = count($catOptions);

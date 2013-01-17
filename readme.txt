@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 2.56
+Stable tag: 2.58
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -23,9 +23,9 @@ All-In-One solution for importing, merging and showing RSS and Atom feeds on you
 </blockquote>
 
 
-= Newest Feature =
+= Newest Features =
 
-Feed to Post now has option to make the image into a Featured Image.
+Feed to Post has option to make the image into a Featured Image.  Filtering option added.
 
 = See How It Works =
 
@@ -117,7 +117,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
-
+= Version 2.58 =
+* Category filters for words added (include or exclude), reworked code to prevent double posting of articles in Feed to Post, other bug fixes.
 = Version 2.57 =
 * Bug fixes
 = Version 2.56 =
