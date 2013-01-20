@@ -9,7 +9,7 @@ Imports & merges multiple feeds. Make blog posts or display on a page, excerpts 
 
 == Description ==
 
-All-In-One solution for importing, merging and showing RSS and Atom feeds on your Wordpress site.  Using this plugin you do 5 things (separately or at the same time):
+All-In-One solution for importing, merging and showing RSS and Atom feeds on your Wordpress site.  Using this plugin you can do 5 things (separately or at the same time):
 
 
 <blockquote>
