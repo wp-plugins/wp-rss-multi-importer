@@ -11,4 +11,16 @@ jQuery( 'document' ).ready( function( $ ){
 	
 	}
 	
+	
+	
+	var comp = new RegExp('(.*)facebook.com(.*)');
+
+	$('a').each(function(){
+	   if(comp.test($(this).attr('href'))){
+	               
+	       $(this).removeClass('colorbox cboxElement');
+	   }
+	   
+	});
+	
 });

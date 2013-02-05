@@ -86,7 +86,6 @@ echo "<br><p class='submit'><input type='submit' value='Save Settings' name='sub
 
 
 
-
 	function wprssmi_convert_key( $key ) { 
 
      if ( strpos( $key, 'feed_name_' ) === 0 ) { 
@@ -196,7 +195,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 492,000 have already</div>
+														<div class="txtwhite">Over 500,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -376,6 +375,9 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
 <OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
 <OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if($options['maxfeed']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if($options['maxfeed']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="50" <?php if($options['maxfeed']==50){echo 'selected';} ?>>50</OPTION>
 </SELECT></p>
 
 
@@ -469,6 +471,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="20" <?php if($options['descnum']==20){echo 'selected';} ?>>20</OPTION>
 <OPTION VALUE="30" <?php if($options['descnum']==30){echo 'selected';} ?>>30</OPTION>
 <OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="75" <?php if($options['descnum']==75){echo 'selected';} ?>>75</OPTION>
 <OPTION VALUE="100" <?php if($options['descnum']==100){echo 'selected';} ?>>100</OPTION>
 <OPTION VALUE="200" <?php if($options['descnum']==200){echo 'selected';} ?>>200</OPTION>
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
@@ -544,6 +547,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
        </form>
 
       <div class="postbox"><h3><label for="title"><?php _e("Help Others", 'wp-rss-multi-importer')?></label></h3><div class="inside"><?php _e("If you find this plugin helpful, let others know by <a href=\"http://wordpress.org/extend/plugins/wp-rss-multi-importer/\" target=\"_blank\">rating it here</a>.  That way, it will help others determine whether or not they should try out the plugin.  Thank you.", 'wp-rss-multi-importer')?></div></div> 
+
 
        </div>
 </div>
@@ -984,11 +988,15 @@ wp_rss_multi_deactivation();
 
 <p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='2' maxlength='3' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
 
-<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if ($post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
+
+
+
+
+<h3><?php _e("Post Time Settings", 'wp-rss-multi-importer')?></h3>
+<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if ($post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
-</p>
+<p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php echo $post_options['timezone'] ?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.allenweiss.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
 
 <h3><?php _e("Fetch Quantity Settings", 'wp-rss-multi-importer')?></h3>
 
@@ -1033,7 +1041,7 @@ wp_rss_multi_deactivation();
 	<OPTION VALUE="2" <?php if($post_options['targetWindow']==2){echo 'selected';} ?>><?php _e("Open in New Window", 'wp-rss-multi-importer')?></OPTION>
 	</SELECT>
 
-
+<h3><?php _e("Word Output Setting", 'wp-rss-multi-importer')?></h3>
 <p><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[descnum]" id="descnum">
 <OPTION VALUE="20" <?php if($post_options['descnum']==20){echo 'selected';} ?>>20</OPTION>
@@ -1054,11 +1062,20 @@ wp_rss_multi_deactivation();
 <p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if ($post_options['addSource']==1){echo 'checked="checked"';} ?></label></p>
 
 
+<p style="padding-left:15px"<label class='o_textinput' for='sourceWords'><?php _e("Feed Source Attribution Label", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[sourceWords]">
+<OPTION VALUE="1" <?php if($post_options['sourceWords']==1){echo 'selected';} ?>><?php _e("Source", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="2" <?php if($post_options['sourceWords']==2){echo 'selected';} ?>><?php _e("Via", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="3" <?php if($post_options['sourceWords']==3){echo 'selected';} ?>><?php _e("Read more here", 'wp-rss-multi-importer')?></OPTION>
+</SELECT></p>
+
+
+
 
 <h3><?php _e("HTML and Image Handling", 'wp-rss-multi-importer')?></h3>
 
 
-<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all html and images in the excerpt.", 'wp-rss-multi-importer')?>
+<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all html and images in the excerpt", 'wp-rss-multi-importer')?>
 	<SELECT NAME="rss_post_options[stripAll]" id="stripAll">
 	<OPTION VALUE="1" <?php if($post_options['stripAll']==1){echo 'selected';} ?>><?php _e("Yes", 'wp-rss-multi-importer')?></OPTION>
 	<OPTION VALUE="0" <?php if($post_options['stripAll']==0){echo 'selected';} ?>><?php _e("No", 'wp-rss-multi-importer')?></OPTION>
@@ -1107,9 +1124,39 @@ wp_rss_multi_deactivation();
 </span>
 
 
+<h3><?php _e("Get Social", 'wp-rss-multi-importer')?></h3>
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter and Facebook) to each post ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if ($post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
+</p>
 
+<h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 
+<p ><label class='o_textinput' for='autoDelete'><?php _e("Check to Auto Remove Posts Created by this Plugin", 'wp-rss-multi-importer')?>   <input type="checkbox" id="autoRemoveCB" Name="rss_post_options[autoDelete]" Value="1" <?php if ($post_options['autoDelete']==1){echo 'checked="checked"';} ?></label></p>
 
+<span id="autoremoveposts" <?php if($post_options['autoDelete']!=1){echo 'style="display:none"';}?>>
+
+<p ><label class='o_textinput' for='expiration'><?php _e("Select the expiration time (number of days, weeks, etc.) before removing posts", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[expiration]" id="expiration">
+<OPTION VALUE="1" <?php if($post_options['expiration']==1){echo 'selected';} ?>>1 Day</OPTION>
+<OPTION VALUE="2" <?php if($post_options['expiration']==2){echo 'selected';} ?>>2 Days</OPTION>
+<OPTION VALUE="3" <?php if($post_options['expiration']==3){echo 'selected';} ?>>3 Days</OPTION>
+<OPTION VALUE="4" <?php if($post_options['expiration']==4){echo 'selected';} ?>>4 Days</OPTION>
+<OPTION VALUE="5" <?php if($post_options['expiration']==5){echo 'selected';} ?>>5 Days</OPTION>
+<OPTION VALUE="6" <?php if($post_options['expiration']==6){echo 'selected';} ?>>6 Days</OPTION>
+<OPTION VALUE="7" <?php if($post_options['expiration']==7){echo 'selected';} ?>>7 Days</OPTION>
+<OPTION VALUE="14" <?php if($post_options['expiration']==14){echo 'selected';} ?>>2 Weeks</OPTION>
+<OPTION VALUE="21" <?php if($post_options['expiration']==21){echo 'selected';} ?>>3 Weeks</OPTION>
+<OPTION VALUE="28" <?php if($post_options['expiration']==28){echo 'selected';} ?>>4 Weeks</OPTION>
+<OPTION VALUE="56" <?php if($post_options['expiration']==56){echo 'selected';} ?>>2 Months</OPTION>
+</SELECT></p>
+
+<p ><label class='o_textinput' for='oldPostStatus'><?php _e("Move posts to what status?", 'wp-rss-multi-importer')?></label>
+<SELECT NAME="rss_post_options[oldPostStatus]" id="setFeaturedImage">
+<OPTION VALUE="0" <?php if($post_options['oldPostStatus']==0){echo 'selected';} ?>>Permanently Delete</OPTION>
+<OPTION VALUE="1" <?php if($post_options['oldPostStatus']==1){echo 'selected';} ?>>Trash (but don't permanently delete)</OPTION>
+<OPTION VALUE="2" <?php if($post_options['oldPostStatus']==2){echo 'selected';} ?>>Pending</OPTION>
+</SELECT><?php _e("  NOTE: Choosing Permanently Delete may result in posts being imported again", 'wp-rss-multi-importer')?></p>
+
+</span>
 <?php
 
 
@@ -1177,6 +1224,7 @@ next( $catOptions );
 
 }
 echo "</SELECT></span><span class='ftpost_r'>";
+
 echo "<input id='wpcategory' type='text' name='rss_post_options[categoryid][wpcatid][$q]' size='5' maxlength='5' value=".$post_options['categoryid']['wpcatid'][$q]." ></span></p></div>";
 reset($catOptions);
 

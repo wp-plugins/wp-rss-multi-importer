@@ -325,7 +325,7 @@ if ($simplelist==1){
 			
 		if ($count>0 && $total>=$count) break;
 	
-		echo '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["mytitle"].'</a>';
+		echo '<li class="title"><a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
 		if (!empty($items["mystrdate"])  && $showdate==1){
 		echo '<span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
 	}
@@ -373,7 +373,7 @@ echo '	<div class="news-contents">';
 			
 			}
 			
-			echo '<a '.$openWindow.' href='.$items["mylink"].'>'.$items["mytitle"].'</a><br />';
+			echo '<a '.$openWindow.' href="'.$items["mylink"].'">'.$items["mytitle"].'</a><br />';
 			
 		
 				
@@ -392,7 +392,7 @@ echo '	<div class="news-contents">';
 					   	$desc= implode(" ",array_splice($words,0,$descNum));	
 						
 								
-						$desc .= ' <a '.$openWindow.' href='.$items["mylink"].'>[&hellip;]</a>';
+						$desc .= ' <a '.$openWindow.' href="'.$items["mylink"].'">[&hellip;]</a>';
 			
 							
 			echo $desc.'<br/>';

@@ -120,7 +120,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			if ($ftp==1){
 				
 				$content=pre_esc_html($content);
-				
+			
 					if ($stripSome==1){
 						$content = strip_tags($content,'<p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
 					}else{
@@ -128,18 +128,23 @@ function getCategoryName($catID){  //  Get the category name from the category I
 					}	
 			
 			}else{
-				
-				$content=strip_tags(html_entity_decode($content),'<a><img><p>');
+					
+				if($maxchars !=99){
+					$content=strip_tags(html_entity_decode($content),'<a><img><p>');
+				}
+		
 			}
 		
 			if($maxchars !=99){
 				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID);	
 			}
-		}	
+		}
+	
+	
 
-	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow  ' :'' ) , $content);  
-
-	$content= str_replace($morestyle, "<a href=".$thisLink." ".$openWindow.' ' 	.($noFollow==1 ? 'rel=nofollow':'').">".$morestyle."</a>", $content);
+	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
+	
+	$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'').">".$morestyle."</a>", $content);
 	
 	return $content;
 	}
@@ -179,7 +184,10 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		$content=str_replace("&#173;","",$content);
 		$content=str_replace("&#171;","'",$content);
 		$content=str_replace("&laquo;","\"",$content);
-		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem	
+		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem
+	
+
+		
 					
 		preg_match_all('#<a.*?>(.*?)<\/a>#', $content, $matches);  //get all links
 			
@@ -205,7 +213,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 										
 					if ($match[1]==''){
 
-					$content = str_replace($match[0], '', $content);  //clean empty tables
+						$content = str_replace($match[0], '', $content);  //clean empty tables
 					}
 
 									}					
@@ -215,7 +223,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 
 					if ($match[1]==''){
 					
-					$content = str_replace($match[0], '', $content);  //clean empty divs
+						$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
 
 									}							
@@ -226,7 +234,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 										
 
 		
-		$content =_decodeAccented($content);
+	$content =_decodeAccented($content);
 
 	return 	$content;
 	}
@@ -326,7 +334,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			$imagefix="imagefix";	
 		}
 		
-		$anchorLink="<a href=".$thisLink." >";//construct hyperlink for image
+		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
 
 		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 
@@ -451,9 +459,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 					if ($ftp==1 && $maxImgWidth==999){
 							return str_replace("<img", "<img", remove_img_hw($imghtml));
 						}else if ($thisWidth > $maxImgWidth){
-							return str_replace("<img", "<img width=".$maximgwidth, remove_img_hw($imghtml));
+							return str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));
 						}else{
-							return str_replace("<img", "<img width=".$thisWidth, remove_img_hw($imghtml));		
+							return str_replace("<img", "<img width=\"".$thisWidth."\"", remove_img_hw($imghtml));		
 					}
 			}
 		}

@@ -215,25 +215,12 @@ this.value = jQuery.trim(this.value);
 	
 	
 	
+	jQuery(document).on('click', '#autoRemoveCB',function() {
+		if (jQuery('#autoRemoveCB').is(':checked')) {
+			jQuery('#autoremoveposts').show();
+				}else{
+			jQuery('#autoremoveposts').hide();
+				}	
+		});
 	
-	
-	
-	///testing stuff here on
-	
-	
-	jQuery(function() {
-
-	            // Binding a click event
-	            // From jQuery v.1.7.0 use .on() instead of .bind()
-	            jQuery('#my-button').on('click', function(e) {
-
-	                // Prevents the default action to be triggered.
-	                e.preventDefault();
-
-	                // Triggering bPopup when click event is fired
-	                jQuery('#element_to_pop_up').bPopup();
-
-	            });
-
-	        });
 	

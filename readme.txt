@@ -1,31 +1,29 @@
 === WP RSS Multi Importer ===
 Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
-Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog
+Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 2.58
+Tested up to: 3.5.2
+Stable tag: 2.60
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
 
-All-In-One solution for importing, merging and showing RSS and Atom feeds on your Wordpress site.  Using this plugin you can do 5 things (separately or at the same time):
+All-In-One solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site.  Using this plugin you can do 3 things (separately or at the same time):
 
 
 <blockquote>
 <ul>
-<li>Display the aggregated feed items in one of **8 different templates that you can customize** </li>
-<li>**Categorize the feeds** so that you can show different feeds on different pages</li>
+<li>Display the aggregated feed items on a page in one of **8 different templates that you can customize** </li>
 <li>**Create blog posts (autoblog)** from the feed items so readers can comment on them</li>
-<li>**Output an RSS feed** so that your users can consume the aggregated feeds you create</li>
-<li>Display the aggregated feed items in a widget, in one of 3 different ways</li>
+<li>Display the aggregated feed items in a theme widget, in one of 3 different displays</li>
 </ul>
 </blockquote>
 
 
 = Newest Features =
 
-Feed to Post has option to make the image into a Featured Image.  Filtering option added.
+Feed to Post has options to make the image into a Featured Image and auto-remove posts.
 
 = See How It Works =
 
@@ -37,6 +35,7 @@ Feed to Post has option to make the image into a Featured Image.  Filtering opti
 * Templates - choose from 8 different templates, create and style your own and save it
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
 * When posting to your blog, have the image be the Featured Image which you can use in the most current themes
+* Auto remove posts to your blog based on expiration time
 * Set a default image to show for each category
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
@@ -117,6 +116,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.60 =
+* Auto remove posts added for Feed to Post option.  Default time zone can now be specified.  Several bugs fixes.
 = Version 2.58 =
 * Category filters for words added (include or exclude), reworked code to prevent double posting of articles in Feed to Post, other bug fixes.
 = Version 2.57 =
@@ -210,5 +211,5 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Upgrade Notice ==
 
-= 2.50 =
-This version includes several improvements and bug fixes for the Feed to Post option and added improved flexibility for the shortcode option.
+= 2.60 =
+This version includes several improvements (e.g. featured image, auto remove, default image, filtering) and bug fixes for the Feed to Post option and added improved flexibility for the shortcode option.

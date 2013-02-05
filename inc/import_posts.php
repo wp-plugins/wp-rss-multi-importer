@@ -1,8 +1,6 @@
 <?php
-
-
-$feedID=$_GET['rssmi_feedID'];
-$catID=$_GET['rssmi_catID'];
+$feedID = isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_feedID'] : NULL;
+$catID = isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_catID'] :  NULL;
 if (!IS_NULL($feedID) || !IS_NULL($catID) ){	
 	$post_options = get_option('rss_post_options');
 	if($post_options['active']==1){
@@ -219,6 +217,33 @@ $post_format=$post_options['post_format'];
 $postTags=$post_options['postTags'];
 global $RSSdefaultImage;
 $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
+$serverTimezone=$post_options['timezone'];
+$autoDelete=$post_options['autoDelete'];
+$sourceWords=$post_options['sourceWords'];
+global $morestyle;
+$morestyle=' ...read more';
+
+switch ($sourceWords) {
+    case 1:
+        $sourceLable='Source';
+        break;
+    case 2:
+        $sourceLable='Via';
+        break;
+    case 3:
+        $sourceLable='Read more here';
+        break;
+    default:
+       	$sourceLable='Source';
+}
+
+if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
+	date_default_timezone_set($serverTimezone);
+	$rightNow=date("Y-m-d H:i:s", time());
+}else{
+	$rightNow=date("Y-m-d H:i:s", time());
+}
+
 
 
 
@@ -232,7 +257,7 @@ $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callbac
 
 if (!empty($wpcatids)){
 	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //orig
-//	$catArray=array_filter($post_options['categoryid']['plugcatid'],'filter_id_callback');
+
 }else{
 	$catArray=array(0);
 	
@@ -506,7 +531,6 @@ $wpdb->show_errors = true;
 
 
 
-
 foreach($myarray as $items) {
 	
 	$total = $total +1;
@@ -534,9 +558,16 @@ foreach($myarray as $items) {
 	
 	
 	
+	
+	
+	
+	
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
-		
+
+	
+	
+
 
 			$wpdb->flush();
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
@@ -549,12 +580,11 @@ foreach($myarray as $items) {
 
 
 
-if ($overridedate==1){
-	//date_default_timezone_set('America/Los_Angeles');  //  Set to your time zone if running into problems
-	$post['post_date'] = date("Y-m-d H:i:s", time());  
-}else{
-  	$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
-}
+	if ($overridedate==1){
+		$post['post_date'] = $rightNow;  	
+	}else{
+  		$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
+	}
 
 
 
@@ -570,23 +600,14 @@ if ($overridedate==1){
 			}
 
 	
-	
-
-	
-	
 	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
 	
-	
-
 
 	if ($addSource==1){
-		$thisContent .= ' <br>Source: <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
+		$thisContent .= ' <br>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
 	}
 
-	
-	
-	
-	
+
 	
 	if ($showsocial==1){
 	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a></span>';
@@ -621,7 +642,7 @@ if ($overridedate==1){
 		$post['tags_input'] =$postTags;
 	}
 	
-//exit;
+
 
  	$post_id = wp_insert_post($post);
 
@@ -640,7 +661,7 @@ if ($overridedate==1){
 			
 	}else{
 		
-	wp_delete_post($post_id);
+	wp_delete_post($post_id, true);
 	unset($post);
 	continue;	
 		
@@ -655,6 +676,11 @@ $postMsg = TRUE;
 }
 
 }
+
+if ($autoDelete==1){
+	rssmi_delete_posts();
+}
+
 return $postMsg;
 
   }
