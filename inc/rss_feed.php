@@ -22,7 +22,7 @@ function rssmi_rss(){
 
 	if (!empty($feed_options)){
 
-add_feed($feed_options['feedslug'], 'rssmi_feed');	
+add_feed($feed_options->feedslug, 'rssmi_feed');
 
 	}
 }
