@@ -27,7 +27,7 @@ Feed to Post has options to make the image into a Featured Image and auto-remove
 
 = See How It Works =
 
-[youtube http://www.youtube.com/watch?v=9v8gIfcBia0]
+[youtube http://www.youtube.com/watch?v=S-Ixus8Maz0]
 
 
 = Features =
