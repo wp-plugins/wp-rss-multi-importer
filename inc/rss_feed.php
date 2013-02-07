@@ -17,12 +17,16 @@ add_action('init', 'rssmi_rss');
 
 function rssmi_rss(){
 	$feed_options = get_option('rss_feed_options', 'option not found');
+/*	global $wp_rewrite;
+	if ( !isset($wp_rewrite) ) { 
+		$wp_rewrite = new WP_Rewrite(); 
+		$wp_rewrite->flush_rules();}
+*/
+	if (!empty($feed_options) && isset($feed_options['feedslug'])){
+		
+add_feed($feed_options['feedslug'], 'rssmi_feed');
 
 
-
-	if (!empty($feed_options)){
-
-add_feed($feed_options->feedslug, 'rssmi_feed');
 
 	}
 }
@@ -290,8 +294,6 @@ if($sortDir==1){
 }else{
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
-
-
 echo '<?xml version="1.0" encoding="UTF-8"?>';
 ?>
 <rss version="2.0">
@@ -301,7 +303,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 <description><?php echo $feed_options['feeddesc'] ?></description>
 <language>en-us</language>
 <?php
+
 	$total=0;	
+
 foreach($myarray as $items) {
 		$total = $total +1;
 			if ($total>20) break;
