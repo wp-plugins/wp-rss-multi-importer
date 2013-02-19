@@ -45,7 +45,6 @@ function pre_esc_html($content) {
 
 
 
-
 function getDateSince($postDate,$nowDate){
 	
 	
@@ -90,7 +89,7 @@ function getDefaultCatImage($catID){
 
 
 
-function getCategoryName($catID){  //  Get the category name from the category ID
+function wp_getCategoryName($catID){  //  Get the category name from the category ID
 
 	$catOptions=get_option('rss_import_categories');
 	if(!empty($catOptions)){
@@ -225,8 +224,21 @@ function getCategoryName($catID){  //  Get the category name from the category I
 					
 						$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
+								}
+/*
+	preg_match_all('#<script.*?>(.*?)<\/script>#', $content, $matches);  //get all divs - still needs work							
 
-									}							
+					foreach ($matches as $match) {						
+var_dump($matches);
+							echo	$match;
+							exit;
+
+									$content = str_replace($match, '', $content);  //clean empty divs
+							
+		
+									}
+	*/	
+													
 						
 										
 			/* end clean tables and divs */
@@ -269,6 +281,7 @@ function getCategoryName($catID){  //  Get the category name from the category I
 		global $ftp;
 		global $setFeaturedImage;
 		
+
 		
 		if ($adjustImageSize==1){
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
@@ -456,9 +469,9 @@ function getCategoryName($catID){  //  Get the category name from the category I
 			if (!empty($matches[1])  && verifyimage($matches[1])){	
 				$thisWidth=getimagesize($matches[1]);
 				
-					if ($ftp==1 && $maxImgWidth==999){
+					if ($ftp==1 && $maximgwidth==999){
 							return str_replace("<img", "<img", remove_img_hw($imghtml));
-						}else if ($thisWidth > $maxImgWidth){
+						}else if ($thisWidth > $maximgwidth){
 							return str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));
 						}else{
 							return str_replace("<img", "<img width=\"".$thisWidth."\"", remove_img_hw($imghtml));		

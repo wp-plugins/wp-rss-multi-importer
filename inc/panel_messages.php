@@ -34,7 +34,7 @@ function wp_rss_multi_importer_template_page(){
 
 <div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Shortcode Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
 	
-<p><a href="http://templates.allenweiss.com" target="_blank">Go here to see what various templates look like</a>.</p>
+<p><a href="http://www.allenweiss.com/templates/" target="_blank">Go here to see what various templates look like</a>.</p>
 
 <p>First, if you know some CSS you can change the styles of all the templates..and then save the CSS for use when the next update of the plugin happens.</p>
 
@@ -80,20 +80,20 @@ function wp_rss_multi_importer_style_tags(){
 <tr class="alternate"><td ><?php _e("Change how images float on a page", 'wp-rss-multi-importer')?></td><td>floattype</td><td>set by default to whatever is set in the admin options</td><td>[wp_rss_multi_importer floattype="right"]</td></tr>	
 <tr ><td ><?php _e("Change whether the date shows or not", 'wp-rss-multi-importer')?></td><td>showdate</td><td>set to 0 to suppress the date</td><td>[wp_rss_multi_importer showdate="0"]</td></tr>	
 <tr class="alternate"><td ><?php _e("Change whether the attribution shows or not (e.g., news source)", 'wp-rss-multi-importer')?></td><td>showgroup</td><td>set to 0 to suppress the source affiliation</td><td>[wp_rss_multi_importer showgroup="0"]</td></tr>	
-<tr class="alternate"><td ><?php _e("Specify the cache time (to override global setting)", 'wp-rss-multi-importer')?></td><td>cachetime</td><td>set in settings option</td><td>[wp_rss_multi_importer cachetime="20"]</td></tr>
+<tr class="alternate"><td ><?php _e("Specify the cache time (to override global setting)", 'wp-rss-multi-importer')?></td><td>cachetime</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer cachetime="20"]</td></tr>
 
-<tr ><td ><?php _e("Specific the number of posts per feed instead of using the general number in the settings panel<", 'wp-rss-multi-importer')?>/td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
+<tr ><td ><?php _e("Specify the number of posts per feed instead of using the general number in the settings panel<", 'wp-rss-multi-importer')?>/td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
 <tr ><td ><?php _e("Change the float of the elements in the feed", 'wp-rss-multi-importer')?></td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
-<tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in settings option</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
+<tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
 
-<tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in settings option</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
-<tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in settings option</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
+<tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
+<tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorprep</td><td>By</td><td>[wp_rss_multi_importer authorprep="from"]</td></tr>
-<tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in settings option</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
-<tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in settings option</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
-<tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in settings option</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
-<tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in settings option</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
+<tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
+<tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
+<tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
+<tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
 	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, date_above.php</span>
 	
 	</td></tr>

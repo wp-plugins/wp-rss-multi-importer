@@ -4,7 +4,7 @@
     padding-bottom: 10px;
     padding-left: 10px;
     padding-top: 10px;
-    width: 820px;
+    width: 1020px;
 }
 
 .wprss-input p { line-height: 28px; }
@@ -81,12 +81,13 @@ max-width:450px;
 .ftpost_head{
 	float:left;
 	margin-right:30px;
-	margin-left:20px;
+	margin-left:25px;
 	font-weight:bold;
 }
 
 .ftpost_l{
 	margin:10px;
+	margin-right:50px;
 }
 .ftpost_r{
 	margin:10px;

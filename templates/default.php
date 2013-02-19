@@ -55,9 +55,10 @@ if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
 		$openWindow='class="rssmi_youtube"';
 		global $YTmatch;
 		$YTmatch=1;
+	} else {
+	   $openWindow='class="colorbox"';
 	}
 }
-
 
 
 	
@@ -109,7 +110,7 @@ if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
      $readable .=  '<span class="source" style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
 	}
 
-	$getCatName=getCategoryName($items["mycatid"]);  // use these 5 lines of code to get and display the category name
+	$getCatName=wp_getCategoryName($items["mycatid"]);  // use these 5 lines of code to get and display the category name
 	if (!empty($getCatName) && $showcategory==1){
 		$catClassID='classID'.$items["mycatid"];
  $readable .=  '  <span class="categoryname  ' .$catClassID.'">Category: '.$getCatName.'</span>';

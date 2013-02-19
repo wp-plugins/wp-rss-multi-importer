@@ -205,10 +205,16 @@ this.value = jQuery.trim(this.value);
 	
 	jQuery(document).ready( function( $ ){		
 		jQuery(".add_cat_id").click(function() {
-	var p= $('div.category_id_options:not([style*="display:none"])').length;
-
-	        var $id =p+1;
-
+			
+		//	var p= $('div.category_id_options:not([style*="display:none"])').length;
+	      //  var $id =p+1;
+	
+	var $id = $('div.category_id_options[style*="display:none"]').first().attr('id');
+	if ($id ==undefined)
+		{
+	alert("You need to add another plugin category before you can associate it with a blog post category.");
+		}	
+	
 			jQuery('#'+$id).show("slow");	
 	    });
 			});

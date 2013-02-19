@@ -22,7 +22,7 @@ $charstoshow=50;  //  This number can be changed..indicates how many characters 
 			add_action('wp_footer','vertical_scroll_footer_scripts'); //  Don't mess with this
 		
 		
-			$readable .=  '	<div  id="news-container"><ul class="wprssmi_rss_vs">';
+			$readable .=  '	<div  id="news-container" class="v_scroller"><ul class="wprssmi_rss_vs">';
 			
 			
 				

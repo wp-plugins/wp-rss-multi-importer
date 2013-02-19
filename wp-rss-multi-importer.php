@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.60
+  Version: 2.61
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.60 );
+define( 'WP_RSS_MULTI_VERSION', 2.61 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -81,7 +81,6 @@ register_activation_hook( __FILE__, 'wp_rss_multi_importer_activate' );
 
 
 
-
    
    /**
    *  Shortcode setup and call (shortcode is [wp_rss_multi_importer]) with options
@@ -97,6 +96,7 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 
+
 //  MAIN SHORTCODE OUTPUT FUNCTION
 
 
@@ -106,6 +106,8 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 //if ($_GET["rssvn"]==q){
 //	echo WP_RSS_MULTI_VERSION;  //  maybe use in future for getting version number
 //}
+
+
 	
 add_action('wp_footer','footer_scripts');
 
@@ -222,7 +224,7 @@ $perPage=$options['perPage'];
 global $anyimage;
 $anyimage=$options['anyimage'];
 $addAuthor=$options['addAuthor'];
-$warnmsg==$options['warnmsg'];
+$warnmsg=$options['warnmsg'];
 
 if(!is_null($defaultImage)){$RSSdefaultImage=$defaultImage;}
 
@@ -273,6 +275,9 @@ $template=$options['template'];
 if ($mytemplate!='') $template=$mytemplate;
 
 //	END PARAMETERS
+	
+
+
 
 
 timer_start();  //TIMER START - for testing purposes
@@ -340,7 +345,7 @@ if (empty($myfeeds)){
 
 
 if ($dumpthis==1){
-list_the_plugins();
+rssmi_list_the_plugins();
 	echo "<strong>Feeds</strong><br>";
 	var_dump($myfeeds);
 }
@@ -361,6 +366,7 @@ if (empty($url)) {continue;}
 
 	$url = esc_url_raw(strip_tags($url));
 	
+
 
 
 
@@ -498,10 +504,10 @@ if ($dumpthis==1){
 	exit;
 }
 if (!isset($myarray) || empty($myarray)){
-	if(!$warnmsg==1){
+	if(!$warnmsg==1 && current_user_can('edit_post')){
 	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
 	}
-		exit;
+	return;
 }
 
 global $isMobileDevice;
@@ -533,9 +539,9 @@ if($sortDir==1){
 if($targetWindow==0){
 	$openWindow='class="colorbox"';
 }elseif ($targetWindow==1){
-	$openWindow='target=_self';		
+	$openWindow='target="_self"';		
 }else{
-	$openWindow='target=_blank';	
+	$openWindow='target="_blank"';	
 }
 	
 $total = -1;

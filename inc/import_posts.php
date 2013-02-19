@@ -109,7 +109,7 @@ function fetch_rss_callback() {
 
 
 function filter_id_callback($val) {
-    if ($val != null){
+    if ($val != null && $val !=99999){
 	return true;
 }
 }
@@ -131,9 +131,18 @@ function strip_qs_var($sourcestr,$url,$key){
 }
 
 
+$clickTitle=0;
+
+if ($clickTitle==1){
+add_filter( 'the_title', 'ta_modified_post_title');  
+}else{
+remove_filter( 'the_title', 'ta_modified_post_title' );  
+}
+
+
 
 //add_filter( 'the_title', 'ta_modified_post_title');  //uncomment this line to change title links
-// remove_filter( 'the_title', 'ta_modified_post_title' );  //this is for when/if this becomes an option
+//remove_filter( 'the_title', 'ta_modified_post_title' );  //this is for when/if this becomes an option
 
 function ta_modified_post_title ($title) {
   if ( in_the_loop() && !is_page() ) {
@@ -148,6 +157,24 @@ function ta_modified_post_title ($title) {
   }
   return $title;
 }
+
+
+
+function isAllCat(){
+$post_options = get_option('rss_post_options'); 
+$catSize=count($post_options['categoryid']);
+
+	for ( $l=1; $l<=$catSize; $l++ ){
+
+		if($post_options['categoryid']['plugcatid'][$l]==0){
+			
+			$allCats[]= $post_options['categoryid']['wpcatid'][$l];
+		}
+}
+return $allCats;
+}
+
+
 
 
 
@@ -222,6 +249,7 @@ $autoDelete=$post_options['autoDelete'];
 $sourceWords=$post_options['sourceWords'];
 global $morestyle;
 $morestyle=' ...read more';
+$sourceWords_Label=$post_options['sourceWords_Label'];
 
 switch ($sourceWords) {
     case 1:
@@ -233,6 +261,12 @@ switch ($sourceWords) {
     case 3:
         $sourceLable='Read more here';
         break;
+	case 4:
+	    $sourceLable='From';
+	    break;
+	case 5:
+		$sourceLable=$sourceWords_Label;
+		break;
     default:
        	$sourceLable='Source';
 }
@@ -248,15 +282,18 @@ if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 
 
 
-
 $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback');
 
-
+//var_dump( $wpcatids);
+//exit;
 
 
 
 if (!empty($wpcatids)){
 	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //orig
+
+
+
 
 }else{
 	$catArray=array(0);
@@ -289,6 +326,16 @@ $stripAll=$post_options['stripAll'];
 $maxperfetch=$post_options['maxperfetch'];
 $showsocial=$post_options['showsocial'];
 $overridedate=$post_options['overridedate'];
+$commentStatus=$post_options['commentstatus'];
+
+
+if ($commentStatus=='1'){
+	$comment_status='closed';
+}else{
+	$comment_status='open';	
+}
+
+
 $adjustImageSize=1;
 $noFollow=0;
 $floatType=1;
@@ -298,6 +345,9 @@ if ($floatType=='1'){
 }else{
 	$float="none";	
 }
+
+
+
 
    for ($i=1;$i<=$size;$i=$i+1){
 
@@ -325,7 +375,7 @@ if ($floatType=='1'){
 $rssCatID=$option_items[$key]; 
 
 
-if (((!in_array(0, $catArray ) && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray ) || $noExistCat==1 || !EMPTY($feedIDArray)) {  //makes sure only desired categories are included
+if (((!in_array(0, $catArray )  && in_array($option_items[$key], $catArray ))) || in_array(0, $catArray )  || $noExistCat==1 || !EMPTY($feedIDArray)) {  //makes sure only desired categories are included
 
 
 	if (!EMPTY($feedIDArray)){	//only pick up specific feed arrary if indicated in querystring
@@ -433,7 +483,7 @@ if (empty($myfeeds)){
 
 
 
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"feedURL"=>$feeditem["FeedURL"]);
 
 							unset($mediaImage);
 							unset($itemAuthor);
@@ -469,7 +519,7 @@ if (empty($myfeeds)){
 
 
 
-				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"feedURL"=>$feeditem["FeedURL"]);
 
 
 							unset($mediaImage);
@@ -617,10 +667,23 @@ foreach($myarray as $items) {
 
 	$mycatid=$items["mycatid"];
 	
+	
+
 
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
 	
 	$blogcatid=array($post_options['categoryid']['wpcatid'][$catkey]);
+	
+	if (is_Null($blogcatid)){
+		
+		$blogcatid=isAllCat();
+	}else{
+		
+		$blogcatid = array_merge((array)$blogcatid, (array)isAllCat());
+	}
+	
+
+	
 
 	$post['post_category'] =$blogcatid;
 	
@@ -632,7 +695,7 @@ foreach($myarray as $items) {
 	
 	$post['post_format'] =$post_format;
 	
-
+	$post['comment_status'] = $comment_status;
 	
 	if (!empty($category_tags[$mycatid]['tags'])) {	
 		$postTags=$category_tags[$mycatid]['tags'];

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.0
 Tested up to: 3.5.2
-Stable tag: 2.60
+Stable tag: 2.61
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -30,12 +30,15 @@ Feed to Post has options to make the image into a Featured Image and auto-remove
 [youtube http://www.youtube.com/watch?v=S-Ixus8Maz0]
 
 
-= Features =
+= Main Features =
 
 * Templates - choose from 8 different templates, create and style your own and save it
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
 * When posting to your blog, have the image be the Featured Image which you can use in the most current themes
 * Auto remove posts to your blog based on expiration time
+
+= More Features =
+
 * Set a default image to show for each category
 * Pagination option - select number of posts per page
 * Select number of posts per feed you want to show
@@ -65,7 +68,7 @@ These features are all available in the admin panel.
 1. Upload the `wp-rss-multi-importer` folder to the `/wp-content/plugins/` directory
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
-3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget.
+3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget, or use the Feed to Post option.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
 You can also use other over 20 other parameters for the DEFAULT template which can be customized in the shortcode.
@@ -102,7 +105,7 @@ Yes.  Just add feeds and then go to the Feed to Posts Options tab in the admin s
 Yes.  Just add feeds and then go to the Export Feed Options tab in the admin section.
 
 
-Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
+Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Screenshots ==
 
@@ -116,6 +119,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/wp_plugin/faqs)
 
 == Change Log ==
 
+= Version 2.61 =
+* Category picker added for Feed to Post, improvements to shortcode templates, increased mobile detection to disable lightbox.  Several bugs fixes.
 = Version 2.60 =
 * Auto remove posts added for Feed to Post option.  Default time zone can now be specified.  Several bugs fixes.
 = Version 2.58 =
