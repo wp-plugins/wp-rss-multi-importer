@@ -27,8 +27,7 @@ jQuery(document).ready( function($) {
 		};
 		$.post(the_ajax_script.ajaxurl, data, function(response) {
 			jQuery("#note").html(response);
-		//	Query("#save_template").hide();
-			//alert(response);
+	
 				});
 			
 			  
@@ -68,16 +67,28 @@ jQuery(document).ready( function($) {
 								
 								
 								$("#fetch-now").click( function() {
-								
+						
 										var data = {
 											action: 'fetch_now'
 										};
 										$.post(the_ajax_script.ajaxurl, data, function(response) {
-						//alert('Got this from the server: ' + response);
+					
 										jQuery("#note").html(response);
 												});
 										 	return false;
-											});		
+											});	
+											
+			
+											$("#fetch-delete").click( function() {
+
+													var data = {
+														action: 'fetch_delete'
+													};
+													$.post(the_ajax_script.ajaxurl, data, function(response) {
+								
+															});
+													 	return false;
+														});	
 					
 	
 	

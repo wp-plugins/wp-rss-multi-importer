@@ -81,7 +81,7 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Change whether the date shows or not", 'wp-rss-multi-importer')?></td><td>showdate</td><td>set to 0 to suppress the date</td><td>[wp_rss_multi_importer showdate="0"]</td></tr>	
 <tr class="alternate"><td ><?php _e("Change whether the attribution shows or not (e.g., news source)", 'wp-rss-multi-importer')?></td><td>showgroup</td><td>set to 0 to suppress the source affiliation</td><td>[wp_rss_multi_importer showgroup="0"]</td></tr>	
 <tr class="alternate"><td ><?php _e("Specify the cache time (to override global setting)", 'wp-rss-multi-importer')?></td><td>cachetime</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer cachetime="20"]</td></tr>
-
+<tr class="alternate"><td ><?php _e("Specify how links open (to override global setting)", 'wp-rss-multi-importer')?></td><td>windowstyle</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer windowstyle="0"]<br>(0=Lightbox, 1=same window, 2=new window)</td></tr>
 <tr ><td ><?php _e("Specify the number of posts per feed instead of using the general number in the settings panel<", 'wp-rss-multi-importer')?>/td><td>thisfeed</td><td>set to a number, as in thisfeed="4"</td><td>[wp_rss_multi_importer thisfeed="5"]</td></tr>	
 <tr ><td ><?php _e("Change the float of the elements in the feed", 'wp-rss-multi-importer')?></td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
@@ -94,7 +94,7 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
 <tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
-	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, date_above.php</span>
+	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
 	
 	</td></tr>
 

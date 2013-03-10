@@ -48,10 +48,8 @@ function rssmi_change_post_status($post_id,$status){
 
 function rssmi_delete_posts(){
 	
-	 global $wpdb;
-	
+	global $wpdb;
 	$post_options_delete = get_option('rss_post_options');
-	
 	$expiration=$post_options_delete['expiration'];
 	$oldPostStatus=$post_options_delete['oldPostStatus'];
 	$serverTimezone=$post_options['timezone'];
@@ -60,14 +58,13 @@ function rssmi_delete_posts(){
 		date_default_timezone_set($serverTimezone);
 	}
 	
-	
 
 	$query = "SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND DATEDIFF(NOW(), `post_date`) > ".$expiration;
 	$ids = $wpdb->get_results($query);
 	
 	foreach ($ids as $id){
 		$mypostids = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link' AND post_id = ".$id->ID);
-	
+		if(get_post_meta($id->ID, 'rssmi_source_protect', true)==1) continue;
 		if (!empty($mypostids)){
 			
 			if($oldPostStatus==0){
@@ -80,6 +77,24 @@ function rssmi_delete_posts(){
 		
 		}
 
+	}
+	
+}
+
+
+
+function rssmi_delete_posts_admin(){  //  USE FOR QUICK DELETE OF BLOG POSTS
+	
+	global $wpdb;
+	$expiration=-1;
+	$query = "SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND DATEDIFF(NOW(), `post_date`) > ".$expiration;
+	$ids = $wpdb->get_results($query);
+	
+	foreach ($ids as $id){
+		$mypostids = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link' AND post_id = ".$id->ID);
+		if (!empty($mypostids)){
+				wp_delete_post($id->ID, true);
+		}
 	}
 	
 }

@@ -10,6 +10,7 @@ function upgrade_db() {
 	$newoptions = get_option('rss_import_options');
 	$plugin_version=$newoptions['plugin_version'];
 	$categoryoptions=get_option('rss_import_categories_images');
+
 	
 	if ( !empty($myoptions) && empty($newoptions)) {  // this transfers data to new table if upgrading
 	//	$plugin_version=$newoptions['plugin_version'];  // might be useful in future updates
@@ -41,6 +42,7 @@ function upgrade_db() {
 		'post_status' => 'draft',
 		'maxperfetch' => 5,
 		'maxfeed' => 5,
+		'maximgwidth' =>150,
 		'category' => 0			
 	);
 	
@@ -63,6 +65,52 @@ function upgrade_db() {
 		$post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
 			update_option( 'rss_post_options', $post_settings );
 	}
+	
+	
+	
+	
+	
+	
+
+		$post_options = get_option('rss_post_options');
+		$catOptions= get_option( 'rss_import_categories' ); 
+
+	if (!is_array($post_options['categoryid']['wpcatid'][1])) {
+
+
+		foreach ( $post_options as $key => $value) {
+			if ($key!='categoryid'){
+			$post_settings[ $key ] = $value;
+			}
+		}
+		
+		$catsize = count($catOptions);
+		$postoptionsize= $catsize/2;
+
+		for ( $q=1; $q<=$postoptionsize; $q++ ){
+			$post_settings['categoryid']['plugcatid'][$q]=$post_options['categoryid']['plugcatid'][$q];
+			$post_settings['categoryid']['wpcatid'][$q][1]=$post_options['categoryid']['wpcatid'][$q];
+		}
+
+
+			update_option( 'rss_post_options', $post_settings );
+
+
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	if (!empty($categoryoptions) && !is_array($categoryoptions[1]) ){

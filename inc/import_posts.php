@@ -108,11 +108,43 @@ function fetch_rss_callback() {
 }
 
 
-function filter_id_callback($val) {
+
+function rssmi_delete_feed_post_admin() {
+rssmi_delete_posts_admin();
+}
+
+
+
+add_action('wp_ajax_fetch_delete', 'fetch_rss_callback_delete');
+
+function fetch_rss_callback_delete() {
+
+			rssmi_delete_feed_post_admin();
+
+
+}
+
+
+
+
+
+
+function filter_id_callback2($val) {
     if ($val != null && $val !=99999){
 	return true;
 }
 }
+
+function filter_id_callback($val) {
+	foreach($val as $thisval){
+    if ($thisval != null){
+	return true;
+	}
+}
+}
+
+
+
 
 function get_values_for_id_keys($mapping, $keys) {
     foreach($keys as $key) {
@@ -130,28 +162,33 @@ function strip_qs_var($sourcestr,$url,$key){
 	}		
 }
 
-
-$clickTitle=0;
-
-if ($clickTitle==1){
-add_filter( 'the_title', 'ta_modified_post_title');  
+$post_filter_options = get_option('rss_post_options');   // make title of post on listing page clickable
+if($post_filter_options['titleFilter']==1){
+	add_filter( 'the_title', 'ta_modified_post_title');  
 }else{
-remove_filter( 'the_title', 'ta_modified_post_title' );  
+	remove_filter( 'the_title', 'ta_modified_post_title' );  
 }
 
 
 
-//add_filter( 'the_title', 'ta_modified_post_title');  //uncomment this line to change title links
-//remove_filter( 'the_title', 'ta_modified_post_title' );  //this is for when/if this becomes an option
-
 function ta_modified_post_title ($title) {
+	$post_options = get_option('rss_post_options'); 
+	$targetWindow=$post_options['targetWindow']; 
+	if($targetWindow==0){
+		$openWindow='class="colorbox"';
+	}elseif ($targetWindow==1){
+		$openWindow='target=_self';		
+	}else{
+		$openWindow='target=_blank ';	
+	}
+	
   if ( in_the_loop() && !is_page() ) {
 	global $wp_query;
 	$postID=$wp_query->post->ID;
 	$myLink = get_post_meta($postID, 'rssmi_source_link' , true);
 		if (!empty($myLink)){
 			$myTitle=$wp_query->post->post_title;
-			$myLinkTitle='<a href='.$myLink.' class="colorbox">'.$myTitle.'</a>';  // change how the link opens here
+			$myLinkTitle='<a href='.$myLink.' '.$openWindow.'>'.$myTitle.'</a>';  // change how the link opens here
 		return $myLinkTitle;					
 			}
   }
@@ -174,6 +211,17 @@ $catSize=count($post_options['categoryid']);
 return $allCats;
 }
 
+
+
+
+function getAllWPCats(){
+	$category_ids = get_all_category_ids();
+	foreach($category_ids as $cat_id) {
+		if ($cat_id==1) continue;
+ 		$getAllWPCats[]=$cat_id;
+	}
+	return $getAllWPCats;
+}
 
 
 
@@ -202,7 +250,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$post_options = get_option('rss_post_options', 'option not found');
 	$category_tags=get_option('rss_import_categories_images', 'option not found');
 	
-
+	global $fopenIsSet;
+	$fopenIsSet = ini_get('allow_url_fopen');
 
 	if ($option_items==false) return "You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds";
 
@@ -247,9 +296,12 @@ $RSSdefaultImage=$post_options['RSSdefaultImage'];   // 0- process normally, 1=u
 $serverTimezone=$post_options['timezone'];
 $autoDelete=$post_options['autoDelete'];
 $sourceWords=$post_options['sourceWords'];
+$readMore=$post_options['readmore'];
 global $morestyle;
 $morestyle=' ...read more';
 $sourceWords_Label=$post_options['sourceWords_Label'];
+
+if (!is_null($readMore)) {$morestyle=$readMore;} 
 
 switch ($sourceWords) {
     case 1:
@@ -281,18 +333,14 @@ if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 
 
 
-
-$wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback');
-
-//var_dump( $wpcatids);
-//exit;
+$wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback'); //array of post blog categories that have been entered
 
 
 
 if (!empty($wpcatids)){
-	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //orig
-
-
+	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //array of plugin categories that have an association with post blog categories
+	$catArray=array_filter($catArray);
+	
 
 
 }else{
@@ -461,7 +509,7 @@ if (empty($myfeeds)){
 				$item = $feed->get_item($i);
 				 if (empty($item))	continue;
 
-					if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 
+				if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
 
 
 							if ($enclosure = $item->get_enclosure()){
@@ -496,7 +544,7 @@ if (empty($myfeeds)){
 					$item = $feed->get_item($i);
 					if (empty($item))	continue;
 					
-					if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 	
+					if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
 
 
 				if ($enclosure = $item->get_enclosure()){
@@ -586,7 +634,7 @@ foreach($myarray as $items) {
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
-	
+//	echo $thisLink.'<br>';
 	
 	
 	//  YouTube  //  NEEDS WORK
@@ -667,23 +715,16 @@ foreach($myarray as $items) {
 
 	$mycatid=$items["mycatid"];
 	
-	
-
-
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
 	
-	$blogcatid=array($post_options['categoryid']['wpcatid'][$catkey]);
-	
-	if (is_Null($blogcatid)){
-		
-		$blogcatid=isAllCat();
-	}else{
-		
-		$blogcatid = array_merge((array)$blogcatid, (array)isAllCat());
-	}
-	
+	$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
 
+	if ($post_options['categoryid']['plugcatid'][$mycatid]=='0'){
 	
+		$blogcatid=getAllWPCats();
+	}
+
+
 
 	$post['post_category'] =$blogcatid;
 	
@@ -693,7 +734,7 @@ foreach($myarray as $items) {
 	
 	$post['post_author'] =$bloguserid;
 	
-	$post['post_format'] =$post_format;
+
 	
 	$post['comment_status'] = $comment_status;
 	
@@ -708,7 +749,8 @@ foreach($myarray as $items) {
 
 
  	$post_id = wp_insert_post($post);
-
+	set_post_format( $post_id , $post_format);
+	
 	if(add_post_meta($post_id, 'rssmi_source_link', $thisLink)!=false){
 	
 	

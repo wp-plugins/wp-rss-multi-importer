@@ -30,6 +30,12 @@ if (is_multisite()) {
 	delete_option('rss_post_options');
 	delete_option('rss_import_categories_images');
 	
+	$allposts = get_posts('numberposts=-1&post_type=post&post_status=any');
+	foreach( $allposts as $postinfo) {
+	    delete_post_meta($postinfo->ID, 'rssmi_source_link');
+	    delete_post_meta($postinfo->ID, 'rssmi_source_protect');
+	  }
+	
 }
 //
 ?>

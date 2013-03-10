@@ -2,8 +2,8 @@
 
 // Helper functions
 
-function include_post($catID,$content){
-	$msg=True;
+function include_post($catID,$content,$title){
+	$msg=1;
 	$option_category = get_option('rss_import_categories_images');
 	if(!empty($option_category)){
 		$filterString=$option_category[$catID]['filterwords'];  //construct array from string
@@ -12,18 +12,21 @@ function include_post($catID,$content){
 		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
 			foreach($filterWords as $filterWord){
 					if ($filterWord!=''){
-						if (strpos($content,$filterWord)==True){	
-							$msg=True;
+					
+						if (strpos($content,$filterWord)!==false || strpos($title,$filterWord)!==false){	
+							$msg=1;
 							break;	
 						}else{
-							$msg=False;
+							$msg=0;
 						}
 					}
 			}
 		}	
 	}
 
-	if ($exclude==1) $msg=!$msg;
+	if ($exclude==1) {
+		($msg==1 ? $msg=0 :$msg=1);		
+	}
 
 	return $msg;
 }	
@@ -176,6 +179,8 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 	
 	function CleanHTML($content){
 		
+	
+	
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
 		$content=str_replace("&#160;&#187;","",$content);
@@ -185,7 +190,7 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 		$content=str_replace("&laquo;","\"",$content);
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem
 	
-
+		
 		
 					
 		preg_match_all('#<a.*?>(.*?)<\/a>#', $content, $matches);  //get all links
@@ -197,16 +202,18 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
 					}
 										}
-										
+																	
 										
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
+		
+		
 		
 												
 										
 			/*  clean empty tables and divs */							
 										
 										
-		preg_match_all('#<table.*?><tr><td>(.*?)<\/td><\/tr><\/table>#', $content, $matches);  //get all tables							
+		preg_match_all('#<table.*?><tr><td>(.*?)<\/td><\/tr><\/table>#', $content, $matches,PREG_SET_ORDER);  //get all tables							
 										
 		foreach ($matches as $match) {						
 										
@@ -215,16 +222,23 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 						$content = str_replace($match[0], '', $content);  //clean empty tables
 					}
 
-									}					
-		preg_match_all('#<div.*?>(.*?)<\/div>#', $content, $matches);  //get all divs - still needs work							
+									}
+									
+									
+														
+		preg_match_all('/<div.*?>(.*?)<\/div>/', $content, $matches,PREG_SET_ORDER);  //get all divs - still needs work							
 
-		foreach ($matches as $match) {						
-
-					if ($match[1]==''){
-					
-						$content = str_replace($match[0], '', $content);  //clean empty divs
+		foreach ($matches as $match) {	
+			
+					if (is_null($match[1])){		
+			$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
-								}
+		}
+								
+				
+								
+								
+								
 /*
 	preg_match_all('#<script.*?>(.*?)<\/script>#', $content, $matches);  //get all divs - still needs work							
 
@@ -243,7 +257,7 @@ var_dump($matches);
 										
 			/* end clean tables and divs */
 			
-										
+									
 
 		
 	$content =_decodeAccented($content);
@@ -346,6 +360,9 @@ var_dump($matches);
 		}else{
 			$imagefix="imagefix";	
 		}
+		
+		
+		
 		
 		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
 
@@ -464,11 +481,15 @@ var_dump($matches);
 	function resize_image($imghtml){
 		global $maximgwidth;
 		global $ftp;
+		global $fopenIsSet;
 		$imghtml= preg_replace('/style=\"[^\"]*\"/', '', $imghtml); //get rid of inline style
 		if (preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches)) {
 			if (!empty($matches[1])  && verifyimage($matches[1])){	
-				$thisWidth=getimagesize($matches[1]);
-				
+				if ($fopenIsSet==1){
+					$thisWidth=getimagesize($matches[1]);
+				}else{
+					$thisWidth="150";	
+				}
 					if ($ftp==1 && $maximgwidth==999){
 							return str_replace("<img", "<img", remove_img_hw($imghtml));
 						}else if ($thisWidth > $maximgwidth){

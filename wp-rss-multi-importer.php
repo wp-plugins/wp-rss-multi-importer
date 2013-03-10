@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.61
+  Version: 2.62
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.61 );
+define( 'WP_RSS_MULTI_VERSION', 2.62 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -70,6 +70,8 @@ require_once ( WP_RSS_MULTI_INC . 'rss_feed.php' );
 
 require_once(  WP_RSS_MULTI_INC . 'import_posts.php');  
 
+require_once(  WP_RSS_MULTI_INC . 'ftp_list_table.php');  
+
 /* Load the admin_init files. */
 require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 
@@ -97,15 +99,30 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 
+function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false)
+  {
+    # SimplePie - extended in admin_init file
+	$feed = new SimplePie_RSSMI();
+	$feed->set_feed_url($url);
+	$feed->force_feed($forceFeed);
+	$feed->enable_cache(false);
+    $feed->set_timeout($timeout);
+	$feed->init();
+	$feed->handle_content_type();
+
+    return $feed;
+  }
+
+
+
+
+
 //  MAIN SHORTCODE OUTPUT FUNCTION
 
 
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
-//if ($_GET["rssvn"]==q){
-//	echo WP_RSS_MULTI_VERSION;  //  maybe use in future for getting version number
-//}
 
 
 	
@@ -121,6 +138,9 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$siteurl= get_site_url();
     $cat_options_url = $siteurl . '/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=category_options/';
 	$images_url = $siteurl . '/wp-content/plugins/' . basename(dirname(__FILE__)) . '/images';	
+	
+	global $fopenIsSet;
+	$fopenIsSet = ini_get('allow_url_fopen');
 	
 	$parms = shortcode_atts(array(  //Get shortcode parameters
 		'category' => 0, 
@@ -146,6 +166,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'mytemplate' =>'',
 		'showmore'=>NULL,
 		'authorprep'=>'by',
+		'windowstyle'=>NULL,
 		'morestyle' =>'[...]'
 		), $atts);
 		
@@ -178,6 +199,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$parmmaxperpage=$parms['maxperpage'];
 	$noimage=$parms['noimage'];
 	$mytemplate=$parms['mytemplate'];
+	$windowstyle=$parms['windowstyle'];
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -225,10 +247,20 @@ global $anyimage;
 $anyimage=$options['anyimage'];
 $addAuthor=$options['addAuthor'];
 $warnmsg=$options['warnmsg'];
+$directFetch=$options['directFetch'];
+$forceFeed=$options['forceFeed'];
+$forceFeed= ($forceFeed==1 ? True:False);
+$timeout=$options['timeout'];
+if (!isset($timeout)) {$timeout=10;}
+if (!isset($directFetch)) {$directFetch=0;}
+
+
+
+
 
 if(!is_null($defaultImage)){$RSSdefaultImage=$defaultImage;}
 
-
+if(!is_null($windowstyle)){$targetWindow=$windowstyle;}
 
 if(!is_null($showThisDesc)){$showDesc=$showThisDesc;}
 
@@ -366,14 +398,13 @@ if (empty($url)) {continue;}
 
 	$url = esc_url_raw(strip_tags($url));
 	
-
-
-
-
+			if ($directFetch==1){
+				$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed);
+			}else{
 				$feed = fetch_feed($url);
+			}
+	
 
-	
-	
 
 	if (is_wp_error( $feed ) ) {
 		
@@ -406,9 +437,9 @@ if (empty($url)) {continue;}
 		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
+			
 		
-		
-				if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 		
+				if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 		
 					
 						if ($enclosure = $item->get_enclosure()){
 							if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
@@ -440,10 +471,13 @@ if (empty($url)) {continue;}
 
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
+			
+			
 				if (empty($item))	continue;	
-									
+							
 	
-	if(include_post($feeditem["FeedCatID"],$item->get_content())==False) continue;   // FILTER 
+	if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
+	
 				
 			if ($enclosure = $item->get_enclosure()){
 
@@ -501,10 +535,11 @@ if ($timerstop==1){
 if ($dumpthis==1){
 	echo "<br><strong>Array</strong><br>";
 	var_dump($myarray);
-	exit;
+	return;
 }
 if (!isset($myarray) || empty($myarray)){
 	if(!$warnmsg==1 && current_user_can('edit_post')){
+	
 	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
 	}
 	return;

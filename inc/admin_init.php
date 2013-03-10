@@ -69,6 +69,14 @@ add_action('init', 'isMobileForWordPress', 1);
 
 
 
+function startSimplePie(){
+	if(! class_exists('SimplePie')){
+	     		require_once(ABSPATH . WPINC . '/class-simplepie.php');
+	}
+	class SimplePie_RSSMI extends SimplePie {}	
+	
+}
+add_action('init', 'startSimplePie');
 
 
 
@@ -139,6 +147,8 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 					$active_tab = 'feed_to_post_options';
 		} else if( $active_tab == 'items_list' ){
 			$active_tab = 'items_list';
+		} else if( $active_tab == 'posts_list' ){
+			$active_tab = 'posts_list';
 		} else { $active_tab = 'intro';	
 			
 		} // end if/else ?>
@@ -151,7 +161,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 				<a href="?page=wp_rss_multi_importer_admin&tab=feed_to_post_options" class="nav-tab <?php echo $active_tab == 'feed_to_post_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Feed to Post Settings", 'wp-rss-multi-importer')?></a>
 			<a href="?page=wp_rss_multi_importer_admin&tab=shortcode_parameters" class="nav-tab <?php echo $active_tab == 'shortcode_parameters' ? 'nav-tab-active' : ''; ?>"><?php  _e("Shortcode Parameters", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=template_options" class="nav-tab <?php echo $active_tab == 'template_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Template Options", 'wp-rss-multi-importer')?></a>
-				
+				<a href="?page=wp_rss_multi_importer_admin&tab=posts_list" class="nav-tab <?php echo $active_tab == 'posts_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("Manage Posts", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export RSS", 'wp-rss-multi-importer')?></a>
 				
 				
@@ -188,7 +198,14 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		} else if ( $active_tab == 'feed_to_post_options' ) {
 				
 			wp_rss_multi_importer_post_page();
+		
+		} else if ( $active_tab == 'posts_list' ) {
 			
+			 	global $myListTable;
+				my_add_menu_items();
+				add_options();
+				my_render_list_page();
+				$myListTable->admin_header(); 
 				
 				} else {
 			wp_rss_multi_importer_intro_page();
