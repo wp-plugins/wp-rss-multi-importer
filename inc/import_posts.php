@@ -333,7 +333,9 @@ if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 
 
 
+if ($post_options['categoryid']['wpcatid'][1]!==NULL){
 $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback'); //array of post blog categories that have been entered
+}
 
 
 
