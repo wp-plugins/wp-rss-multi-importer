@@ -333,15 +333,18 @@ if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 
 
 
+
 if ($post_options['categoryid']['wpcatid'][1]!==NULL){
 $wpcatids=array_filter($post_options['categoryid']['wpcatid'],'filter_id_callback'); //array of post blog categories that have been entered
 }
 
 
 
+
 if (!empty($wpcatids)){
 	$catArray = get_values_for_id_keys($post_options['categoryid']['plugcatid'], array_keys($wpcatids));  //array of plugin categories that have an association with post blog categories
-	$catArray=array_filter($catArray);
+	$catArray=array_diff($catArray, array(''));
+	
 	
 
 
@@ -349,6 +352,10 @@ if (!empty($wpcatids)){
 	$catArray=array(0);
 	
 }
+
+
+
+
 
 
 if(!IS_NULL($catID)){
@@ -717,13 +724,22 @@ foreach($myarray as $items) {
 
 	$mycatid=$items["mycatid"];
 	
+	
+	$blogcatid=array();
+	
 	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
-	
 	$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
-
-	if ($post_options['categoryid']['plugcatid'][$mycatid]=='0'){
 	
-		$blogcatid=getAllWPCats();
+	
+	
+	if ($post_options['categoryid']['plugcatid'][1]=='0'){   //this gets all the wp categories indicated when All is chosen in the first position
+		$allblogcatid=$post_options['categoryid']['wpcatid'][1];
+			if (is_array($blogcatid)){
+				$blogcatid=array_merge ($blogcatid,$allblogcatid);
+				$blogcatid = array_unique($blogcatid);
+			}else{
+				$blogcatid=$allblogcatid;
+			}
 	}
 
 

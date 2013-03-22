@@ -188,6 +188,7 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 		$content=str_replace("&#173;","",$content);
 		$content=str_replace("&#171;","'",$content);
 		$content=str_replace("&laquo;","\"",$content);
+		$content=str_replace("&#223;","",$content);
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem
 	
 		
@@ -239,20 +240,7 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 								
 								
 								
-/*
-	preg_match_all('#<script.*?>(.*?)<\/script>#', $content, $matches);  //get all divs - still needs work							
-
-					foreach ($matches as $match) {						
-var_dump($matches);
-							echo	$match;
-							exit;
-
-									$content = str_replace($match, '', $content);  //clean empty divs
-							
 		
-									}
-	*/	
-													
 						
 										
 			/* end clean tables and divs */
@@ -274,7 +262,7 @@ var_dump($matches);
 	        'encoding'  => 'UTF-8',
 	    );
 	    return preg_replace_callback(
-	        '/&\w(acute|uml|tilde|cedil|circ|grave|ordm|ordf|laquo);/',
+	        '/&\w(acute|uml|tilde|cedil|circ|grave|ordm|ordf|laquo|szlig);/',
 	        create_function(
 	            '$m',
 	            'return html_entity_decode($m[0], ' . $options['quote'] . ', "' .
