@@ -1099,6 +1099,8 @@ wp_rss_multi_deactivation();
 		<p ><label class='o_textinput' for='titleFilter'><?php _e("Make title clickable on listing page with same settings as above", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[titleFilter]" Value="1" <?php if ($post_options['titleFilter']==1){echo 'checked="checked"';} ?></label></p>
 	
 	<p ><label class='o_textinput' for='readmore'><?php _e("Text to use for Read More (default is ...Read More)", 'wp-rss-multi-importer')?>   <input  id='readmore' type="text" size='18' Name="rss_post_options[readmore]" Value="<?php echo $post_options['readmore'] ?>"></label></p>
+	
+	
 
 <h3><?php _e("Word Output Setting", 'wp-rss-multi-importer')?></h3>
 <p><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)", 'wp-rss-multi-importer')?></label>
@@ -1132,6 +1134,13 @@ wp_rss_multi_deactivation();
 
 <p style="padding-left:15px"><label class='o_textinput' for='sourceWords_Label'><?php _e("Your own attribution label", 'wp-rss-multi-importer')?>   <input  id='sourceWords_Label' type="text" size='12'  Name="rss_post_options[sourceWords_Label]" Value="<?php echo $post_options['sourceWords_Label'] ?>">(make sure to choose Other in drop down list)</label></p>
 
+<p><label class='o_textinput' for='sourceAnchorText'><?php _e("Read More anchor text", 'wp-rss-multi-importer')?></label>
+	<SELECT NAME="rss_post_options[sourceAnchorText]" id="sourceAnchorText">
+	<OPTION VALUE="1" <?php if($post_options['sourceAnchorText']==1){echo 'selected';} ?>><?php _e("Feed Name", 'wp-rss-multi-importer')?></OPTION>
+	<OPTION VALUE="2" <?php if($post_options['sourceAnchorText']==2){echo 'selected';} ?>><?php _e("Title", 'wp-rss-multi-importer')?></OPTION>
+	<OPTION VALUE="3" <?php if($post_options['sourceAnchorText']==3){echo 'selected';} ?>><?php _e("Link", 'wp-rss-multi-importer')?></OPTION>
+	</SELECT></p>
+
 
 <h3><?php _e("HTML and Image Handling", 'wp-rss-multi-importer')?></h3>
 
@@ -1152,7 +1161,7 @@ wp_rss_multi_deactivation();
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
 	
 	
-	<p ><label class='o_textinput' for='stripSome'><?php _e("Preserve limited tags (p,strong,b,br,i,em,li,ul,pre,code,sup,sub,u,h2,h3,h4)   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if ($post_options['stripSome']==1){echo 'checked="checked"';} ?></label>   (leave unchecked for all html to be preserved)</p>
+	<p ><label class='o_textinput' for='stripSome'><?php _e("Eliminate all hyperlinks   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if ($post_options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maximgwidth]">
@@ -1193,6 +1202,12 @@ wp_rss_multi_deactivation();
 <h3><?php _e("Comment Status", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='showsocial'><?php _e("Turn off comments on posts made by this plugin ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[commentstatus]" Value="1" <?php if ($post_options['commentstatus']==1){echo 'checked="checked"';} ?></label>
 </p>
+
+<h3><?php _e("Excerpt Handling", 'wp-rss-multi-importer')?></h3>
+<p ><label class='o_textinput' for='includeExcerpt'><?php _e("Put the contents also in the excerpts field. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[includeExcerpt]" Value="1" <?php if ($post_options['includeExcerpt']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+
 
 <h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 

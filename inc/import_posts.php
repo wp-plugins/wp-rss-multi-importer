@@ -285,6 +285,7 @@ $maxperPage=$options['maxperPage'];
 global $setFeaturedImage;
 $setFeaturedImage=$post_options['setFeaturedImage'];
 $addSource=$post_options['addSource'];
+$sourceAnchorText=$post_options['sourceAnchorText'];
 $maxposts=$post_options['maxfeed'];
 $post_status=$post_options['post_status'];
 $addAuthor=$post_options['addAuthor'];
@@ -297,6 +298,7 @@ $serverTimezone=$post_options['timezone'];
 $autoDelete=$post_options['autoDelete'];
 $sourceWords=$post_options['sourceWords'];
 $readMore=$post_options['readmore'];
+$includeExcerpt=$post_options['includeExcerpt'];
 global $morestyle;
 $morestyle=' ...read more';
 $sourceWords_Label=$post_options['sourceWords_Label'];
@@ -380,6 +382,7 @@ global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
 $descNum=$post_options['descnum'];
 $stripAll=$post_options['stripAll'];
+$stripSome=$post_options['stripSome'];
 $maxperfetch=$post_options['maxperfetch'];
 $showsocial=$post_options['showsocial'];
 $overridedate=$post_options['overridedate'];
@@ -683,6 +686,7 @@ foreach($myarray as $items) {
 
 			$thisContent='';
   			$post = array();  
+
   			$post['post_status'] = $post_status;
 
 
@@ -707,11 +711,29 @@ foreach($myarray as $items) {
 			}
 
 	
-	$thisContent .= showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+	$thisExcerpt = showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
 	
 
+	$thisContent .= $thisExcerpt;
+
 	if ($addSource==1){
-		$thisContent .= ' <br>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'>'.$items["myGroup"].'</a>';
+		
+		
+		switch ($sourceAnchorText) {
+		    case 1:
+		        $anchorText=$items["myGroup"];
+		        break;
+		    case 2:
+		        $anchorText=$items["mytitle"];
+		        break;
+		    case 3:
+		        $anchorText=$items["mylink"];
+		        break;
+		    default:
+		        $anchorText=$items["myGroup"];
+		}	
+		
+		$thisContent .= ' <p>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'">'.$anchorText.'</a></p>';
 	}
 
 
@@ -721,6 +743,10 @@ foreach($myarray as $items) {
 	}
 	
   	$post['post_content'] = $thisContent;
+
+	if ($includeExcerpt==1){
+		$post['post_excerpt'] = $thisExcerpt;
+	}
 
 	$mycatid=$items["mycatid"];
 	
