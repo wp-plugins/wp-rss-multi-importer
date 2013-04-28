@@ -165,7 +165,9 @@ function atf_deslashit($stringvar){
 
 function get_template_function($thistemplate){
 
-	$path=str_replace('/inc/','/templates/',plugin_dir_path( __FILE__));
+	$dirPath=plugin_dir_path( __FILE__);
+	$dirPath = str_replace ( "\\", "/",$dirPath );
+	$path=str_replace('/inc/','/templates/',$dirPath);
 
 	$dir_handle = @opendir($path) or die("Cannot open the file $path");
 	

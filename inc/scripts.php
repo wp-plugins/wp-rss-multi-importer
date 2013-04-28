@@ -79,7 +79,7 @@ add_action( 'wp_enqueue_scripts', 'wprssmi_tempate_header' );
 
 function wprssmi_tempate_header(){
 
-		wp_enqueue_style( 'styles', plugins_url( 'templates/templates.css', dirname(__FILE__)) );
+		wp_enqueue_style( 'wprssmi_template_styles', plugins_url( 'templates/templates.css', dirname(__FILE__)) );
 	
 }
 
@@ -92,7 +92,7 @@ function wprssmi_tempate_header(){
 
 
     function wprssmi_header() {        
-        wp_enqueue_style( 'styles', plugins_url( 'css/styles.css', dirname(__FILE__)) );
+        wp_enqueue_style( 'wprssmi_styles', plugins_url( 'css/styles.css', dirname(__FILE__)) );
 
     }
 
