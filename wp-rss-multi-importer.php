@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.64
+  Version: 2.65
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.64 );
+define( 'WP_RSS_MULTI_VERSION', 2.65 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -159,6 +159,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'cachetime'=>NULL,
 		'pinterest'=>0,
 		'maxperpage' =>0,
+		'excerptlength'=>50,
 		'noimage' => 0,
 		'sortorder' => NULL,
 		'defaultimage' => NULL,
@@ -200,6 +201,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$noimage=$parms['noimage'];
 	$mytemplate=$parms['mytemplate'];
 	$windowstyle=$parms['windowstyle'];
+	$excerptlength=$parms['excerptlength'];
    	$readable = '';
    	$options = get_option('rss_import_options','option not found');
 	$option_items = get_option('rss_import_items','option not found');
@@ -254,10 +256,6 @@ $timeout=$options['timeout'];
 if (!isset($timeout)) {$timeout=10;}
 if (!isset($directFetch)) {$directFetch=0;}
 
-
-
-
-
 if(!is_null($defaultImage)){$RSSdefaultImage=$defaultImage;}
 
 if(!is_null($windowstyle)){$targetWindow=$windowstyle;}
@@ -267,6 +265,8 @@ if(!is_null($showThisDesc)){$showDesc=$showThisDesc;}
 if(!is_null($sortOrder)){$sortDir=$sortOrder;}
 
 if (!is_null($pshowmore)) {$showmore=$pshowmore;} 
+
+if (!is_null($excerptlength)) {$descNum=$excerptlength;} 
 
 if(empty($options['sourcename'])){
 	$attribution='';
@@ -474,15 +474,17 @@ if (empty($url)) {continue;}
 			
 			
 				if (empty($item))	continue;	
+				
 							
 	
 	if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
 	
-				
+			//	$x=1;
 			if ($enclosure = $item->get_enclosure()){
 
 				if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
+					//$mediaImage=$mediaImage2[$x];
 				}else if (!IS_NULL($item->get_enclosure()->get_link())){
 					$mediaImage=$item->get_enclosure()->get_link();	
 				}	
@@ -596,7 +598,6 @@ if ( strpos( $currentURL, '?' ) == 0 ){
 }
 
 
-
 //pagination controls and parameters
 
 
@@ -629,30 +630,31 @@ $end = ($currentPage * $perPage) + $perPage;
 	return _e("One more step...go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>", 'wp-rss-multi-importer');
 	}
 	
-
 	require( WP_RSS_MULTI_TEMPLATES . $template );
-
-    
 
 
 }
 
 	//pagination controls at bottom
-	
-if ($pag==1){  
-$readable .='<div class="pag_box">';
 
-if($numPages > $currentPage && ($currentPage + 1) < $numPages)  
-    $readable .=  '<a href="http://'.$currentURL.'pg=' . ($currentPage + 1) . '" class="more-prev">'.__('Next page', 'wp-rss-multi-importer').' »</a>';
- //$readable .=$numPages;
-	if($currentPage > 0 && $currentPage < $numPages)  
-	    $readable .= '<a href="http://'.$currentURL.'pg=' . ($currentPage - 1) . '" class="more-prev">« '.__('Previous page', 'wp-rss-multi-importer').'</a>';  
+	if ($pag==1 && $numPages>1){
 
-$readable .='</div>';
+			$readable .='<div class="rssmi_pagination"><ul>';
+		
+		for($q=0;$q<$numPages;$q++){
+			if($currentPage>0 && $q==0){$readable .='<li class="prev"><a href="http://'.$currentURL.'pg=' . ($currentPage-1) . '">Prev</a></li>';}
+			if($currentPage<>$q){
+				$readable .= '<li><a href="http://'.$currentURL.'pg=' . ($q) . '"> '.__($q+1, 'wp-rss-multi-importer').'</a></li>';  
+			}else{
+				$readable .='<li class="active"><a href="#">'.($q+1).'</a></li>';
+			}
+		if( $q==$numPages-1 && $currentPage<>$numPages-1){$readable .='<li class="next"><a href="http://'.$currentURL.'pg=' . ($currentPage+1) . '">Next</a></li>';}
+		}
+			$readable .='</ul></div>';
+		
+	}	
+		//end pagination controls at bottom
 
-}
-     //end pagination controls at bottom
-	
 
 return $readable;
 

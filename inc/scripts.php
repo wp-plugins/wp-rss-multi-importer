@@ -15,6 +15,19 @@ if ( isset( $_GET['page'] ) && $_GET['page'] == 'wp_rss_multi_importer_admin' ) 
 
 
 
+function rssmi_noindex_function()
+{
+	global $wp_query;
+	$postID=$wp_query->post->ID;
+	$myLink = get_post_meta($postID, 'rssmi_source_link' , true);
+		if (!empty($myLink) && !is_front_page()  ){
+echo '<meta name="robots" content="noindex, nofollow">';
+}
+}
+
+
+
+
 
 /**
     * Load scripts for admin, including check for version since new method (.on) used available in jquery 1.7.1

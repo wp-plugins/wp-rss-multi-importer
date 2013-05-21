@@ -222,7 +222,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 520,000 have already</div>
+														<div class="txtwhite">Over 550,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -1205,6 +1205,11 @@ wp_rss_multi_deactivation();
 
 <h3><?php _e("Excerpt Handling", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='includeExcerpt'><?php _e("Put the contents also in the excerpts field. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[includeExcerpt]" Value="1" <?php if ($post_options['includeExcerpt']==1){echo 'checked="checked"';} ?></label>
+</p>
+
+
+<h3><?php _e("No Index, No Follow ", 'wp-rss-multi-importer')?></h3>
+<p ><label class='o_textinput' for='noindex'><?php _e("Make the Feed to Post items not search engine visible (It is up to search engines to honor this request.). ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[noindex]" Value="1" <?php if ($post_options['noindex']==1){echo 'checked="checked"';} ?></label>
 </p>
 
 

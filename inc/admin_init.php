@@ -2,11 +2,6 @@
 
 
 
-
-
-
-
-
 //ON INIT
 
 add_action('admin_init','wp_rss_multi_importer_start');
@@ -45,6 +40,10 @@ function wp_rss_multi_importer_post_to_feed(){
 		if ($post_options['targetWindow']==0 && $post_options['active']==1){
 			add_action('wp_footer','colorbox_scripts');
 		}
+		if ($post_options['noindex']==1){
+			add_action('wp_head', 'rssmi_noindex_function');
+		}
+		
 	}
 }
 

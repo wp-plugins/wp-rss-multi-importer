@@ -222,7 +222,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 					$item = $feed->get_item($i);
 					 if (empty($item))	continue;
 					
-					
+						if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 	
 					
 							if ($enclosure = $item->get_enclosure()){
 								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
@@ -245,7 +245,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 						$item = $feed->get_item($i);
 						if (empty($item))	continue;
 						
-						
+							if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 	
+							
 							if ($enclosure = $item->get_enclosure()){
 								if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
 									$mediaImage=$item->get_enclosure()->get_thumbnail();

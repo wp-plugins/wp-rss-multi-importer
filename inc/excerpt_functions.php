@@ -105,7 +105,7 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 
 
 
-	function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0)  //show excerpt function
+function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0)  //show excerpt function
 	{
 
 
@@ -113,43 +113,26 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 	global $morestyle;
     $content=CleanHTML($content);
 
-
-
 	if ($stripAll==1){
 			$content=strip_tags(html_entity_decode($content));	
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-				
-				$content=pre_esc_html($content);
-			
-					if ($stripSome==1){
-						$content = strip_tags($content,'<p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
-					}else{
-						$content=html_entity_decode($content);
-					}	
-			
-			}else{
-					
+				$content=html_entity_decode(pre_esc_html($content));	
+			}else{				
 				if($maxchars !=99){
 					$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 				}
-		
 			}
-		
 			if($maxchars !=99){
-				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID);	
+				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$stripSome);	
 			}
 		}
-	
-	
-
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
-	
-	$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'').">".$morestyle."</a>", $content);
+	$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmore\">".$morestyle."</a>", utf8_encode($content));
 	
 	return $content;
-	}
+}
 	
 	
 	
@@ -157,20 +140,26 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 
 	function limitwords($maxchars,$content){
 		
+
+		
 		global $morestyle;
+
+
 		if($maxchars !=99 && $maxchars !=0) {
+			
+	
 		//echo $maxchars;
-		  $words = explode(' ', $content, ($maxchars + 1));
+		
+		$words = explode(' ', $content, ($maxchars + 1));
 	  			if(count($words) > $maxchars)
 		  				array_pop($words); 				
 						$content = implode(' ', $words)." ". $morestyle;
+						
+					
 		}else if ($maxchars==0) {
 			$content='';
-			
 		}else{
-			
-						$content=$content."";
-						
+			$content=$content."";				
 		}
 		return $content;
 	}
@@ -190,10 +179,9 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 		$content=str_replace("&laquo;","\"",$content);
 		$content=str_replace("&#223;","",$content);
 		$content=str_replace("&pound;","&amp;pound;",$content);  // replace strange pound sign problem
-	
-		
-		
-					
+		$content=str_replace("&rsquo;", "'", $content);
+		$content=str_replace("&amp;rsquo;", "'", $content);
+			
 		preg_match_all('#<a.*?>(.*?)<\/a>#', $content, $matches);  //get all links
 			
 		foreach ($matches[0] as $val) {
@@ -203,13 +191,9 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
 					}
 										}
-																	
-										
+																							
 		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
 		
-		
-		
-												
 										
 			/*  clean empty tables and divs */							
 										
@@ -225,8 +209,7 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 
 									}
 									
-									
-														
+												
 		preg_match_all('/<div.*?>(.*?)<\/div>/', $content, $matches,PREG_SET_ORDER);  //get all divs - still needs work							
 
 		foreach ($matches as $match) {	
@@ -235,18 +218,8 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 			$content = str_replace($match[0], '', $content);  //clean empty divs
 					}
 		}
-								
-				
-								
-								
-								
-		
-						
-										
+																		
 			/* end clean tables and divs */
-			
-									
-
 		
 	$content =_decodeAccented($content);
 
@@ -275,66 +248,52 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 	
 	
 	
-	
-	
-	
-	
-	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch){
+	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome){
 		global $ftp;
 		global $setFeaturedImage;
 		
-
+	
 		
 		if ($adjustImageSize==1){
-			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.resize_image($mediaImage)."</a></div>";
+			$mediaImage=resize_image($mediaImage);
+		}
+		
+		if ($stripSome==1){
+			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
 		}else{
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
 		}	
-	
-	if($ftp==1){  
 		
-		
-
 	
+	if($ftp==1){  // GETS RID OF REDUNDANCY OF IMAGES IN FEED TO POST
+		
 		$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
-	
-
-			$content = preg_replace("/<img.*?>/im","",$content,1);
-				
-
+		$content = preg_replace("/<img.*?>/im","",$content,1);
 		
-
 		$content = limitwords($maxchars,$content);
-		
-		
-		
 		
 	}else{
 		$content = limitwords($maxchars,strip_tags($content));
 	}
 	
 	
-	
-	
 	if($ftp!=1){  //  only return if not Feed to Post
 		$content=$tabledImage."".$content;
 	}else{
-		if($setFeaturedImage!=2){  //  check for condition if Feed to Post
-			$content=$tabledImage."".$content;
+		if ($stripSome==1){  // determine whether links should be stripped
+			$content = strip_tags($content,',<img><p><strong><b><br><i><em><li><ul><pre><code><sup><sub><u><h2><h3><h4>');
 		}
-			}
-
-	return 	$content;
-		
-		
+		if($setFeaturedImage!=2){  //  check for if featured image not selected, then add exerpt image
+			$content=$tabledImage."".$content;	
+		}
+	}
+	return 	$content;	
 	}
 	
 	
 	
 	
-	
-	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID){
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$stripSome){
 		$leadmatch=0;	
 		global $YTmatch;
 		global $anyimage;
@@ -349,16 +308,14 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 			$imagefix="imagefix";	
 		}
 		
-		
-		
-		
-		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
 
-		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=".*"\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 
-		$strmatch2='^(\s*)(?:<p.*>)?(<img.*src=".*"\s*?\/?>)\s*(.*)$';
+		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=[\'"].*[\'"]\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 
-		$strmatch3='^(.*)(<img.*src=".*"\s*?\/?>)\s*(.*)$';  //match first image if it exists
+		$strmatch2='^(\s*)(?:<p.*>)?(<img.*src=[\'"].*[\'"]\s*?\/?>)\s*(.*)$';
+
+		$strmatch3='^(.*)(<img.*src=[\'"].*[\'"]\s*?\/?>)\s*(.*)$';  //match first image if it exists
+		
 		
 	if (preg_match("/$strmatch/sU", $content, $matches)) { //matches a leading hperlinked image
 		$leadMatch=1;
@@ -378,20 +335,20 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 		
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";	
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage=$catImageArray[1];
 	
 	}else if (($leadMatch==1) && isbug($matches[2])==False){
 
 		$mediaImage = $matches[2];
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 		
 	}else if (($leadMatch==2) && isbug($matches[2])==False){
 
 
 		$mediaImage = $matches[2];
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
@@ -399,20 +356,20 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 
 		$featuredImage=$mediaImage;
 		$mediaImage="<img src=\"$mediaImage\">";		
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		
 			
 	}else if ($leadMatch==3 && $anyimage==1){
 
 		$mediaImage=$matches[2];	
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 	
 	}else if($RSSdefaultImage==2 && $catImageArray[1]==True){
 
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";		
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage=$catImageArray[1];
 	
 	}else{  //matches no leading image or media enclosure and no default category image

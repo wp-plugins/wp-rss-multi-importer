@@ -303,7 +303,8 @@ global $morestyle;
 $morestyle=' ...read more';
 $sourceWords_Label=$post_options['sourceWords_Label'];
 
-if (!is_null($readMore)) {$morestyle=$readMore;} 
+if (!is_null($readMore) && $readMore!='') {$morestyle=$readMore;} 
+
 
 switch ($sourceWords) {
     case 1:
@@ -470,6 +471,7 @@ if (empty($myfeeds)){
 	return "You've either entered a category ID that doesn't exist or have no feeds configured for this category.  Edit the shortcode on this page with a category ID that exists, or <a href=".$cat_options_url.">go here and and get an ID</a> that does exist in your admin panel.";
 	exit;
 }
+
 
 
 
@@ -675,8 +677,8 @@ foreach($myarray as $items) {
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
 
-	
-	
+	$thisLink=mysql_real_escape_string($thisLink);
+
 
 
 			$wpdb->flush();
@@ -753,9 +755,12 @@ foreach($myarray as $items) {
 	
 	$blogcatid=array();
 	
-	$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
-	$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
-	
+	if (!empty($post_options['categoryid'])){
+		$catkey=array_search($mycatid, $post_options['categoryid']['plugcatid']);
+		$blogcatid=$post_options['categoryid']['wpcatid'][$catkey];
+	}else{
+		$blogcatid=0;	
+	}
 	
 	
 	if ($post_options['categoryid']['plugcatid'][1]=='0'){   //this gets all the wp categories indicated when All is chosen in the first position

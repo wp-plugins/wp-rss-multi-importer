@@ -66,11 +66,12 @@ function wp_rss_multi_importer_style_tags(){
 	<div id="poststuff">
 
 
-<div class="postbox"><div class="inside"><h2><?php _e("Customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here are some examples:", 'wp-rss-multi-importer')?></h2>
+<div class="postbox"><div class="inside"><h2><?php _e("Customize some of the ways the feeds are presented on your page by using shortcode parameters.  Here is the complete list:", 'wp-rss-multi-importer')?></h2>
 
 
 <table class="widefat">
 <tr><th><?php _e("FEATURE CHANGE", 'wp-rss-multi-importer')?></th><th><?php _e("PARAMETER", 'wp-rss-multi-importer')?></th><th><?php _e("DEFAULT", 'wp-rss-multi-importer')?></th><th><?php _e("EXAMPLE", 'wp-rss-multi-importer')?></th></tr>
+<tr class="alternate"><td ><?php _e("Category", 'wp-rss-multi-importer')?></td><td>category</td><td>none</td><td>[wp_rss_multi_importer category="1"]</td></tr>
 <tr class="alternate"><td ><?php _e("Headline font size", 'wp-rss-multi-importer')?></td><td>hdsize</td><td>16px</td><td>[wp_rss_multi_importer hdsize="18px"]</td></tr>	
 <tr><td ><?php _e("Headline bold weight", 'wp-rss-multi-importer')?></td><td>hdweight</td><td>400</td><td>[wp_rss_multi_importer hdweight="500"]</td></tr>		
 <tr class="alternate"><td ><?php _e("Style of the Today and Earlier tags", 'wp-rss-multi-importer')?></td><td>testyle</td><td>color: #000000; font-weight: bold;margin: 0 0 0.8125em;</td><td>[wp_rss_multi_importer testyle="color:#cccccc"]</td></tr>	
@@ -92,6 +93,7 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorprep</td><td>By</td><td>[wp_rss_multi_importer authorprep="from"]</td></tr>
 <tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
 <tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
+<tr ><td ><?php _e("Use this to override the default excerpt length setting", 'wp-rss-multi-importer')?></td><td>excerptlength</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer excerptlength="100"]</td></tr>
 <tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
 	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
