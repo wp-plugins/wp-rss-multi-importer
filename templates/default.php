@@ -46,19 +46,13 @@ if ($nodays==0){
 
 
 
-//  YouTube
-if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
-
-	if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $items["mylink"], $match)) {
-	    $video_id = $match[1];
-		$items["mylink"]='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
-		$openWindow='class="rssmi_youtube"';
-		global $YTmatch;
-		$YTmatch=1;
-	} else {
-	   $openWindow='class="colorbox"';
-	}
+// VIDEO CHECK
+if ($targetWindow==0){
+	$getVideoArray=rssmi_video($items["mylink"]);
+	$openWindow=$getVideoArray[1];
+	$items["mylink"]=$getVideoArray[0];
 }
+
 
 
 	

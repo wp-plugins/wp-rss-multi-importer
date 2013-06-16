@@ -651,21 +651,13 @@ foreach($myarray as $items) {
 //	echo $thisLink.'<br>';
 	
 	
-	//  YouTube  //  NEEDS WORK
-	if ($targetWindow==0 && strpos($items["mylink"],'www.youtube.com')>0){
-		
+// VIDEO CHECK
+if ($targetWindow==0){
+	$getVideoArray=rssmi_video($items["mylink"]);
+	$openWindow=$getVideoArray[1];
+	$items["mylink"]=$getVideoArray[0];
+}
 
-		if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $items["mylink"], $match)) {
-			
-		    $video_id = $match[1];
-			$items["mylink"]='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
-		
-			$openWindow='class="rssmi_youtube"';
-			global $YTmatch;
-			$YTmatch=1;
-		}
-	}
-	
 	
 	
 	
@@ -684,8 +676,10 @@ foreach($myarray as $items) {
 			$wpdb->flush();
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
 		
-		if (empty( $mypostids ) && $mypostids !== false){ 
-
+			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string(trim($items["mytitle"]))."%'");
+		
+		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle)){ 
+		
 			$thisContent='';
   			$post = array();  
 

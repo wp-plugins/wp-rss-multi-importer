@@ -127,7 +127,7 @@ function colorbox_scripts(){
     wp_enqueue_script( 'jquery.colorbox-min', plugins_url( 'scripts/jquery.colorbox-min.js', dirname(__FILE__)) );
  wp_enqueue_script( 'wprssmi_detect_mobile', plugins_url( 'scripts/detect-mobile.js', dirname(__FILE__)) );
 	//echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'})});</script>";	
-	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344})});</script>";	
+	echo "<script type='text/javascript'>jQuery(document).ready(function(){ jQuery('a.colorbox').colorbox({iframe:true, width:'80%', height:'80%'});jQuery('a.rssmi_youtube').colorbox({iframe:true, innerWidth:425, innerHeight:344});jQuery('a.rssmi_vimeo').colorbox({iframe:true, innerWidth:500, innerHeight:409})});</script>";	
 	
 }
 

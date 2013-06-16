@@ -32,6 +32,27 @@ function include_post($catID,$content,$title){
 }	
 
 
+function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO 
+	if (strpos($link,'www.youtube.com')>0){	
+		if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link, $match)) {
+		    $video_id = $match[1];
+			$vlink='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
+			$openWindow='class="rssmi_youtube"';
+		}
+	} else if (strpos($link,'vimeo.com')>0){	
+		if (preg_match_all('#(http://vimeo.com)/([0-9]+)#i',$link,$match)){
+			$video_id = $match[2][0];
+			$vlink='http://player.vimeo.com/video/'.$video_id;
+			$openWindow='class="rssmi_vimeo"';
+		}				
+	} else {
+		$openWindow='class="colorbox"';	
+		$vlink=$link;
+	}
+	return array($vlink,$openWindow);		
+}
+
+
 
 
 function pre_esc_html($content) {
@@ -192,8 +213,9 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 					}
 										}
 																							
-		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
 		
+		$content = preg_replace('(<img[^>]*height[:|=] *([\'"]?)[0|1](px|[\'"]| )[^>]*>)', '', $content);  //clean bugs
+	
 										
 			/*  clean empty tables and divs */							
 										
@@ -308,7 +330,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 			$imagefix="imagefix";	
 		}
 		
-
+		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
 
 		$strmatch='^\s*(?:<p.*>)?\<a.*href="(.*)">\s*(<img.*src=[\'"].*[\'"]\s*?\/?>)[^\<]*<\/a\>\s*(.*)$';
 

@@ -317,6 +317,7 @@ function my_render_list_page(){
     <div style="background:#ECECEC;border:1px solid #CCC;padding:0 10px;margin-top:5px;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;">
         <p>This page lists all the articles you have imported using the plugin using Feed to Post.  If the articles are set to be deleted, you'll see the time until deletion in the last column (otherwise it is marked with n/a).</p> 
         <p>If you've set the plugin to automatically delete imported articles but want one or more imported articles NOT to be deleted, you can do this using the page.  Click Do Not Delete for any single article you don't want automatically deleted or check off all the articles you want to be preserved and choose Do Not Delete from the drop down menu and click Apply.</p>
+		<p style="color:red">If at any time you want to delete all the post created by this plugin and all the featured images associated with these posts, click this button once (then wait a minute or so and refresh this page) - NOTE:  This will delete only the posts created by this plugin.<button type="button" name="fetchdelete" id="fetch-delete" value=""><?php _e("CLICK TO DELETE ALL PLUGIN POSTS NOW", 'wp-rss-multi-importer')?></button> </p>
     </div>
 
 

@@ -46,6 +46,20 @@ function rssmi_change_post_status($post_id,$status){
 }
 
 
+function rssmi_delete_attachment($id_ID){
+	$args = array( 'post_type' => 'attachment', 'numberposts' => -1, 'post_status' =>'any', 'post_parent' => $id_ID ); 
+	$attachments = get_posts($args);			
+	if ($attachments) {
+		foreach ( $attachments as $attachment ) {
+			 wp_delete_attachment($attachment->ID,true);
+		}
+	}
+}
+
+
+
+
+
 function rssmi_delete_posts(){
 	
 	global $wpdb;
@@ -68,6 +82,7 @@ function rssmi_delete_posts(){
 		if (!empty($mypostids)){
 			
 			if($oldPostStatus==0){
+				rssmi_delete_attachment($id->ID);
 				wp_delete_post($id->ID, true);
 			}elseif ($oldPostStatus==1){
 				wp_delete_post($id->ID, false);
@@ -93,7 +108,8 @@ function rssmi_delete_posts_admin(){  //  USE FOR QUICK DELETE OF BLOG POSTS
 	foreach ($ids as $id){
 		$mypostids = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link' AND post_id = ".$id->ID);
 		if (!empty($mypostids)){
-				wp_delete_post($id->ID, true);
+			rssmi_delete_attachment($id->ID);
+			wp_delete_post($id->ID, true);
 		}
 	}
 	

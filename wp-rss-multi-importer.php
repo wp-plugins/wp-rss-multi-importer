@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.65
+  Version: 2.66
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.65 );
+define( 'WP_RSS_MULTI_VERSION', 2.66 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -203,9 +203,9 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$windowstyle=$parms['windowstyle'];
 	$excerptlength=$parms['excerptlength'];
    	$readable = '';
-   	$options = get_option('rss_import_options','option not found');
-	$option_items = get_option('rss_import_items','option not found');
-	$option_category_images = get_option('rss_import_categories_images','option not found');
+   	$options = get_option('rss_import_options');
+	$option_items = get_option('rss_import_items');
+	$option_category_images = get_option('rss_import_categories_images');
 
 	if ($option_items==false) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds", 'wp-rss-multi-importer');
 

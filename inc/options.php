@@ -507,6 +507,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="300" <?php if($options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 <OPTION VALUE="400" <?php if($options['descnum']==400){echo 'selected';} ?>>400</OPTION>
 <OPTION VALUE="500" <?php if($options['descnum']==500){echo 'selected';} ?>>500</OPTION>
+<OPTION VALUE="1000" <?php if($options['descnum']==1000){echo 'selected';} ?>>1000</OPTION>
 <OPTION VALUE="99" <?php if($options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything", 'wp-rss-multi-importer')?></OPTION>
 </SELECT><?php _e("  Note: Choosing Give me everything will just be a pure extract of the content without any image processsing, etc.", 'wp-rss-multi-importer')?></p>
 
@@ -1034,7 +1035,8 @@ wp_rss_multi_deactivation();
 <p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='4' maxlength='4' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
 
 
-
+<p ><label class='o_textinput' for='plugindelete'><span style="color:red"><?php _e("IMPORTANT: Check to delete all posts and featured images created by this plugin if this plugin is deleted  ", 'wp-rss-multi-importer')?></span><input type="checkbox" Name="rss_post_options[plugindelete]" Value="1" <?php if ($post_options['plugindelete']==1){echo 'checked="checked"';} ?></label>
+</p>
 
 
 <h3><?php _e("Post Time Settings", 'wp-rss-multi-importer')?></h3>
@@ -1113,6 +1115,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="300" <?php if($post_options['descnum']==300){echo 'selected';} ?>>300</OPTION>
 <OPTION VALUE="400" <?php if($post_options['descnum']==400){echo 'selected';} ?>>400</OPTION>
 <OPTION VALUE="500" <?php if($post_options['descnum']==500){echo 'selected';} ?>>500</OPTION>
+<OPTION VALUE="1000" <?php if($post_options['descnum']==1000){echo 'selected';} ?>>1000</OPTION>
 <OPTION VALUE="99" <?php if($post_options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything", 'wp-rss-multi-importer')?></OPTION>
 </SELECT><?php _e("  NOTE: Choosing Give me everything will prohibit you from getting a Featured or Default Category Image", 'wp-rss-multi-importer')?></p>
 
