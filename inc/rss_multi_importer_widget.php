@@ -370,7 +370,7 @@ echo '	<div class="news-contents">';
 			if($showimage==1 && $addmotion!=1){
 							
 	
-			echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,0,0,$items["myimage"],$items["mycatid"]);
+				echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,"left",0,$items["myimage"],$items["mycatid"]);
 			
 			}
 			
