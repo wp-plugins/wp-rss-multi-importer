@@ -1,6 +1,6 @@
 <?php
 $feedID = isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_feedID'] : NULL;
-$catID = isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_catID'] :  NULL;
+$catID = isset( $_GET[ 'rssmi_catID' ] ) ? $_GET['rssmi_catID'] :  NULL;
 if (!IS_NULL($feedID) || !IS_NULL($catID) ){	
 	$post_options = get_option('rss_post_options');
 	if($post_options['active']==1){
