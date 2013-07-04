@@ -542,7 +542,7 @@ if ($dumpthis==1){
 if (!isset($myarray) || empty($myarray)){
 	if(!$warnmsg==1 && current_user_can('edit_post')){
 	
-	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/wp_plugin'>support page</a> and we'll help you diagnose the problem.", 'wp-rss-multi-importer');
+	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
 	}
 	return;
 }
