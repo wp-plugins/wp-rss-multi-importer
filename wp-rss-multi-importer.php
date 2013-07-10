@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66
+  Version: 2.66.1
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.66 );
+define( 'WP_RSS_MULTI_VERSION', 2.661 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -81,6 +81,13 @@ require_once ( WP_RSS_MULTI_INC . 'admin_init.php' );
 register_activation_hook( __FILE__, 'wp_rss_multi_importer_activate' );
 
 
+function rssmi_plugin_update_info() {
+	if (rssmi_remoteFileExists("http://www.allenweiss.com/a/plugin-updates.txt")===True) {
+	$info = wp_remote_fopen("http://www.allenweiss.com/a/plugin-updates.txt");
+	echo '<br />' . strip_tags( $info, "<br><a><b><i><span>" );
+		}
+}
+add_action('in_plugin_update_message-'.plugin_basename(__FILE__), 'rssmi_plugin_update_info');
 
 
    
@@ -123,7 +130,6 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false)
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
-
 
 	
 add_action('wp_footer','footer_scripts');
@@ -207,7 +213,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$option_items = get_option('rss_import_items');
 	$option_category_images = get_option('rss_import_categories_images');
 
-	if ($option_items==false) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds", 'wp-rss-multi-importer');
+	if ($option_items==false ) return _e("You need to set up the WP RSS Multi Importer Plugin before any results will show here.  Just go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin'>settings panel</a> and put in some RSS feeds", 'wp-rss-multi-importer');
+
 
 
 $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
@@ -412,7 +419,7 @@ if (empty($url)) {continue;}
 				echo $feed->get_error_message();
 				}	
 		if ($size<4){
-			return _e("You have one feed and it's not valid.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.", 'wp-rss-multi-importer');
+			return _e("You have one feed and it's not a valid RSS feed.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.", 'wp-rss-multi-importer');
 			exit;
 
 		}else{

@@ -17,11 +17,7 @@ add_action('init', 'rssmi_rss');
 
 function rssmi_rss(){
 	$feed_options = get_option('rss_feed_options', 'option not found');
-/*	global $wp_rewrite;
-	if ( !isset($wp_rewrite) ) { 
-		$wp_rewrite = new WP_Rewrite(); 
-		$wp_rewrite->flush_rules();}
-*/
+
 	if (!empty($feed_options) && isset($feed_options['feedslug'])){
 		
 add_feed($feed_options['feedslug'], 'rssmi_feed');
@@ -43,13 +39,13 @@ function rss_text_limit($striptags=0,$string, $length, $replacer = '...') {
 
 
 function wp_rss_multi_importer_feed(){
-	
+header("Content-type: text/xml");	
 $catArray=array(0);
 
 if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 0; }  // no caching of RSS feed
 }
-add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
+
 
 
 
@@ -294,7 +290,7 @@ if($sortDir==1){
 }else{
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
-echo '<?xml version="1.0" encoding="UTF-8"?>';
+header('Content-Type: ' . feed_content_type('rss-http') . '; charset=' . get_option('blog_charset'), true);
 ?>
 <rss version="2.0">
 <channel>

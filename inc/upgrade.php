@@ -8,7 +8,7 @@ function upgrade_db() {
 
 	$myoptions = get_option( 'rss_import_items' ); 
 	$newoptions = get_option('rss_import_options');
-	$plugin_version=$newoptions['plugin_version'];
+	if(isset($newoptions['plugin_version'])) $plugin_version=$newoptions['plugin_version'];
 	$categoryoptions=get_option('rss_import_categories_images');
 
 	
@@ -62,7 +62,7 @@ function upgrade_db() {
 		}
 	
 		$post_settings['categoryid']['plugcatid'][1]=$post_options['category'];
-		$post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
+		if (isset($post_options['wpcategory'])) $post_settings['categoryid']['wpcatid'][1]=$post_options['wpcategory'];
 			update_option( 'rss_post_options', $post_settings );
 	}
 	
@@ -125,7 +125,7 @@ function upgrade_db() {
 }
 	
 	//for resetting the admin message
-	if ($plugin_version<2.40){
+	if (isset($plugin_version) && $plugin_version<2.40){
 	$wprssmi_admin_options = get_option( 'rss_admin_options' );
 	$wprssmi_admin_options['dismiss_slug'] ='false';
 	//update_option( 'wprssmi_admin_options', $post_settings );
@@ -158,7 +158,31 @@ function upgrade_db() {
 }
 
 
+function rssmi_remoteFileExists($url) {
+    $curl = curl_init($url);
 
+    //don't fetch the actual page, you only want to check the connection is ok
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+
+    //do request
+    $result = curl_exec($curl);
+
+    $ret = false;
+
+    //if request did not fail
+    if ($result !== false) {
+        //if request was ok, check response code
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);  
+
+        if ($statusCode == 200) {
+            $ret = true;   
+        }
+    }
+
+    curl_close($curl);
+
+    return $ret;
+}
 
 
 
