@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.1
+  Version: 2.66.2
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.661 );
+define( 'WP_RSS_MULTI_VERSION', 2.662 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -390,7 +390,7 @@ rssmi_list_the_plugins();
 }
 
 
- 
+
  foreach($myfeeds as $feeditem){
 
 
@@ -419,7 +419,7 @@ if (empty($url)) {continue;}
 				echo $feed->get_error_message();
 				}	
 		if ($size<4){
-			return _e("You have one feed and it's not a valid RSS feed.  This is likely a problem with the source of the RSS feed.  Contact our support forum for help.", 'wp-rss-multi-importer');
+			return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
 			exit;
 
 		}else{
@@ -433,6 +433,11 @@ if (empty($url)) {continue;}
 	if ($feedAuthor = $feed->get_author())
 	{
 		$feedAuthor=$feed->get_author()->get_name();
+	}
+	
+	if ($feedHomePage=$feed->get_link()){
+		$feedHomePage=$feed->get_link();
+
 	}
 	
 
@@ -485,13 +490,11 @@ if (empty($url)) {continue;}
 							
 	
 	if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
-	
-			//	$x=1;
-			if ($enclosure = $item->get_enclosure()){
 
-				if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
+				$x=1;
+			if ($enclosure = $item->get_enclosure()){
+				if(!IS_NULL($item->get_enclosure()->get_thumbnails())){	
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
-					//$mediaImage=$mediaImage2[$x];
 				}else if (!IS_NULL($item->get_enclosure()->get_link())){
 					$mediaImage=$item->get_enclosure()->get_link();	
 				}	
@@ -574,7 +577,7 @@ foreach ($myarray as $key => $row) {
 
 if($sortDir==1){
 	array_multisort($dates, SORT_ASC, $myarray);
-}else{
+}elseif ($sortDir==0){
 	array_multisort($dates, SORT_DESC, $myarray);		
 }
 

@@ -3,8 +3,8 @@ Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
-Tested up to: 3.5.2
-Stable tag: 2.66.1
+Tested up to: 3.5.3
+Stable tag: 2.66.2
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -123,6 +123,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Change Log ==
 
+= Version 2.66.2 =
+* Feed to Post now can grab featured image when Give Me Everything word length is chosen. Accepts images from Google news feed. Google+ social media link added. Ability to suppress Read More added. Several bugs fixed.
 = Version 2.66.1 =
 * Fixed RSS export feature and several other bugs.
 = Version 2.66 =
@@ -156,7 +158,7 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 = Version 2.51 =
 * Images are now hyperlinked in excerpts. Images that are on secure servers now work. Feed or item author now available for use in templates and Feed to Post (if the feed has the author).
 = Version 2.50 =
-* Many features added, including improved image handling, selecting window option and more cron scheduling options when using Feed to Post, fixed problem with custom posts, ability to choose different templates on different pages (via shortcode), more shortcode pararmeters added, suppress beacon images in feeds, fixed Bing resulting in duplicate entries in Feed to Post, YouTube now opens in lightbox in Feed to Post, and several other bug fixes.
+* Many features added, including improved image handling, selecting window option and more cron scheduling options when using Feed to Post, fixed problem with custom posts, ability to choose different templates on different pages (via shortcode), more shortcode parameters added, suppress beacon images in feeds, fixed Bing resulting in duplicate entries in Feed to Post, YouTube now opens in lightbox in Feed to Post, and several other bug fixes.
 = Version 2.47 =
 * Added more options to put Feed to Post entries into your blog categories. Added more shortcode parameters and fixed various bugs.
 = Version 2.46 =

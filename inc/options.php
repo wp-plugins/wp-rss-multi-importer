@@ -192,23 +192,21 @@ function wp_rss_multi_importer_intro_page() {
 	<div class="wrap">
 						
 			
-	                                <div class="postbox-container" style="min-width:400px; max-width:600px; padding: 0 20px 0 0;">	<h2>Put RSS Feeds on Your Site in 3 Different Ways</h2>
+	                                <div class="postbox-container" style="min-width:400px; max-width:600px; padding: 0 20px 0 0;">	<h2>Instructions: Get Up and Running Quickly</h2>
 					<div class="metabox-holder">	
 						<div class="postbox-container">
-							<H3 class="info_titles">1. Display the feed items in one of 8 customizable templates</H3>
-							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then use shortcode and put it on the page where you want to display the feed articles.  Select the templates and change the settings in the Settings tab. Use shortcode parameters (Shortcode Parameters tab) to put more customization onto your feed presentation.", 'wp-rss-multi-importer')?></p>
+							<H3 class="info_titles">Add the RSS feeds and optionally assign them to categories</H3>
+							<p class="info_text"><?php _e("Start by adding feeds (Add a Feed or Upload RSS Feeds tabs).  Then, if you want, you can add Categories (Categories tab).  If you add categories, you can then go back and assign each feed to a category.", 'wp-rss-multi-importer')?></p>
+							<H3 class="info_titles">Decide how you want to present the items from the RSS feeds on your web site</H3>
+							<p class="info_text"><?php _e("You can present them on any page using Shortcode, which looks like this - [wp_rss_multi_importer], and display them using one of the 8 templates provided.  Or, you can have the items from RSS feeds become blog posts, and then let the settings of your Wordpress theme determine how they will look.  Finally, you might simply want the feeds in the side bar - and here a widget would work best.<br><br>You don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>	
+		
+							<H3 class="info_titles">1. Using the shortcode to display the feed items</H3>
+							<p class="info_text"><?php _e("Go to the Shortcode Settings tab and select the template you want to use and set the settings. Make sure this feature is activated. Add the shortcode to your Wordpress page. Use shortcode parameters (Shortcode Parameters tab) to put more customization onto your feed presentation.  If you put your feeds into categories, you can restrict which shows on a page to whatever categories you want.", 'wp-rss-multi-importer')?></p>
 							<H3 class="info_titles">2. Create blog posts from the feed items (Feed to Post)</H3>
-							<p class="info_text"><?php _e("Start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then click on the Feed to Post tab and set the options.", 'wp-rss-multi-importer')?></p>
+							<p class="info_text"><?php _e("Click on the Feed to Post Settings tab and set the options.  Make sure this feature is activated. At the bottom of that page you can assign the plugin categories to your WP blog categories", 'wp-rss-multi-importer')?></p>
 							<H3 class="info_titles">3. Display the aggregated feed items in a widget</H3>
-							<p class="info_text"><?php _e("If your theme supports widgets, then start by adding feeds (RSS Feeds tab), adding Categories and optional default category images (Categories tab), then assign the feeds to the categories in the RSS Feeds tab.  Then go to Appearance->Widgets, add the RSS Multi-Importer widget, configure the options and click Save..", 'wp-rss-multi-importer')?></p>
-							<p><?php _e("You don't have to choose one way or another to present the feeds.  You can do all 3 at the same time.", 'wp-rss-multi-importer')?></p>
-							<H2 class="info_titles">More things you can do</H2>
+							<p class="info_text"><?php _e("If your theme supports widgets, go to Appearance->Widgets, add the RSS Multi-Importer widget, configure the options and then click Save.", 'wp-rss-multi-importer')?></p>
 							
-							<ul>
-								<li style="margin:3px;"><?php _e("Put tags on posts that go onto your blog - on the Categories tab.", 'wp-rss-multi-importer')?></li>
-					
-							<li style="margin:3px;"><?php _e("Filter posts by keywords - on the Categories tab.", 'wp-rss-multi-importer')?></li>
-							</ul>
 						</div>
 					</div>
 				</div>
@@ -222,12 +220,11 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 550,000 have already</div>
+														<div class="txtwhite">Over 600,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
 														<li style="margin:3px;"><b>FREE</b> community forum use</li>
-														<li style="margin:3px;"><b>FREE</b> weekly newsletters</li>
 													</ul>
 													<form style="padding-bottom:4px;" onsubmit="validateEmail(document.getElementById('e'));" action="https://www.marketingprofs.com/login/signup.asp" method="POST">
 																				<div class="center width_full"><input type="text" onfocus="this.value=''" value="you@company.com" style="width:225px;color:#444;" id="e" name="e"></div>
@@ -280,7 +277,7 @@ function wp_rss_multi_importer_intro_page() {
 		<h2 class="MP_title">Need Plugin Help?</h2>
 	</div>
 	
-	<p><a href="http://www.allenweiss.com/wp_plugin/" target="_blank" style="color:white">Go here</a> to find FAQs, our discussion board, template examples, and more.</p>
+	<p><a href="http://www.allenweiss.com/faqs/" target="_blank" style="color:white">Go here</a> to find FAQs, our discussion board, template examples, and more.</p>
 	<p><a href="http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>			
 				
 				</div>
@@ -379,6 +376,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 		<SELECT NAME="rss_import_options[sortbydate]">
 		<OPTION VALUE="1" <?php if($options['sortbydate']==1){echo 'selected';} ?>><?php _e("Ascending", 'wp-rss-multi-importer')?></OPTION>
 		<OPTION VALUE="0" <?php if($options['sortbydate']==0){echo 'selected';} ?>><?php _e("Descending", 'wp-rss-multi-importer')?></OPTION>
+		<OPTION VALUE="2" <?php if($options['sortbydate']==2){echo 'selected';} ?>><?php _e("No sorting", 'wp-rss-multi-importer')?></OPTION>
 		
 		</SELECT></p>  
 		
@@ -411,7 +409,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 </SELECT></p>
 
 
-<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Entries per Page of Output", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Entries per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">Go here to see how to set this option</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
 <OPTION VALUE="5" <?php if($options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
@@ -887,7 +885,7 @@ function wp_rss_multi_importer_feed_page() {
 	<div id="poststuff">
 
   
-<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.  Please note this feature is in beta and is not supported as much as the other features.", 'wp-rss-multi-importer')?></p>
+<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.", 'wp-rss-multi-importer')?></p>
 
 
        <div id="options">
@@ -1069,7 +1067,7 @@ wp_rss_multi_deactivation();
 
 
 
-<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (should be much greater than the number of entries per feed)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">Go here to see how to set this option</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maxperfetch]">
 <OPTION VALUE="1" <?php if($post_options['maxperfetch']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($post_options['maxperfetch']==2){echo 'selected';} ?>>2</OPTION>
@@ -1107,6 +1105,7 @@ wp_rss_multi_deactivation();
 <h3><?php _e("Word Output Setting", 'wp-rss-multi-importer')?></h3>
 <p><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[descnum]" id="descnum">
+<OPTION VALUE="0" <?php if($post_options['descnum']==0){echo 'selected';} ?>>0</OPTION>
 <OPTION VALUE="20" <?php if($post_options['descnum']==20){echo 'selected';} ?>>20</OPTION>
 <OPTION VALUE="30" <?php if($post_options['descnum']==30){echo 'selected';} ?>>30</OPTION>
 <OPTION VALUE="50" <?php if($post_options['descnum']==50){echo 'selected';} ?>>50</OPTION>
@@ -1117,7 +1116,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="500" <?php if($post_options['descnum']==500){echo 'selected';} ?>>500</OPTION>
 <OPTION VALUE="1000" <?php if($post_options['descnum']==1000){echo 'selected';} ?>>1000</OPTION>
 <OPTION VALUE="99" <?php if($post_options['descnum']==99){echo 'selected';} ?>><?php _e("Give me everything", 'wp-rss-multi-importer')?></OPTION>
-</SELECT><?php _e("  NOTE: Choosing Give me everything will prohibit you from getting a Featured or Default Category Image", 'wp-rss-multi-importer')?></p>
+</SELECT></p>
 
 <h3><?php _e("Author and Source Settings", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if ($post_options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>

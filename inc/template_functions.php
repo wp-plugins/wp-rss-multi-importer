@@ -171,7 +171,7 @@ function get_template_function($thistemplate){
 
 	$dir_handle = @opendir($path) or die("Cannot open the file $path");
 	
-echo '<p>'.__("Choose a template for your output.  Choose DEFAULT if you want the typical template.  You can also customize your own template.  <a href=\"options-general.php?page=wp_rss_multi_importer_admin&tab=template_options\">Go here to learn more about this.</a>  NOTE:  all options below are available for the DEFAULT template only.", 'wp-rss-multi-importer').'</p>';
+echo '<p>'.__("Choose a template for your output.  Choose DEFAULT if you want the typical template.  You can also customize your own template.  <a href=\"options-general.php?page=wp_rss_multi_importer_admin&tab=template_options\">Go here to learn more about this.</a>  <span style=\"color:red\">NOTE:  all options below are available for the DEFAULT template only.</span>", 'wp-rss-multi-importer').'</p>';
 
 
 

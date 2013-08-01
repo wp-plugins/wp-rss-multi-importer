@@ -44,14 +44,14 @@ if ($nodays==0){
 	
 }
 
-
-
 // VIDEO CHECK
 if ($targetWindow==0){
 	$getVideoArray=rssmi_video($items["mylink"]);
 	$openWindow=$getVideoArray[1];
 	$items["mylink"]=$getVideoArray[0];
 }
+
+
 
 
 
@@ -111,7 +111,7 @@ if ($targetWindow==0){
 	}
 	
 	if ($showsocial==1){
-	 $readable .=  '  <span class="socialicons"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a></span>';
+	 $readable .=  '  <span class="socialicons"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a>&nbsp;&nbsp;<a href="http://plus.google.com/share?url='.rawurlencode($items["mylink"]).'"><img src="'.WP_RSS_MULTI_IMAGES.'gplus.png"/></a></span>';
 	}
 	
 	 $readable .=  '</div>';
