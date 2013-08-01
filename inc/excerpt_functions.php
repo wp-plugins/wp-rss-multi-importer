@@ -180,7 +180,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		  			$stack=	array_pop($words); 	
 						$content = implode(' ', $words);
 							if ($morestyle!='' && $morestyle!="NONE"){
-								$content =" ". $morestyle;
+								$content .=" ". $morestyle;
 							}
 					//	$content = implode(' ', $words)." ". $morestyle;
 					}
