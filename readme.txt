@@ -3,8 +3,8 @@ Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
-Tested up to: 3.5.3
-Stable tag: 2.66.2
+Tested up to: 3.6
+Stable tag: 2.66.3
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -123,6 +123,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Change Log ==
 
+= Version 2.66.3 =
+* Fixed bugs found in earlier version that prohibited some excerpts and video images from showing.
 = Version 2.66.2 =
 * Feed to Post now can grab featured image when Give Me Everything word length is chosen. Accepts images from Google news feed. Google+ social media link added. Ability to suppress Read More added. Several bugs fixed.
 = Version 2.66.1 =

@@ -150,10 +150,10 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 					$content=strip_tags(html_entity_decode($content),'<a><img><p>');
 				}
 			}
-		//	if($maxchars !=99){
-				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
-		//	}
-		}
+	
+		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
+
+	}
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
 
 	if ($morestyle!='' || $morestyle=="NONE"){
@@ -170,28 +170,30 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	function limitwords($maxchars,$content){
 		
 		global $morestyle;
-
+		global $ftp;
+		
 		if($maxchars !=99 && $maxchars !=0) {		
 		
-		$words = explode(' ', trim($content," \t\n\r"), ($maxchars + 1));
-
+			$words = explode(' ', trim($content," \t\n\r"), ($maxchars + 1));
 
 	  			if(count($words) > $maxchars){
 		  			$stack=	array_pop($words); 	
 						$content = implode(' ', $words);
-							if ($morestyle!='' && $morestyle!="NONE"){
-								$content .=" ". $morestyle;
-							}
-					//	$content = implode(' ', $words)." ". $morestyle;
-					}
-						
-			
-					
+				}
+
 		}else if ($maxchars==0) {
 			$content='';
 		}else{
 			$content=$content."";				
 		}
+		
+		
+		if ($maxchars!=0){
+			if (($ftp!=1 && $morestyle!='') || ($ftp==1 && $morestyle!="NONE")){
+				$content .=" ". $morestyle;
+			}
+		}
+		
 		return $content;
 	}
 	
@@ -309,12 +311,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		}
 		
 		
-		// VIDEO CHECK
-		if (strpos($thisLink,'www.youtube.com')>0){
-			$getVideoArray=rssmi_video($thisLink);
-			$video_id=$getVideoArray[2];
-			$tabledImage= "<br><br>[youtube=http://www.youtube.com/watch?v=$video_id]<br><br>";
-		}
+
 		
 			
 
