@@ -25,6 +25,8 @@ function wp_rss_multi_activation() {
 			case 3: $display_period='fifteenminutes'; break;
 			case 4: $display_period='twentyminutes'; break;
 			case 5: $display_period='thirtyminutes'; break;
+			case 6: $display_period='twohours'; break;
+			case 7: $display_period='fourhours'; break;
 			case 12: $display_period='twicedaily'; break;
 			case 24: $display_period='daily'; break;
 			case 168: $display_period='weekly'; break;
@@ -112,6 +114,31 @@ function cron_add_wprssmi_schedule_30( $schedules ) {  //add a 30 min schedule t
 }
 
 
+
+add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule_120' );
+
+function cron_add_wprssmi_schedule_120( $schedules ) {  //add a 2 hourly schedule to cron
+	
+	$period=7200;
+	$schedules['twohours'] = array(
+		'interval' => $period,
+		'display' => __( 'Once Every 2 Hours' )
+	);
+	return $schedules;	
+}
+
+
+add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule_240' );
+
+function cron_add_wprssmi_schedule_240( $schedules ) {  //add a 4 hourly schedule to cron
+	
+	$period=14400;
+	$schedules['fourhours'] = array(
+		'interval' => $period,
+		'display' => __( 'Once Every 4 Hours' )
+	);
+	return $schedules;	
+}
 
 
 

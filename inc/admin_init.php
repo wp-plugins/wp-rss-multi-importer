@@ -50,13 +50,13 @@ function wp_rss_multi_importer_post_to_feed(){
 
 
 
-function isMobile() {
+function rssmi_isMobile() {
     return preg_match("/(android|avantgo|blackberry|bolt|boost|cricket|docomo|fone|hiptop|mini|mobi|palm|phone|pie|tablet|up\.browser|up\.link|webos|wos)/i", $_SERVER["HTTP_USER_AGENT"]);
 }
 
 function isMobileForWordPress() {
 	global $isMobileDevice;
-    if(isMobile()){
+    if(rssmi_isMobile()){
        $isMobileDevice=1;
 		}else{
  			$isMobileDevice=0;

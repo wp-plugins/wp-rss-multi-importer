@@ -34,6 +34,7 @@ div.rss-output {
 	padding: 1.025em;
 /* float: left; */  /*  uncomment to float all posts to the left */
 	
+/*  border-bottom: 1px solid #DADADA; */  /*  uncomment to make a line in between each entry */	
 
 }
 
@@ -90,7 +91,7 @@ div#wprssmi_main_container {
     float: left;
     margin: 5px 0 0;
     padding: 3px;
-    width: 666px;  //change the width to match your themes width
+    width: 666px;  /* change the width to match your themes width */
 
     color: #1E1E1E;
     font-family: "Lucida Grande",Arial,Helvetica,sans-serif;
@@ -110,7 +111,7 @@ ul#wprssmi_rss_list li.item {
     float: left;
     margin: 0 15px 15px 0;
     overflow: hidden;
-    width: 211px;  // change this width to the size of the boxes you want
+    width: 211px;  /* change this width to the size of the boxes you want */
 }
 
 div.item_inner {
@@ -135,7 +136,7 @@ ul#wprssmi_rss_list li.item p.date {
 }
 
 a {
-    //color: #1E1E1E;  // you can change the color of the hyperlinked title here
+    /*color: #1E1E1E;  // you can change the color of the hyperlinked title here */
 }
 
 ul#wprssmi_rss_list li.item p.site_info
@@ -282,10 +283,10 @@ div#wprssmi_center_box {
 	div.wprssmi_item_inner {
 	    background: none repeat scroll 0 0 #FCFCFC;
 	    border: 1px solid #DDDDDD;
-	    height: 245px;  //245px;  //300px;
+	    height: 245px; /* 245px;  300px; */
 	    overflow: hidden;
 	    position: relative;
-		width:220px;  //220px;  //250px;
+		width:220px;  /* 220px;  250px; */
 		margin:5px;
 	}
 
@@ -297,7 +298,7 @@ div#wprssmi_center_box {
 	p.wprssmi_title {
 	    margin: 8px 0 4px;
 	    text-transform: uppercase;
-	font-size:12px;  //change the title font size here
+	font-size:12px;  /* change the title font size here */
 	}
 		
 		div#wprssmi_main_container {
@@ -308,8 +309,9 @@ div#wprssmi_center_box {
 		}
 		
 	div.wprssmi-excerpt{
-			font-size:12px;  //change the text font size here
-			color:;   //change the text color here
+			font-size:12px;  /* change the text font size here */
+			/*	color:;    change the text color here */
+		 	/*	padding-left:;  put padding here */
 		
 	}
 	

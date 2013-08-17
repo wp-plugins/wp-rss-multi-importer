@@ -23,7 +23,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	 * @param array $instance Saved values from database.
 	 */
 	public function widget( $args, $instance ) {
-		add_action('wp_footer','footer_scripts');
+		add_action('wp_footer','rssmi_footer_scripts');
 		
 		/* Load the excerpt functions file. */
 		
@@ -328,7 +328,7 @@ if ($simplelist==1){
 	
 		echo '<li class="title"><a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
 		if (!empty($items["mystrdate"])  && $showdate==1){
-		echo '<span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
+		echo '<span class="date"> | '. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
 	}
 		
 		echo '</li>';
@@ -659,7 +659,7 @@ echo '	<div class="news-contents">';
 					<label for="<?php echo $this->get_field_id('numoption'); ?>"><?php _e('How many total results displayed?', 'wp-rss-multi-importer'); ?></label>
 					<select name="<?php echo $this->get_field_name('numoption'); ?>" id="<?php echo $this->get_field_id('numoption'); ?>" class="widefat">
 						<?php
-						$myoptions = array('2','5','6','7', '8', '10', '15','20','50');
+						$myoptions = array('2','3','4','5','6','7', '8', '10', '15','20','50');
 						foreach ($myoptions as $myoption) {
 							echo '<option value="' . $myoption . '" id="' . $myoption . '"', $numoption == $myoption ? ' selected="selected"' : '', '>', $myoption, '</option>';
 						}

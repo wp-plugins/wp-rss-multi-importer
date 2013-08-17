@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.3
+  Version: 2.66.4
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.663 );
+define( 'WP_RSS_MULTI_VERSION', 2.664 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -106,17 +106,21 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 
 
-function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false)
+function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
   {
     # SimplePie - extended in admin_init file
 	$feed = new SimplePie_RSSMI();
 	$feed->set_feed_url($url);
 	$feed->force_feed($forceFeed);
+	if ($showVideo==1){
+		$strip_htmltags = $feed->strip_htmltags;
+		array_splice($strip_htmltags, array_search('iframe', $strip_htmltags), 1);
+		$feed->strip_htmltags($strip_htmltags);
+	}
 	$feed->enable_cache(false);
     $feed->set_timeout($timeout);
 	$feed->init();
 	$feed->handle_content_type();
-
     return $feed;
   }
 
@@ -132,7 +136,7 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false)
 	
 
 	
-add_action('wp_footer','footer_scripts');
+add_action('wp_footer','rssmi_footer_scripts');
 
 if(!function_exists("wprssmi_hourly_feed")) {
 function wprssmi_hourly_feed() { return 0; }
@@ -165,7 +169,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'cachetime'=>NULL,
 		'pinterest'=>0,
 		'maxperpage' =>0,
-		'excerptlength'=>50,
+		'excerptlength'=>NULL,
 		'noimage' => 0,
 		'sortorder' => NULL,
 		'defaultimage' => NULL,

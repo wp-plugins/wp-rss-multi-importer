@@ -18,7 +18,7 @@ jQuery(function(){
 $charstoshow=50;  //  This number can be changed..indicates how many characters of the excerpt to show
 
 	
-			add_action('wp_footer','footer_scripts');  //  Don't mess with this
+			add_action('wp_footer','rssmi_footer_scripts');  //  Don't mess with this
 			add_action('wp_footer','vertical_scroll_footer_scripts'); //  Don't mess with this
 		
 		

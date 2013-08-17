@@ -409,7 +409,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 </SELECT></p>
 
 
-<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Entries per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">Go here to see how to set this option</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Entries per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
 <OPTION VALUE="5" <?php if($options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
@@ -438,6 +438,8 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 	<OPTION VALUE="12" <?php if($options['perPage']==12){echo 'selected';} ?>>12</OPTION>
 	<OPTION VALUE="15" <?php if($options['perPage']==15){echo 'selected';} ?>>15</OPTION>
 	<OPTION VALUE="20" <?php if($options['perPage']==20){echo 'selected';} ?>>20</OPTION>
+	<OPTION VALUE="25" <?php if($options['perPage']==25){echo 'selected';} ?>>25</OPTION>
+	<OPTION VALUE="30" <?php if($options['perPage']==30){echo 'selected';} ?>>30</OPTION>
 	</SELECT></p>	
 	
 </span>
@@ -496,6 +498,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 	
 <p style="padding-left:15px"><label class='o_textinput' for='descnum'><?php _e("Excerpt length (number of words)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[descnum]" id="descnum">
+<OPTION VALUE="0" <?php if($options['descnum']==0){echo 'selected';} ?>>0</OPTION>
 <OPTION VALUE="20" <?php if($options['descnum']==20){echo 'selected';} ?>>20</OPTION>
 <OPTION VALUE="30" <?php if($options['descnum']==30){echo 'selected';} ?>>30</OPTION>
 <OPTION VALUE="50" <?php if($options['descnum']==50){echo 'selected';} ?>>50</OPTION>
@@ -515,7 +518,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <?php
 
 if (ini_get('allow_url_fopen')==0){
-echo 'You server is not configured to accept images from outside sources.  Please contact your web host to set allow_url_fopen to ON.  You might be able to do this for yourself if your host gives you a way to edit the php.ini file.';	
+echo 'Your server is not configured to accept images from outside sources.  Please contact your web host to set allow_url_fopen to ON.  You might be able to do this for yourself if your host gives you a way to edit the php.ini file.';	
 }
 ?>
 
@@ -885,7 +888,7 @@ function wp_rss_multi_importer_feed_page() {
 	<div id="poststuff">
 
   
-<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.", 'wp-rss-multi-importer')?></p>
+<p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.  Please note this feature is in beta and is not supported as much as the other features.", 'wp-rss-multi-importer')?></p>
 
 
        <div id="options">
@@ -1000,6 +1003,8 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="4" <?php if($post_options['fetch_schedule']=="4"){echo 'selected';} ?>>Every 20 Min.</OPTION>
 <OPTION VALUE="5" <?php if($post_options['fetch_schedule']=="5"){echo 'selected';} ?>>Every 30 Min.</OPTION>
 <OPTION VALUE="1" <?php if($post_options['fetch_schedule']=="1"){echo 'selected';} ?>>Hourly</OPTION>
+<OPTION VALUE="6" <?php if($post_options['fetch_schedule']=="6"){echo 'selected';} ?>>Every Two Hours</OPTION>
+<OPTION VALUE="7" <?php if($post_options['fetch_schedule']=="7"){echo 'selected';} ?>>Every Four Hours</OPTION>
 <OPTION VALUE="12" <?php if($post_options['fetch_schedule']=="12"){echo 'selected';} ?>>Twice Daily</OPTION>
 <OPTION VALUE="24" <?php if($post_options['fetch_schedule']=="24"){echo 'selected';} ?>>Daily</OPTION>
 <OPTION VALUE="168" <?php if($post_options['fetch_schedule']=="168"){echo 'selected';} ?>>Weekly</OPTION>
@@ -1067,7 +1072,7 @@ wp_rss_multi_deactivation();
 
 
 
-<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">Go here to see how to set this option</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maxperfetch]">
 <OPTION VALUE="1" <?php if($post_options['maxperfetch']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($post_options['maxperfetch']==2){echo 'selected';} ?>>2</OPTION>
@@ -1144,7 +1149,7 @@ wp_rss_multi_deactivation();
 	</SELECT></p>
 
 
-<h3><?php _e("HTML and Image Handling", 'wp-rss-multi-importer')?></h3>
+<h3><?php _e("HTML, Image, and Video Handling", 'wp-rss-multi-importer')?></h3>
 
 
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all html and images in the excerpt", 'wp-rss-multi-importer')?>
@@ -1184,6 +1189,10 @@ wp_rss_multi_deactivation();
 </SELECT></p>
 
 
+<p><label class='o_textinput' for='showVideo'><?php _e("Embed video into the post when available (IMPORTANT:  For this to work, your server must be configured to accept iFrames.)", 'wp-rss-multi-importer')?></label>
+	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if ($post_options['showVideo']==1){echo 'checked="checked"';} ?></label>
+	<?php _e("(<a href=\"http://www.allenweiss.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
+	</p>
 
 
 <p ><label class='o_textinput' for='setFeaturedImage'><?php _e("Select how to use the image (in excerpt and/or as the Featured Image).", 'wp-rss-multi-importer')?></label>

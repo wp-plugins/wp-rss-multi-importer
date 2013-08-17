@@ -38,18 +38,24 @@ function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO
 		    $video_id = $match[1];
 			$vlink='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
 			$openWindow='class="rssmi_youtube"';
+			$t='yt';
 		}
 	} else if (strpos($link,'vimeo.com')>0){	
-		if (preg_match_all('#(http://vimeo.com)/([0-9]+)#i',$link,$match)){
+
+	//	if (preg_match_all('#(http://vimeo.com)/([0-9]+)#i',$link,$match)){
+			
+		if(preg_match_all('#vimeo\.com/(\w*/)*(\d+)#i',$link,$match)){
+		
 			$video_id = $match[2][0];
 			$vlink='http://player.vimeo.com/video/'.$video_id;
 			$openWindow='class="rssmi_vimeo"';
+			$t='vm';
 		}				
 	} else {
 		$openWindow='class="colorbox"';	
 		$vlink=$link;
 	}
-	return array($vlink,$openWindow,$video_id);		
+	return array($vlink,$openWindow,$video_id,$t);		
 }
 
 
@@ -67,10 +73,46 @@ function pre_esc_html($content) {
 }
 
 
+function rssmi_strip_attributes($text){
+	$text= preg_replace("/<([a-z][a-z0-9]*)[^>]*?(\/?)>/i",'<$1$2>', $text);
+	return $text;
+}
+
+function rssmi_ParseTag($content, $starttag, $endtag){
+	$test = '|'.$starttag.'(.*?)'.$endtag.'|s'; 
+	preg_match($test, $content,$matches);  
+	$ParseTag=$matches[0];
+	$ParseContent=trim($matches[1]);
+	$ParseTag=str_replace("<a>", "", $ParseTag);
+	$ParseTag=str_replace("</a>", "", $ParseTag);
+
+	$output=$ParseTag;
+
+	return $output;
+}
 
 
+function rssmi_yt_video_content($content){
+	
+	$v_excerpt = rssmi_parsetag(rssmi_strip_attributes($content), "<div><span>","</div>");  //excerpt
+	$v_excerpt_contents=strip_tags($v_excerpt);
+	if ($v_excerpt_contents==''){$v_excerpt='';}
+	$v_from = rssmi_parsetag(rssmi_strip_attributes($content), "<div><span>From:</span>","</div>");  //from
+	$v_views = rssmi_parsetag(rssmi_strip_attributes($content), "<div><span>Views:</span>","</div>");  //Views
+	$v_content='<div>'.$v_excerpt.''.$v_from.''.$v_views.'</div>';
+	return $v_content;
+}
 
-
+function rssmi_vimeo_video_content($content){
+	$x=rssmi_strip_attributes($content);
+	preg_match_all('#<p.*?>(.*?)<\/p>#', $x, $matches);  //get all links
+	foreach ($matches[0] as $match){
+		if ($match!=''){
+			$vv_content.= $match;
+		}
+	}
+	return $vv_content;
+}
 
 
 function getDateSince($postDate,$nowDate){
@@ -133,11 +175,12 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0,$feedHomePage=Null)  //show excerpt function
 	{
 
-
 		
 	global $ftp;	
 	global $morestyle;
     $content=CleanHTML($content,$thisLink);
+
+
 
 	if ($stripAll==1){
 			$content=strip_tags(html_entity_decode($content));	
@@ -151,15 +194,19 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 				}
 			}
 	
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
+				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
 
-	}
+		}
+	
+
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
 
+
 	if ($morestyle!='' || $morestyle=="NONE"){
+	
 		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmore\">".$morestyle."</a>", $content);
 	}
-	
+
 	return $content;
 }
 	
@@ -182,13 +229,15 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 				}
 
 		}else if ($maxchars==0) {
+		
 			$content='';
 		}else{
 			$content=$content."";				
 		}
 		
+	
 		
-		if ($maxchars!=0){
+		if ($maxchars!=0  && $maxchars!=99){
 			if (($ftp!=1 && $morestyle!='') || ($ftp==1 && $morestyle!="NONE")){
 				$content .=" ". $morestyle;
 			}
@@ -200,8 +249,6 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	
 	
 	function CleanHTML($content,$thisLink){
-	
-
 	
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
@@ -311,8 +358,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		}
 		
 		
-
-		
+	
 			
 
 	
@@ -346,7 +392,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		$content = limitwords($maxchars,$content);
 		
 	}else{
-		
+	
 		$content = limitwords($maxchars,strip_tags($content));
 	}
 	
@@ -374,8 +420,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	
 	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome){
 		
-	
-
+		if (strpos($mediaImage,"//t1.gstatic")>0 && strpos($mediaImage,"http")==0){$mediaImage=str_replace("//t1.gstatic", "http//t1.gstatic");}
 		
 		$leadmatch=0;	
 		global $YTmatch;
@@ -422,7 +467,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
 
 	
-	}else if (($leadMatch==1) && isbug($matches[2])==False){
+	}else if (($leadMatch==1) && isbug($matches[2])==False ){
 
 		$mediaImage = $matches[2];
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
@@ -440,9 +485,10 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		$featuredImage=$mediaImage;
 		$mediaImage="<img src=\"$mediaImage\">";		
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-		
+	
 			
-	}else if ($leadMatch==3 && $anyimage==1){
+	}else if ($leadMatch==3 && intval($anyimage)==1){
+
 		
 		$mediaImage=$matches[2];	
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
@@ -466,7 +512,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 		
 		}
 		
-		
+	
 	return $content;
 		
 	}
@@ -532,6 +578,30 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	}
 
 
+	function rssmi_remoteFileExists($url) {
+	    $curl = curl_init($url);
 
+	    //don't fetch the actual page, you only want to check the connection is ok
+	    curl_setopt($curl, CURLOPT_NOBODY, true);
+
+	    //do request
+	    $result = curl_exec($curl);
+
+	    $ret = false;
+
+	    //if request did not fail
+	    if ($result !== false) {
+	        //if request was ok, check response code
+	        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);  
+
+	        if ($statusCode == 200) {
+	            $ret = true;   
+	        }
+	    }
+
+	    curl_close($curl);
+
+	    return $ret;
+	}
 
 ?>
