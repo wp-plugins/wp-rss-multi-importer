@@ -7,7 +7,7 @@ function include_post($catID,$content,$title){
 	$option_category = get_option('rss_import_categories_images');
 	if(!empty($option_category)){
 		$filterString=$option_category[$catID]['filterwords'];  //construct array from string
-		$exclude=$option_category[$catID]['exclude'];	
+		$exclude=(isset($option_category[$catID]['exclude']) ? $option_category[$catID]['exclude'] : null);		
 		$filterWords=explode(',', $filterString);
 		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
 			foreach($filterWords as $filterWord){
@@ -38,7 +38,7 @@ function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO
 		    $video_id = $match[1];
 			$vlink='http://www.youtube.com/embed/'.$video_id.'?rel=0&amp;wmode=transparent';
 			$openWindow='class="rssmi_youtube"';
-			$t='yt';
+			$t="yt";
 		}
 	} else if (strpos($link,'vimeo.com')>0){	
 
@@ -49,11 +49,13 @@ function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO
 			$video_id = $match[2][0];
 			$vlink='http://player.vimeo.com/video/'.$video_id;
 			$openWindow='class="rssmi_vimeo"';
-			$t='vm';
+			$t="vm";
 		}				
 	} else {
 		$openWindow='class="colorbox"';	
 		$vlink=$link;
+		$video_id=null;
+		$t='';
 	}
 	return array($vlink,$openWindow,$video_id,$t);		
 }

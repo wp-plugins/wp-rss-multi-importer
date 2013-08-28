@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.4
+  Version: 2.66.5
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.664 );
+define( 'WP_RSS_MULTI_VERSION', 2.665 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -176,6 +176,8 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'showdesc' => NULL,
 		'mytemplate' =>'',
 		'showmore'=>NULL,
+		'warnmsg'=>NULL,
+		'nofollow'=>NULL,
 		'authorprep'=>'by',
 		'windowstyle'=>NULL,
 		'morestyle' =>'[...]'
@@ -208,6 +210,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$cachetime=$parms['cachetime'];
 	$pinterest=$parms['pinterest'];
 	$parmmaxperpage=$parms['maxperpage'];
+	$pnofollow=$parms['nofollow'];
 	$noimage=$parms['noimage'];
 	$mytemplate=$parms['mytemplate'];
 	$windowstyle=$parms['windowstyle'];
@@ -239,31 +242,31 @@ global $RSSdefaultImage;
 $RSSdefaultImage=$options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
 $size = count($option_items);
 $sortDir=$options['sortbydate'];  // 1 is ascending
-$stripAll=$options['stripAll'];
+$stripAll=(isset($options['stripAll']) ? $options['stripAll'] : 0);
 $todaybefore=$options['todaybefore'];
 $adjustImageSize=$options['adjustImageSize'];
 $showDesc=$options['showdesc'];  // 1 is show
 $descNum=$options['descnum'];
 $maxperPage=$options['maxperPage'];
-$showcategory=$options['showcategory'];
+$showcategory=(isset($options['showcategory']) ? $options['showcategory'] : 0);
 $cacheMin=$options['cacheMin'];
 $maxposts=$options['maxfeed'];
-$showsocial=$options['showsocial'];
+$showsocial=(isset($options['showsocial']) ? $options['showsocial'] : 0);
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
-$noFollow=$options['noFollow'];
-$showmore=$options['showmore'];
-$cb=$options['cb'];  // 1 if colorbox should not be loaded
+$noFollow=(isset($options['noFollow']) ? $options['noFollow'] : 0);
+$showmore=(isset($options['showmore']) ? $options['showmore'] : 0);
+$cb=(isset($options['cb']) ? $options['cb'] : 0);  // 1 if colorbox should not be loaded
 $pag=$options['pag'];  // 1 if pagination
 $perPage=$options['perPage'];
 global $anyimage;
-$anyimage=$options['anyimage'];
-$addAuthor=$options['addAuthor'];
-$warnmsg=$options['warnmsg'];
-$directFetch=$options['directFetch'];
-$forceFeed=$options['forceFeed'];
+$anyimage=(isset($options['anyimage']) ? $options['anyimage'] : 0);
+$addAuthor=(isset($options['addAuthor']) ? $options['addAuthor'] : 0);
+$warnmsg=(isset($options['warnmsg']) ? $options['warnmsg'] : 0);
+$directFetch=(isset($options['directFetch']) ? $options['directFetch'] : 0);
+$forceFeed=(isset($options['forceFeed']) ? $options['forceFeed'] : 0);
 $forceFeed= ($forceFeed==1 ? True:False);
-$timeout=$options['timeout'];
+$timeout=(isset($options['timeout']) ? $options['timeout'] : 0);
 if (!isset($timeout)) {$timeout=10;}
 if (!isset($directFetch)) {$directFetch=0;}
 
@@ -278,6 +281,8 @@ if(!is_null($sortOrder)){$sortDir=$sortOrder;}
 if (!is_null($pshowmore)) {$showmore=$pshowmore;} 
 
 if (!is_null($excerptlength)) {$descNum=$excerptlength;} 
+
+if (!is_null($pnofollow)) {$noFollow=$pnofollow;} 
 
 if(empty($options['sourcename'])){
 	$attribution='';
@@ -462,6 +467,8 @@ if (empty($url)) {continue;}
 								$mediaImage=$item->get_enclosure()->get_thumbnail();
 							}else if (!IS_NULL($item->get_enclosure()->get_link())){
 								$mediaImage=$item->get_enclosure()->get_link();	
+							}else{
+								$mediaImage=null;
 							}
 						}
 						
@@ -501,6 +508,8 @@ if (empty($url)) {continue;}
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
 				}else if (!IS_NULL($item->get_enclosure()->get_link())){
 					$mediaImage=$item->get_enclosure()->get_link();	
+				}else{
+					$mediaImage=null;
 				}	
 			}
 		
@@ -600,7 +609,7 @@ $todayStamp=0;
 $idnum=0;
 
 //for pagination
-$currentPage = trim($_REQUEST[pg]);
+$currentPage = trim(isset($_REQUEST['pg']) && $_REQUEST['pg']);
 $currentURL = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; 
 $currentURL = str_replace( '&pg='.$currentPage, '', $currentURL );
 $currentURL = str_replace( '?pg='.$currentPage, '', $currentURL );

@@ -677,6 +677,7 @@ $wpdb->show_errors = true;
 
 
 foreach($myarray as $items) {
+
 	
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
@@ -695,9 +696,9 @@ foreach($myarray as $items) {
 	
 	
 	
+
 	
-	
-	
+
 	
 	
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
@@ -709,12 +710,15 @@ foreach($myarray as $items) {
 
 			$wpdb->flush();
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
-		
-			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string(trim($items["mytitle"]))."%'");
+			
+	//	if (!empty($items["mytitle"])){
+			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string(trim($items["mytitle"]))."%'");	
+	//	}
+			
 		
 		
 		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
-			
+		
 		
 			$added=$added+1;
 		
@@ -887,11 +891,12 @@ foreach($myarray as $items) {
 	unset($post);
 }
 
-if ($added==0) return 4;
-$postMsg = TRUE; 
+
 
 }
 
+if ($added==0) return 4;
+	$postMsg = TRUE; 
 }
 
 if ($autoDelete==1){

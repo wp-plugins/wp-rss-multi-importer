@@ -87,6 +87,7 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Change the float of the elements in the feed", 'wp-rss-multi-importer')?></td><td>floattype</td><td>by default, no float set</td><td>[wp_rss_multi_importer floattype="left"]</td></tr>	
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
+<tr ><td ><?php _e("Use this to override the no follow option", 'wp-rss-multi-importer')?></td><td>nofollow</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer nofollow="1"]<br>(1=no follow, 0=follow)</td></tr>
 
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>

@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 2.66.4
+Stable tag: 2.66.5
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -123,6 +123,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Change Log ==
 
+= Version 2.66.5 =
+* Several bugs fixed, including a major one that kept some new feed items to be posted using the Feed to Post.  Additional shortcode parameters added. Cleaned up code for those who had debug on.
 = Version 2.66.4 =
 * Using Feed to Post, video from YouTube and other sources can now be embedded into posts. More scheduling options added. More links to FAQs added. New template added. Several bugs fixed.
 = Version 2.66.3 =

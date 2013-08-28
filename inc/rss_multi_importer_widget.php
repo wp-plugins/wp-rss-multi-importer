@@ -43,7 +43,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$title = apply_filters( 'widget_title', $instance['title'] );
 		$count = $instance['numoption'];
 
-	(array) $catArray = $instance['category'];
+	(array) $catArray = (isset($instance['category']) ? $instance['category'] : Null);
 	
 		if (empty($catArray)) {
 			$catArray=array("0");	
@@ -100,7 +100,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	    add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		
 			
-		if ($cb!=='1' && $targetwindow==0 ){
+		if ((isset($cb) && $cb!=='1') && $targetwindow==0 ){
 		add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
 		   }
 		
@@ -129,7 +129,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	
 	
 		$size = count($options);
-		$targetWindow=$options['targetWindow']; 
+		$targetWindow=(isset($options['targetWindow']) ? $options['targetWindow'] : Null);
 		
 	
 	//	$sortDir=$options['sortbydate'];
@@ -229,6 +229,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 									$mediaImage=$item->get_enclosure()->get_thumbnail();
 								}else if (!IS_NULL($item->get_enclosure()->get_link())){
 									$mediaImage=$item->get_enclosure()->get_link();	
+								}else{
+									$mediaImage=null;
 								}
 							}
 					
@@ -252,6 +254,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 									$mediaImage=$item->get_enclosure()->get_thumbnail();
 								}else if (!IS_NULL($item->get_enclosure()->get_link())){
 									$mediaImage=$item->get_enclosure()->get_link();	
+								}else{
+									$mediaImage=null;
 								}
 							}	
 
@@ -411,7 +415,7 @@ echo '	<div class="news-contents">';
 			
 			}
 				if (!empty($items["myGroup"]) && $showsource==1){
-		    echo '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';
+		    echo '<span style="font-style:italic;">'.$items["myGroup"].'</span>';
 			}
 			 echo '</p>';
 			echo '</div>';
@@ -484,7 +488,7 @@ echo '	<div class="news-contents">';
 		
 		//Defaults
 		$defaults = array(
-			'title' => __( 'RSS Feeds', $this->textdomain, 'wp-rss-multi-importer'),
+			'title' => __( 'RSS Feeds', 'wp-rss-multi-importer'),
 			'checkbox' => 0,
 			'category' => array(),
 			'exclude' => array(),

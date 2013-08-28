@@ -89,7 +89,25 @@ function usort_reorder( $a, $b ) {
   return ( $order === 'asc' ) ? $result : -$result;
 }
 
+
 function column_posttitle($item){
+	$pt_page=(isset($_REQUEST['page']) ? $_REQUEST['page']: null);	
+	$pt_getpage=(isset($_GET['paged']) ? $_GET['paged']: null);	
+  $actions = array(
+           // 'delete'    => sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$_REQUEST['page'],'preserve',$item['ID'],$_GET['paged']),
+			'view'    => sprintf('<a href="%s">View</a>',$item['guid']),
+        );
+		if(!$item['postprotect']){$actions['preserve'] =sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$pt_page,'preserve',$item['ID'],$pt_getpage);}
+		if($item['postprotect']){ $actions['readydelete'] = sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Auto Delete</a>',$pt_page,'readydelete',$item['ID'],$pt_getpage); }
+
+  return sprintf('%1$s %2$s', $item['posttitle'], $this->row_actions($actions) );
+}
+
+
+
+
+
+function column_posttitle_old($item){
   $actions = array(
             'delete'    => sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$_REQUEST['page'],'preserve',$item['ID'],$_GET['paged']),
 			'view'    => sprintf('<a href="%s">View</a>',$item['guid']),
@@ -132,7 +150,7 @@ function column_cb($item) {
     }
 
 function prepare_items() {
-	$search = trim($_POST['s']);
+	$search=(isset($_POST['s']) ? trim($_POST['s']) : null);	
   	global $wpdb;
   	$columns  = $this->get_columns();
   	$hidden   = array();
@@ -143,7 +161,7 @@ function prepare_items() {
 
 	$post_options_delete = get_option('rss_post_options');
 	$expSetting=$post_options_delete['expiration'];
-	$autoDelete=$post_options_delete['autoDelete'];
+	$autoDelete=(isset($post_options_delete['autoDelete'])) ? $post_options_delete['autoDelete'] : null;
 	$serverTimezone=$post_options_delete['timezone'];
 	if (isset($serverTimezone) && $serverTimezone!=''){  //set time zone
 		date_default_timezone_set($serverTimezone);
