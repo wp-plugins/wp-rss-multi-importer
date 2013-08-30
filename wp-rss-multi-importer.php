@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.5
+  Version: 2.66.6
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.665 );
+define( 'WP_RSS_MULTI_VERSION', 2.666 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -256,7 +256,7 @@ $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
 $floatType=$options['floatType'];
 $noFollow=(isset($options['noFollow']) ? $options['noFollow'] : 0);
 $showmore=(isset($options['showmore']) ? $options['showmore'] : 0);
-$cb=(isset($options['cb']) ? $options['cb'] : 0);  // 1 if colorbox should not be loaded
+$cb=(isset($options['cb']) ? $options['cb'] : null);  // 1 if colorbox should not be loaded
 $pag=$options['pag'];  // 1 if pagination
 $perPage=$options['perPage'];
 global $anyimage;
