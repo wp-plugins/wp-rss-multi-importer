@@ -60,7 +60,7 @@ if( $i % 2== 0 ) continue;
 	
 	//$cat_default_filterwords_exclude=$options_images[$j]['exclude'];
 	
-	$cat_default_tags=(isset($options_images[$j]['exclude']) ? $options_images[$j]['exclude'] : null);
+	$cat_default_filterwords_exclude=(isset($options_images[$j]['exclude']) ? $options_images[$j]['exclude'] : null);
 	
 	
 	
