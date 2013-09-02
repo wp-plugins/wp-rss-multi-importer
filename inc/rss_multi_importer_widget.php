@@ -129,7 +129,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	
 	
 		$size = count($options);
-		$targetWindow=(isset($options['targetWindow']) ? $options['targetWindow'] : Null);
+		$targetwindow=(isset($targetwindow) ? $targetwindow : Null);
 		
 	
 	//	$sortDir=$options['sortbydate'];
