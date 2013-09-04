@@ -396,7 +396,8 @@ $maxperfetch=$post_options['maxperfetch'];
 $showsocial=$post_options['showsocial'];
 $overridedate=$post_options['overridedate'];
 $commentStatus=$post_options['commentstatus'];
-
+$noFollow=(isset($post_options['noFollow']) ? $post_options['noFollow'] : 0 );
+$floatType=(isset($post_options['floatType']) ? $post_options['floatType'] : 0);
 
 if ($commentStatus=='1'){
 	$comment_status='closed';
@@ -404,10 +405,7 @@ if ($commentStatus=='1'){
 	$comment_status='open';	
 }
 
-
 $adjustImageSize=1;
-$noFollow=0;
-$floatType=1;
 
 if ($floatType=='1'){
 	$float="left";
@@ -560,7 +558,7 @@ $directFetch=1;
 
 							if ($itemAuthor = $item->get_author())
 							{
-								$itemAuthor=$item->get_author()->get_name();
+								$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
 							}else if (!IS_NULL($feedAuthor)){
 								$itemAuthor=$feedAuthor;
 
@@ -596,7 +594,7 @@ $directFetch=1;
 
 				if ($itemAuthor = $item->get_author())
 				{
-					$itemAuthor=$item->get_author()->get_name();
+					$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
 				}else if (!IS_NULL($feedAuthor)){
 					$itemAuthor=$feedAuthor;
 
@@ -793,7 +791,7 @@ foreach($myarray as $items) {
 		        $anchorText=$items["myGroup"];
 		}	
 		
-		$thisContent .= ' <p>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'">'.$anchorText.'</a></p>';
+		$thisContent .= ' <p>'.$sourceLable.': <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$anchorText.'</a></p>';
 	}
 
 

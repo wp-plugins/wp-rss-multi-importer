@@ -1182,6 +1182,8 @@ wp_rss_multi_deactivation();
 
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
 	
+	<p ><label class='o_textinput' for='floatType'><?php _e("Float images to the left.", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[floatType]" Value="1" <?php if ($post_options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+	
 	
 	<p ><label class='o_textinput' for='stripSome'><?php _e("Eliminate all hyperlinks   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if (isset($post_options['stripSome']) && $post_options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>
 
@@ -1238,7 +1240,7 @@ wp_rss_multi_deactivation();
 <p ><label class='o_textinput' for='noindex'><?php _e("Make the Feed to Post items not search engine visible (It is up to search engines to honor this request.). ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[noindex]" Value="1" <?php if (isset($post_options['noindex']) && $post_options['noindex']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-
+<p ><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_post_options[noFollow]" Value="1" <?php if (isset($post_options['noFollow']) && $post_options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
 
 <h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 

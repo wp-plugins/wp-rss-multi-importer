@@ -189,12 +189,17 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-				$content=html_entity_decode(pre_esc_html($content));
+			$content=html_entity_decode(pre_esc_html($content));
+		//	$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
+		//	$content=pre_esc_html($content);
+		
 			}else{				
 				if($maxchars !=99){
-					$content=strip_tags(html_entity_decode($content),'<a><img><p>');
+				
+					$content=strip_tags(html_entity_decode($content),'<a><img><p><br>');
 				}
 			}
+			
 	
 				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
 
@@ -206,10 +211,14 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 
 	if ($morestyle!='' || $morestyle=="NONE"){
 	
-		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmore\">".$morestyle."</a>", $content);
+		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmi_more\">".$morestyle."</a>", $content);
 	}
 
+if ($noFollow==1){
+	$content=dont_follow_links($content);
+}
 	return $content;
+	
 }
 	
 	
@@ -605,5 +614,19 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 
 	    return $ret;
 	}
+
+
+	function dont_follow_links( $html ) {
+	 // follow these websites only!
+	 $follow_list = array(
+	  'mypage.com',
+	 );
+	 return preg_replace(
+	  '%(<a\s*(?!.*\brel=)[^>]*)(href="https?://)((?!(?:(?:www\.)?'.implode('|(?:www\.)?', $follow_list).'))[^"]+)"((?!.*\brel=)[^>]*)(?:[^>]*)>%',
+	  '$1$2$3"$4 rel="nofollow">',
+	  $html);
+	}
+
+
 
 ?>

@@ -60,7 +60,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$showimage= $instance['showimage'];
 		$showsource=$instance['showsource'];
 		$descNum=$instance['descnum'];
-		
+		$nofollow=$instance['nofollow'];
 		global $anyimage;
 		$anyimage=1;
 		
@@ -100,9 +100,9 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 	    add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		
 			
-		if ((isset($cb) && $cb!=='1') && $targetwindow==0 ){
-		add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
-		   }
+		if ($targetwindow==0 ){
+			add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+		}
 		
 		if (empty( $sortDir ) ){$sortDir=0;}
 	
@@ -126,11 +126,11 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 			}else{
 				$noExistCat=0;	
 			}
-	
+
 	
 		$size = count($options);
 		$targetwindow=(isset($targetwindow) ? $targetwindow : Null);
-		
+
 	
 	//	$sortDir=$options['sortbydate'];
 		//$sortDir=0;
@@ -330,7 +330,7 @@ if ($simplelist==1){
 			
 		if ($count>0 && $total>=$count) break;
 	
-		echo '<li class="title"><a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
+		echo '<li class="title"><a '.$openWindow.' href="'.$items["mylink"].'" '.($nofollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
 		if (!empty($items["mystrdate"])  && $showdate==1){
 		echo '<span class="date"> | '. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
 	}
@@ -374,11 +374,11 @@ echo '	<div class="news-contents">';
 			if($showimage==1 && $addmotion!=1){
 							
 	
-				echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,"left",0,$items["myimage"],$items["mycatid"]);
+				echo showexcerpt($items["mydesc"],0,$openWindow,0,$items["mylink"],1,"left",$nofollow,$items["myimage"],$items["mycatid"]);
 			
 			}
 			
-			echo '<a '.$openWindow.' href="'.$items["mylink"].'">'.$items["mytitle"].'</a><br />';
+			echo '<a '.$openWindow.' href="'.$items["mylink"].'" '.($nofollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a><br />';
 			
 		
 				
@@ -397,7 +397,7 @@ echo '	<div class="news-contents">';
 					   	$desc= implode(" ",array_splice($words,0,$descNum));	
 						
 								
-						$desc .= ' <a '.$openWindow.' href="'.$items["mylink"].'">[&hellip;]</a>';
+						$desc .= ' <a '.$openWindow.' href="'.$items["mylink"].'" '.($nofollow==1 ? 'rel=nofollow':'').'>[&hellip;]</a>';
 			
 							
 			echo $desc.'<br/>';
@@ -467,6 +467,7 @@ echo '	<div class="news-contents">';
 		$instance['linktitle'] = strip_tags($new_instance['linktitle']);
 		$instance['showdesc'] = strip_tags($new_instance['showdesc']);		
 		$instance['maxposts'] = strip_tags($new_instance['maxposts']);	
+		$instance['nofollow'] = strip_tags($new_instance['nofollow']);	
 		$instance['targetwindow'] = strip_tags($new_instance['targetwindow']);
 		$instance['simplelist'] = strip_tags($new_instance['simplelist']);	
 		$instance['showimage'] = strip_tags($new_instance['showimage']);	
@@ -500,6 +501,7 @@ echo '	<div class="news-contents">';
 			'showicon' => 0,
 			'linktitle' => '',
 			'targetwindow' => 0,
+			'nofollow' =>0,
 			'showdesc' => 0,
 			'showsource'=>1,
 			'rssdefaultimage' =>0,
@@ -522,6 +524,7 @@ echo '	<div class="news-contents">';
 		$linktitle = esc_attr($instance['linktitle']);
 		$showdesc = esc_attr($instance['showdesc']);
 		$maxposts = esc_attr($instance['maxposts']);
+		$nofollow = esc_attr($instance['nofollow']);
 		$targetwindow = esc_attr($instance['targetwindow']);
 		$simplelist= esc_attr($instance['simplelist']);
 		$showimage= esc_attr($instance['showimage']);
@@ -565,6 +568,12 @@ echo '	<div class="news-contents">';
 				</SELECT>	
 			</p>
 			
+	
+			<p>
+		      	<input id="<?php echo $this->get_field_id('nofollow'); ?>" name="<?php echo $this->get_field_name('nofollow'); ?>" type="checkbox" value="1" <?php checked( '1', $nofollow ); ?>/>
+		    	<label for="<?php echo $this->get_field_id('nofollow'); ?>"><?php _e('Check to add no follow to links', 'wp-rss-multi-importer'); ?></label>
+		    </p>
+	
 		
 
 		<p>

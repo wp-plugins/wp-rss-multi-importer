@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.6
+  Version: 2.66.7
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.666 );
+define( 'WP_RSS_MULTI_VERSION', 2.667 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -414,6 +414,7 @@ if (empty($url)) {continue;}
 
 	$url = esc_url_raw(strip_tags($url));
 	
+	
 			if ($directFetch==1){
 				$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed);
 			}else{
@@ -423,7 +424,7 @@ if (empty($url)) {continue;}
 
 
 	if (is_wp_error( $feed ) ) {
-		
+	
 		if ($dumpthis==1){
 				echo $feed->get_error_message();
 				}	
@@ -436,11 +437,13 @@ if (empty($url)) {continue;}
 		continue;
 		}
 	}
-
+	
 	$maxfeed= $feed->get_item_quantity(0);  
+	
 
 	if ($feedAuthor = $feed->get_author())
 	{
+	
 		$feedAuthor=$feed->get_author()->get_name();
 	}
 	
@@ -448,7 +451,7 @@ if (empty($url)) {continue;}
 		$feedHomePage=$feed->get_link();
 
 	}
-	
+
 
 
 //SORT DEPENDING ON SETTINGS
@@ -475,7 +478,7 @@ if (empty($url)) {continue;}
 						
 						if ($itemAuthor = $item->get_author())
 						{
-							$itemAuthor=$item->get_author()->get_name();
+							$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
 						}else if (!IS_NULL($feedAuthor)){
 							$itemAuthor=$feedAuthor;
 							
@@ -494,8 +497,8 @@ if (empty($url)) {continue;}
 
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
-			
-			
+	
+	
 				if (empty($item))	continue;	
 				
 							
@@ -513,13 +516,13 @@ if (empty($url)) {continue;}
 				}	
 			}
 		
-			
-			
+	
 			
 			
 			if ($itemAuthor = $item->get_author())
 			{
-				$itemAuthor=$item->get_author()->get_name();
+			$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+			
 			}else if (!IS_NULL($feedAuthor)){
 				$itemAuthor=$feedAuthor;	
 			}
@@ -609,10 +612,12 @@ $todayStamp=0;
 $idnum=0;
 
 //for pagination
-$currentPage = trim(isset($_REQUEST['pg']) && $_REQUEST['pg']);
+
+$currentPage = (isset($_REQUEST['pg']) ? trim($_REQUEST['pg']): NULL);
 $currentURL = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; 
 $currentURL = str_replace( '&pg='.$currentPage, '', $currentURL );
 $currentURL = str_replace( '?pg='.$currentPage, '', $currentURL );
+
 
 if ( strpos( $currentURL, '?' ) == 0 ){
 	$currentURL=$currentURL.'?';

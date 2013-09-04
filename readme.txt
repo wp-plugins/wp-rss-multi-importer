@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 2.66.6
+Stable tag: 2.66.7
 Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
 
 == Description ==
@@ -125,6 +125,8 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Change Log ==
 
+= Version 2.66.7 =
+* Fixed bugs and added more flexibility to author name and email, widget now has nofollow.
 = Version 2.66.6 =
 * Fixed bug that caused some people who updated the plugin lost lightbox functionality.  Added new template.
 = Version 2.66.5 =
