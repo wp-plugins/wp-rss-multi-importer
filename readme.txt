@@ -5,7 +5,7 @@ Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, 
 Requires at least: 3.1
 Tested up to: 3.6
 Stable tag: 2.66.7
-Imports & merges multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more.
+Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
 
