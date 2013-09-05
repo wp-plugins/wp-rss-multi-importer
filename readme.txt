@@ -11,16 +11,10 @@ Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates
 
 All-In-One solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site.  Using this plugin you can do 4 things (separately or at the same time):
 
-
-<blockquote>
-<ul>
-<li>Display the aggregated feed items on a page in one of **8 different templates that you can customize** </li>
-<li>**Create blog posts (autoblog)** from the feed items so readers can comment on them</li>
-<li>Display the aggregated feed items in a theme widget, in one of 3 different displays</li>
-<li>Display the aggregated feed items in your own RSS feed</li>
-</ul>
-</blockquote>
-
+* Display the aggregated feed items on a page in one of __9 different templates that you can customize__ 
+* __Create blog posts (autoblog)__ from the feed items so readers can comment on them
+* Display the aggregated feed items in a __theme widget__, in one of 3 different displays
+* Display the aggregated feed items in __your own RSS feed__
 
 = Newest Features =
 
@@ -33,7 +27,7 @@ Feed to Post has options to make the image into a Featured Image and auto-remove
 
 = Main Features =
 
-* Templates - choose from 8 different templates, create and style your own and save it
+* Templates - choose from 9 different templates, create and style your own and save it
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
 * When posting to your blog, have the image be the Featured Image which you can use in the most current themes
 * Auto remove posts to your blog based on expiration time

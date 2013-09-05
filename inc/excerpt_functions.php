@@ -211,7 +211,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 
 	if ($morestyle!='' || $morestyle=="NONE"){
 	
-		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmi_more\">".$morestyle."</a>", $content);
+		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." class=\"rssmi_more\">".$morestyle."</a>", $content);
 	}
 
 if ($noFollow==1){
