@@ -1,7 +1,11 @@
 <?php
-$feedID = isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_feedID'] : NULL;
-$catID = isset( $_GET[ 'rssmi_catID' ] ) ? $_GET['rssmi_catID'] :  NULL;
-if (!IS_NULL($feedID) || !IS_NULL($catID) ){	
+$feedID = (isset( $_GET[ 'rssmi_feedID' ] ) ? $_GET['rssmi_feedID'] : NULL);
+$catID = (isset( $_GET[ 'rssmi_catID' ] ) ? $_GET['rssmi_catID'] :  NULL);
+if (!IS_NULL($feedID) || !IS_NULL($catID) ){
+	if(! class_exists('SimplePie')){
+	     		require_once(ABSPATH . WPINC . '/class-simplepie.php');
+	}
+	class SimplePie_RSSMI extends SimplePie {}
 	$post_options = get_option('rss_post_options');
 	if($post_options['active']==1){
 		if (!IS_NULL($feedID)){
@@ -16,6 +20,9 @@ if (!IS_NULL($feedID) || !IS_NULL($catID) ){
 			die();
 	}
 }
+
+
+	
 
 function deleteArticles(){
 
