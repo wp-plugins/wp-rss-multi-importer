@@ -46,25 +46,12 @@ if( $i % 2== 0 ) continue;
 	$j = cat_get_id_number($key);
 	$textUpper=strtoupper($options[$key]);
 		if (!empty($options_images) ) {
-	//$cat_default_image=$options_images[$j]['imageURL'];
+
 	$cat_default_image=(isset($options_images[$j]['imageURL']) ? $options_images[$j]['imageURL'] : null);
-	
-	//$cat_default_tags=$options_images[$j]['tags'];
-	
 	$cat_default_tags=(isset($options_images[$j]['tags']) ? $options_images[$j]['tags'] : null);
-	
-	//$cat_default_filterwords=$options_images[$j]['filterwords'];
-	
 	$cat_default_filterwords=(isset($options_images[$j]['filterwords']) ? $options_images[$j]['filterwords'] : null);
-	
-	
-	//$cat_default_filterwords_exclude=$options_images[$j]['exclude'];
-	
 	$cat_default_filterwords_exclude=(isset($options_images[$j]['exclude']) ? $options_images[$j]['exclude'] : null);
-	
-	
-	
-	
+
 	if (isset($cat_default_filterwords_exclude) && $cat_default_filterwords_exclude==1) {$checkmsg='checked=checked';}else{$checkmsg='';}
 		}
 	
@@ -235,7 +222,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 600,000 have already</div>
+														<div class="txtwhite">Over 620,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -505,6 +492,8 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 
 
 <span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
+	
+		<p style="padding-left:15px"><label class='o_textinput' for='stripSome'><?php _e("Keep limited html in the excerpt (&lt;a&gt;,&lt;br&gt;,&lt;p&gt;)  ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripSome]" Value="1" <?php if (isset($options['stripSome']) && $options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>
 	
 	
 	<p style="padding-left:15px"><label class='o_textinput' for='showmore'><?php _e("Let your readers determine if they want to see the excerpt with a show-hide option. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showmore]" Value="1" <?php if (isset($options['showmore']) && $options['showmore']==1){echo 'checked="checked"';} ?></label>
@@ -1261,6 +1250,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="21" <?php if($post_options['expiration']==21){echo 'selected';} ?>>3 Weeks</OPTION>
 <OPTION VALUE="28" <?php if($post_options['expiration']==28){echo 'selected';} ?>>4 Weeks</OPTION>
 <OPTION VALUE="56" <?php if($post_options['expiration']==56){echo 'selected';} ?>>2 Months</OPTION>
+<OPTION VALUE="365" <?php if($post_options['expiration']==365){echo 'selected';} ?>>1 Year</OPTION>
 </SELECT></p>
 
 <p ><label class='o_textinput' for='oldPostStatus'><?php _e("Move posts to what status?", 'wp-rss-multi-importer')?></label>

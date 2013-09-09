@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.7
+  Version: 2.66.8
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.667 );
+define( 'WP_RSS_MULTI_VERSION', 2.668);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -108,7 +108,7 @@ add_action('plugins_loaded', 'wp_rss_mi_lang_init');
 
 function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
   {
-    # SimplePie - extended in admin_init file
+
 	$feed = new SimplePie_RSSMI();
 	$feed->set_feed_url($url);
 	$feed->force_feed($forceFeed);
@@ -243,6 +243,7 @@ $RSSdefaultImage=$options['RSSdefaultImage'];   // 0- process normally, 1=use de
 $size = count($option_items);
 $sortDir=$options['sortbydate'];  // 1 is ascending
 $stripAll=(isset($options['stripAll']) ? $options['stripAll'] : 0);
+$stripSome=(isset($options['stripSome']) ? $options['stripSome'] : null);
 $todaybefore=$options['todaybefore'];
 $adjustImageSize=$options['adjustImageSize'];
 $showDesc=$options['showdesc'];  // 1 is show
@@ -414,7 +415,7 @@ if (empty($url)) {continue;}
 
 	$url = esc_url_raw(strip_tags($url));
 	
-	
+
 			if ($directFetch==1){
 				$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed);
 			}else{

@@ -44,13 +44,18 @@ if ($nodays==0){
 	
 }
 
+
 // VIDEO CHECK
 if ($targetWindow==0){
 	$getVideoArray=rssmi_video($items["mylink"]);
 	$openWindow=$getVideoArray[1];
 	$items["mylink"]=$getVideoArray[0];
+	
 }
 
+
+
+	
 
 
 
@@ -82,7 +87,7 @@ if ($targetWindow==0){
 		}
 		
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
 
 	
 	$readable .=  '</div>';	

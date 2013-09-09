@@ -189,21 +189,19 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-			$content=html_entity_decode(pre_esc_html($content));
-		//	$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
-		//	$content=pre_esc_html($content);
-		
+				$content=html_entity_decode(pre_esc_html($content));
+			//	$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
+			//	$content=pre_esc_html($content);
 			}else{				
 				if($maxchars !=99){
-				
 					$content=strip_tags(html_entity_decode($content),'<a><img><p><br>');
 				}
 			}
 			
-	
-				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
 
-		}
+		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
+
+	}
 	
 
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
@@ -217,6 +215,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 if ($noFollow==1){
 	$content=dont_follow_links($content);
 }
+
 	return $content;
 	
 }
@@ -362,7 +361,7 @@ if ($noFollow==1){
 		
 	
 		
-		if ($stripSome==1){
+		if ($stripSome==1 && $ftp==1){
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
 		}else{
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
@@ -373,7 +372,7 @@ if ($noFollow==1){
 			
 
 	
-	if($ftp==1 && $maxchars==99){  // GETS RID OF REDUNDANCY OF IMAGES IN FEED TO POST
+	if($ftp==1 && $maxchars==99){  // GETS RID OF REDUNDANCY OF IMAGES IN FEED TO POST WHEN ALL CONTENT REQUESTED
 					$j=0;
 				preg_match_all('/<a.*?>(<img.*?>)<\/a>/im', $content, $matches);  //get all links
 
@@ -396,15 +395,21 @@ if ($noFollow==1){
 						}
 					}
 		
-	}elseif ($ftp==1 && $maxchars!=99)	{
+	}elseif ($ftp==1 && $maxchars!=99)	{  // GETS RID OF ALL IMAGES IN FEED TO POST WHEN WHEN LESS THAN ALL CONTENT REQUESTED
 		
 		$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
 		$content = preg_replace("/<img.*?>/im","",$content,1);
 		$content = limitwords($maxchars,$content);
 		
-	}else{
-	
-		$content = limitwords($maxchars,strip_tags($content));
+	}else{ // SHORTCODE
+		
+		if ($stripSome==1){
+			$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+		}else{
+			$content = limitwords($maxchars,strip_tags($content));
+		}
+		
+		
 	}
 	
 	
@@ -518,7 +523,12 @@ if ($noFollow==1){
 			if($ftp==1){  
 				$content = limitwords($maxchars,$content);
 			}else{
-				$content = limitwords($maxchars,strip_tags($content));
+			
+				if ($stripSome==1){  //  NO IMAGE MATCH SO CHECK FOR HOW MUCH TO STRIP HTML FOR SHORTCODE
+					$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+				}else{
+					$content = limitwords($maxchars,strip_tags($content));
+				}
 			}
 		
 		}
