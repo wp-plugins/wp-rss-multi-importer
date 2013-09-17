@@ -29,6 +29,36 @@ echo '<meta name="robots" content="noindex, nofollow">';
 
 
 
+
+function pbd_alp_init($max,$paged,$nextPost,$imageURL,$pag) {
+
+ 	// Add code to index pages.
+ 		// Queue JS and CSS
+ 		wp_enqueue_script(
+ 			'pbd-alp-load-posts',
+ 			plugins_url('scripts/load-more.js',
+			dirname(__FILE__)),
+ 			array('jquery'),
+ 			'1.0',
+ 			true
+ 		);
+
+ 		// Add some parameters for the JS.
+ 		wp_localize_script(
+ 			'pbd-alp-load-posts',
+ 			'pbd_alp',
+ 			array(
+ 				'startPage' => $paged,
+ 				'maxPages' => $max,
+ 				'nextLink' => $nextPost,
+				'imageURL' => $imageURL,
+				'moreMethod'=>$pag
+ 			)
+ 		);
+
+ }
+
+
 /**
     * Load scripts for admin, including check for version since new method (.on) used available in jquery 1.7.1
     */
@@ -75,15 +105,13 @@ function wprssmi_ajax_load_scripts() {
 
 
 
-
-
-
  
    
   add_action( 'wp_enqueue_scripts', 'wprssmi_frontend_scripts' );
    
    function wprssmi_frontend_scripts() {
 		wp_enqueue_script( 'jquery' );  
+			
    }
 
 
@@ -93,6 +121,7 @@ add_action( 'wp_enqueue_scripts', 'wprssmi_tempate_header' );
 function wprssmi_tempate_header(){
 
 		wp_enqueue_style( 'wprssmi_template_styles', plugins_url( 'templates/templates.css', dirname(__FILE__)) );
+
 	
 }
 

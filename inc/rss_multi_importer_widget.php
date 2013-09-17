@@ -101,8 +101,8 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		
 			
 		if ($targetwindow==0 ){
-			add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
-		}
+		add_action('wp_footer','colorbox_scripts');  // load colorbox only if not indicated as conflict
+		   }
 		
 		if (empty( $sortDir ) ){$sortDir=0;}
 	
@@ -686,7 +686,7 @@ echo '	<div class="news-contents">';
 						<label for="<?php echo $this->get_field_id('maxposts'); ?>"><?php _e('How many posts per feed?', 'wp-rss-multi-importer'); ?></label>
 						<select name="<?php echo $this->get_field_name('maxposts'); ?>" id="<?php echo $this->get_field_id('maxposts'); ?>" class="widefat">
 							<?php
-							$postoptions = array('1','2', '3', '4', '5','6');
+							$postoptions = array('1','2', '3', '4', '5','6','7','8','9','10');
 							foreach ($postoptions as $postoption) {
 								echo '<option value="' . $postoption . '" id="' . $postoption . '"', $maxposts == $postoption ? ' selected="selected"' : '', '>', $postoption, '</option>';
 							}

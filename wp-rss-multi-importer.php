@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.66.8
+  Version: 2.66.9
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.668);
+define( 'WP_RSS_MULTI_VERSION', 2.669);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -126,6 +126,36 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
 
 
 
+//	CODE FOR LOAD MORE  - can be deleted
+
+function pbd_alp_init2($max,$paged,$nextPost) {
+
+ 	// Add code to index pages.
+ 		// Queue JS and CSS
+ 		wp_enqueue_script(
+ 			'pbd-alp-load-posts',
+ 			plugin_dir_url( __FILE__ ) . 'scripts/load-posts.js',
+ 			array('jquery'),
+ 			'1.0',
+ 			true
+ 		);
+
+ 		// Add some parameters for the JS.
+ 		wp_localize_script(
+ 			'pbd-alp-load-posts',
+ 			'pbd_alp',
+ 			array(
+ 				'startPage' => $paged,
+ 				'maxPages' => $max,
+ 				'nextLink' => $nextPost
+ 			)
+ 		);
+
+ }
+
+
+
+
 
 
 //  MAIN SHORTCODE OUTPUT FUNCTION
@@ -133,6 +163,10 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
 
    
    function wp_rss_multi_importer_shortcode($atts=array()){
+	
+
+
+	
 	
 
 	
@@ -258,7 +292,7 @@ $floatType=$options['floatType'];
 $noFollow=(isset($options['noFollow']) ? $options['noFollow'] : 0);
 $showmore=(isset($options['showmore']) ? $options['showmore'] : 0);
 $cb=(isset($options['cb']) ? $options['cb'] : null);  // 1 if colorbox should not be loaded
-$pag=$options['pag'];  // 1 if pagination
+$pag=$options['pag'];  // 1 if pagination 2 or 3 if load more
 $perPage=$options['perPage'];
 global $anyimage;
 $anyimage=(isset($options['anyimage']) ? $options['anyimage'] : 0);
@@ -614,7 +648,7 @@ $idnum=0;
 
 //for pagination
 
-$currentPage = (isset($_REQUEST['pg']) ? trim($_REQUEST['pg']): NULL);
+$currentPage = (isset($_REQUEST['pg']) ? trim($_REQUEST['pg']): 0);
 $currentURL = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]; 
 $currentURL = str_replace( '&pg='.$currentPage, '', $currentURL );
 $currentURL = str_replace( '?pg='.$currentPage, '', $currentURL );
@@ -630,6 +664,9 @@ if ( strpos( $currentURL, '?' ) == 0 ){
 //pagination controls and parameters
 
 
+
+
+
 if (!isset($perPage)){$perPage=5;}
 
 $numPages = ceil(count($myarray) / $perPage);
@@ -639,7 +676,7 @@ $start = $currentPage * $perPage;
 $end = ($currentPage * $perPage) + $perPage;
 
 	
-		if ($pag==1){   //set up pagination array and put into myarray
+		if ($pag==1 || $pag==2 || $pag==3){   //set up pagination array and put into myarray
 	foreach($myarray AS $key => $val)  
 		{  
 	    if($key >= $start && $key < $end)  
@@ -658,15 +695,27 @@ $end = ($currentPage * $perPage) + $perPage;
 	if (!isset($template) || $template=='') {
 	return _e("One more step...go into the <a href='/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=setting_options'>Settings Panel and choose a Template.</a>", 'wp-rss-multi-importer');
 	}
-	
+
 	require( WP_RSS_MULTI_TEMPLATES . $template );
 
 
 }
 
-	//pagination controls at bottom
+if ($pag==2 || $pag==3){
+		 
+add_action('rssmi_load_more_data', 'pbd_alp_init',10,5);
+if (strpos($currentURL,'http')==0){
+$nextPost='http://'.$currentURL.'pg=' . ($currentPage+1);
+}else{
+$nextPost=$currentURL.'pg=' . ($currentPage+1);	
+}
+do_action('rssmi_load_more_data',$numPages,$currentPage,$nextPost,WP_RSS_MULTI_IMAGES,$pag); 
+}
 
-	if ($pag==1 && $numPages>1){
+
+	//pagination controls at bottom - will be suppressed with Load More option, but only for users with javascript
+
+	if (($pag==1 || $pag==2 || $pag==3) && $numPages>1){
 
 			$readable .='<div class="rssmi_pagination"><ul>';
 		

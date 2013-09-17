@@ -6,7 +6,7 @@ function include_post($catID,$content,$title){
 	$msg=1;
 	$option_category = get_option('rss_import_categories_images');
 	if(!empty($option_category)){
-		$filterString=$option_category[$catID]['filterwords'];  //construct array from string
+		$filterString=(isset($option_category[$catID]['filterwords']) ? $option_category[$catID]['filterwords'] : null);	
 		$exclude=(isset($option_category[$catID]['exclude']) ? $option_category[$catID]['exclude'] : null);		
 		$filterWords=explode(',', $filterString);
 		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
@@ -32,7 +32,7 @@ function include_post($catID,$content,$title){
 }	
 
 
-function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO 
+function rssmi_video($link,$targetWindow){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO 
 	if (strpos($link,'www.youtube.com')>0){	
 		if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $link, $match)) {
 		    $video_id = $match[1];
@@ -52,7 +52,14 @@ function rssmi_video($link){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO
 			$t="vm";
 		}				
 	} else {
-		$openWindow='class="colorbox"';	
+			if($targetWindow==0){
+				$openWindow='class="colorbox"';
+			}elseif ($targetWindow==1){
+				$openWindow='target=_self';		
+			}else{
+				$openWindow='target=_blank ';	
+			}
+		//$openWindow='class="colorbox"';	
 		$vlink=$link;
 		$video_id=null;
 		$t='';
@@ -148,7 +155,9 @@ function getDateSince($postDate,$nowDate){
 function getDefaultCatImage($catID){
 		$option_category_images = get_option('rss_import_categories_images');
 		if(!empty($option_category_images)){
-		$defaultCatImage=$option_category_images[$catID]['imageURL'];
+		$defaultCatImage=(isset($option_category_images[$catID]['imageURL']) ? $option_category_images[$catID]['imageURL'] : null);	
+			
+	//	$defaultCatImage=$option_category_images[$catID]['imageURL'];
 		//echo $defaultCatImage;
 		if(verifyimage($defaultCatImage)==True){
 			return array(True,$defaultCatImage);
@@ -166,11 +175,28 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 	$catOptions=get_option('rss_import_categories');
 	if(!empty($catOptions)){
 		$idnum='cat_name_'.$catID;
-		return	$catOptions[$idnum];
+		$rssmi_cat_name=(isset($catOptions[$idnum]) ? $catOptions[$idnum] : null);	
+		return	$rssmi_cat_name;
 	}
 }
 
+/*  function to parse input html tags into stripsome list */
 
+function rssmi_html_tags($str){
+	$htmlArray=array("<p>","<a>","<br>");
+	$str=strtolower($str);
+	$str=str_replace("<","",$str);
+	$str=str_replace(">","",$str);
+	$strA=explode(",", $str);
+	$strHTML='';
+	foreach ($strA as $val){
+			$val = "<".$val.">";
+		if (in_array($val,$htmlArray)){
+		 	$strHTML.= $val;
+		}
+	}
+	return $strHTML;	
+}
 
 
 
@@ -400,7 +426,7 @@ if ($noFollow==1){
 		$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
 		$content = preg_replace("/<img.*?>/im","",$content,1);
 		$content = limitwords($maxchars,$content);
-		
+			
 	}else{ // SHORTCODE
 		
 		if ($stripSome==1){
@@ -483,14 +509,14 @@ if ($noFollow==1){
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
 
 	
-	}else if (($leadMatch==1) && isbug($matches[2])==False ){
+	}else if ((isset($leadMatch) && $leadMatch==1) && isbug($matches[2])==False ){
 
 		$mediaImage = $matches[2];
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
 
 		
-	}else if (($leadMatch==2) && isbug($matches[2])==False){
+	}else if ((isset($leadMatch) && $leadMatch==2) && isbug($matches[2])==False){
 
 		$mediaImage = $matches[2];
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
@@ -503,7 +529,7 @@ if ($noFollow==1){
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
 	
 			
-	}else if ($leadMatch==3 && intval($anyimage)==1){
+	}else if (isset($leadMatch) && $leadMatch==3 && intval($anyimage)==1){
 
 		
 		$mediaImage=$matches[2];	
@@ -520,7 +546,7 @@ if ($noFollow==1){
 	
 	}else{  //matches no leading image or media enclosure and no default category image
 
-			if($ftp==1){  
+			if($ftp==1){ 
 				$content = limitwords($maxchars,$content);
 			}else{
 			
@@ -529,11 +555,9 @@ if ($noFollow==1){
 				}else{
 					$content = limitwords($maxchars,strip_tags($content));
 				}
-			}
-		
+			}		
 		}
-		
-	
+			
 	return $content;
 		
 	}

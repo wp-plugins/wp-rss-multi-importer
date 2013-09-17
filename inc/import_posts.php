@@ -22,7 +22,9 @@ if (!IS_NULL($feedID) || !IS_NULL($catID) ){
 }
 
 
+
 	
+
 
 function deleteArticles(){
 
@@ -77,6 +79,7 @@ function setFeaturedImage($post_id,$url,$featuredImageTitle){
 //					echo $post_result);
 		
 }
+
 
 
 
@@ -244,7 +247,7 @@ function getAllWPCats(){
 
 
 function wp_rss_multi_importer_post($feedID=NULL,$catID=NULL){
-	
+
  $postMsg = FALSE; 
 
 
@@ -398,14 +401,13 @@ global $maximgwidth;
 $maximgwidth=$post_options['maximgwidth'];;
 $descNum=$post_options['descnum'];
 $stripAll=$post_options['stripAll'];
-$stripSome=$post_options['stripSome'];
 $maxperfetch=$post_options['maxperfetch'];
 $showsocial=$post_options['showsocial'];
 $overridedate=$post_options['overridedate'];
 $commentStatus=$post_options['commentstatus'];
 $noFollow=(isset($post_options['noFollow']) ? $post_options['noFollow'] : 0 );
 $floatType=(isset($post_options['floatType']) ? $post_options['floatType'] : 0);
-
+$stripSome=(isset($post_options['stripSome']) ? $post_options['stripSome'] : null);
 if ($commentStatus=='1'){
 	$comment_status='closed';
 }else{
@@ -513,7 +515,7 @@ $directFetch=1;
 						}else{
 							$feed = fetch_feed($url);
 						}
-
+					
 	
 	
 
@@ -683,7 +685,7 @@ $wpdb->show_errors = true;
 
 foreach($myarray as $items) {
 
-	
+
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
@@ -693,13 +695,13 @@ foreach($myarray as $items) {
 	// VIDEO CHECK
 	if ($targetWindow==0  || $showVideo==1){
 		$vitem=$items["mylink"];
-		$getVideoArray=rssmi_video($items["mylink"]);
+		$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
 		$openWindow=$getVideoArray[1];
 		$items["mylink"]=$getVideoArray[0];
 		$vt=$getVideoArray[2];
 	}
 	
-	
+
 	
 
 	
@@ -770,7 +772,7 @@ foreach($myarray as $items) {
 		}else if ($vt=='vm'){
 			$thisExcerpt = rssmi_vimeo_video_content($items["mydesc"])."<br>";
 		}
-
+	
 	//	$thisContent.="\r\n".$orig_video_link."\r\n";
 
 		$thisExcerpt .= '<iframe title=".$items["mytitle"]." width="420" height="315" src="'.$items["mylink"].'" frameborder="0" allowfullscreen allowTransparency="true"></iframe>';

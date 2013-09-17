@@ -1,7 +1,7 @@
 <?php
 //  this is the default template
-
-foreach($myarray as $items) {
+$readable='<div class="rssmi_wrap">';
+foreach((array)$myarray as $items) {
 	
 
 
@@ -47,7 +47,7 @@ if ($nodays==0){
 
 // VIDEO CHECK
 if ($targetWindow==0){
-	$getVideoArray=rssmi_video($items["mylink"]);
+	$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
 	$openWindow=$getVideoArray[1];
 	$items["mylink"]=$getVideoArray[0];
 	
@@ -124,5 +124,6 @@ if ($targetWindow==0){
 	
 	
 		}
+		 $readable .=  '</div>';
 	//  This is the end of the default template
 ?>

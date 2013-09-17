@@ -1,5 +1,5 @@
 <?php
-	
+	$readable='<div class="rssmi_wrap">';
 	
 	//  don't mess with this php code 
 	foreach($myarray as $items) {
@@ -45,7 +45,7 @@ if (!empty($items["mydesc"]) && $showDesc==1){
 	}
 	
 	
-$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
 
 $readable .=  '</div>';	
 	
@@ -63,7 +63,7 @@ $readable .=  '</div>';
 
 }  	//  don't mess with this php code 
 
-						
+	$readable='</div>';					
 
 
 

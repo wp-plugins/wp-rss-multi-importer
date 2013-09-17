@@ -11,6 +11,15 @@ $readable .=  '<ul id="wprssmi_rss_list">';
 		$total = $total +1;
 		if ($maxperPage>0 && $total>=$maxperPage) break;
 	}
+	
+	// VIDEO CHECK
+	if ($targetWindow==0){
+		$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
+		$openWindow=$getVideoArray[1];
+		$items["mylink"]=$getVideoArray[0];
+
+	}
+	
 
 	$idnum=$idnum +1;
 	//  END don't mess with this php code 

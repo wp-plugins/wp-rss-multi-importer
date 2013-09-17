@@ -159,11 +159,13 @@ this.value = jQuery.trim(this.value);
 
 
   jQuery(document).on('change', '#pagination', function() {       
-     if(jQuery('#pagination').val() == 1){
+     if(jQuery('#pagination').val() == 1 || jQuery('#pagination').val() == 2  || jQuery('#pagination').val() == 3){
 //alert("hello");
 		jQuery('span#pag_options').show();
+		jQuery('span#posts_per_pag_options').hide();
 	}else{
-		jQuery('span#pag_options').hide()};
+		jQuery('span#pag_options').hide()
+		jQuery('span#posts_per_pag_options').show();};
     });
 
 
@@ -229,4 +231,11 @@ this.value = jQuery.trim(this.value);
 				}	
 		});
 	
-	
+		$=jQuery.noConflict();	
+		this.vtip=function(){this.xOffset=-10;this.yOffset=10;$(".vtip").unbind().hover(function(e){this.t=this.title;this.title='';this.top=(e.pageY+yOffset);this.left=(e.pageX+xOffset);$('body').append('<p id="vtip"><img id="vtipArrow" />'+this.t+'</p>');$('p#vtip').css("top",this.top+"px").css("left",this.left+"px").fadeIn("slow");},function(){this.title=this.t;$("p#vtip").fadeOut("slow").remove();}).mousemove(function(e){this.top=(e.pageY+yOffset);this.left=(e.pageX+xOffset);$("p#vtip").css("top",this.top+"px").css("left",this.left+"px");});};
+
+		jQuery(document).ready(function($){
+			vtip();
+		});
+		
+		

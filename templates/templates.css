@@ -1,4 +1,8 @@
 
+
+
+
+
 /*
 CSS FOR FEED TO POST IMAGE */
 
@@ -23,6 +27,8 @@ div.news a{
 	/*  color:#cccccc !important; */    /* change to any color you want for the wdiget title */
 	
 }
+
+
    
 /* End */
 
@@ -34,8 +40,7 @@ div.rss-output {
 	padding: 1.025em;
 /* float: left; */  /*  uncomment to float all posts to the left */
 	
-/*  border-bottom: 1px solid #DADADA; */  /*  uncomment to make a line in between each entry */	
-
+/*  border-bottom: 1px solid #DADADA; */  /*  uncomment to make a line in between each entry */
 }
 
 span.headline {  /* headline css */
@@ -136,7 +141,7 @@ ul#wprssmi_rss_list li.item p.date {
 }
 
 a {
-    /*color: #1E1E1E;  // you can change the color of the hyperlinked title here */
+      /*color: #1E1E1E;  // you can change the color of the hyperlinked title here */
 }
 
 ul#wprssmi_rss_list li.item p.site_info
@@ -283,7 +288,7 @@ div#wprssmi_center_box {
 	div.wprssmi_item_inner {
 	    background: none repeat scroll 0 0 #FCFCFC;
 	    border: 1px solid #DDDDDD;
-	    height: 245px; /* 245px;  300px; */
+	    height: 245px;  /* 245px;  300px; */
 	    overflow: hidden;
 	    position: relative;
 		width:220px;  /* 220px;  250px; */
@@ -303,7 +308,7 @@ div#wprssmi_center_box {
 		
 		div#wprssmi_main_container {
 		    //float: left;
-		    margin: 5px 0 0;
+		   margin: 5px 0 0;
 		    padding: 3px;
 		    width: 666px;
 		}
@@ -328,6 +333,71 @@ div#wprssmi_center_box {
 		font-size:.9em;
 	}
 	
+	div.wprssmi_teste3{
+		height: 165px;
+		overflow: hidden;
+		    position: relative;
+		}
 
 
 	/*  VERTICAL SCROLL  TEMPLATE - END */
+	
+	/* LOAD MORE CSS */	
+	
+	#pbd-alp-load-posts a:link, #pbd-alp-load-posts a:visited {
+		display: block;
+		text-align: center;
+		padding: 4px 0;
+		color: #444;
+		text-decoration: none;
+
+		/** Rounded Corners **/
+		-moz-border-radius: 8px;
+		border-radius: 8px;
+
+		/** Drop shadow **/
+		-moz-box-shadow: 1px 1px 1px #999;
+		-webkit-box-shadow: 1px 1px 1px #999;
+		box-shadow: 1px 1px 1px #999;
+
+		/** Gradients : http://css-tricks.com/css3-gradients/ */
+		/* fallback */
+		background-color: #f1f1f1;
+
+		/* Firefox 3.6+ */
+		background: -moz-linear-gradient(100% 100% 90deg, #e4e3e3, #f1f1f1);
+
+		/* Safari 4-5, Chrome 1-9 */
+		/* -webkit-gradient(<type>, <point> [, <radius>]?, <point> [, <radius>]? [, <stop>]*) */
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f1f1f1), to(#e4e3e3));
+
+		/* Safari 5.1+, Chrome 10+ */
+		background: -webkit-linear-gradient(#f1f1f1, #e4e3e3);
+
+		/* Opera 11.10+ */ background: -o-linear-gradient(#f1f1f1, #e4e3e3);
+	}
+
+	#pbd-alp-load-posts a:hover, #pbd-alp-load-posts a:active {
+		/** Drop shadow **/
+		-moz-box-shadow: 1px 1px 1px #bbb;
+		-webkit-box-shadow: 1px 1px 1px #bbb;
+		box-shadow: 1px 1px 1px #bbb;
+
+		/** Gradients : http://css-tricks.com/css3-gradients/ */
+		/* fallback */
+		background-color: #f5f5f5;
+
+		/* Firefox 3.6+ */
+		background: -moz-linear-gradient(100% 100% 90deg, #eaeaea, #f5f5f5);
+
+		/* Safari 4-5, Chrome 1-9 */
+		/* -webkit-gradient(<type>, <point> [, <radius>]?, <point> [, <radius>]? [, <stop>]*) */
+		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#f5f5f5), to(#eaeaea));
+
+		/* Safari 5.1+, Chrome 10+ */
+		background: -webkit-linear-gradient(#f1f1f1, #eaeaea);
+
+		/* Opera 11.10+ */ background: -o-linear-gradient(#f5f5f5, #eaeaea);
+	}
+
+	

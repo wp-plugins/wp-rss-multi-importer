@@ -1,6 +1,6 @@
 <?php
 //  this is the regular template...the default template but without any styling
-
+$readable='<div class="rssmi_wrap">';
 foreach($myarray as $items) {
 
 if ($pag!==1){ 	
@@ -69,7 +69,7 @@ if ($nodays==0){
 		}
 		
 		
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
 	
 	$readable .=  '</div>';	
 
@@ -97,5 +97,5 @@ if ($nodays==0){
 	
 	
 		}
-	//  This is the end of the default template
+	 $readable .=  '</div>';
 ?>

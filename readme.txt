@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 2.66.8
+Stable tag: 2.66.9
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -36,22 +36,20 @@ Feed to Post has options to make the image into a Featured Image and auto-remove
 = More Features =
 
 * Set a default image to show for each category
-* Pagination option - select number of posts per page
+* Pagination or Load More options - select number of posts per page or click on load more
 * Select number of posts per feed you want to show
-* Select number of posts on a page of your web site (when not in pagination mode)
 * Separate out Today from Earlier posts
-* Sort by date (ascending or descending) 
-* Output feed name as (Source, Sponsor, Via, or Club)
+* Sort by date if you want (ascending or descending) 
+* Output feed name as (Source, Sponsor, Via, Club or name your own)
 * Show an excerpt (and select the number of words to show)
 * Select how you would like the links to open (in a Lightbox, a new window, or the current window)
-* Set the links as no-follow or not
+* Set the links as no-follow or not, or add no follow to meta tag
 * Suppress images in excerpts if you want
 * Resize images in excerpts
 * Allow users to determine whether to show-hide excerpts
-* Set caching time for faster page loading
 * Export all the feeds as a single RSS feed
 * Add social links (Twitter and Facebook)
-* Over 15 shortcode parameters you can use to further customize the output
+* Over 18 shortcode parameters you can use to further customize the output
 
 These features are all available in the admin panel.
 
@@ -117,7 +115,13 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 4. User view - with excerpts and images.
 
-== Change Log ==
+== Changelog ==
+
+= Version 2.66.9 (2013-9-17) =
+* NEW: Option to Load More instead of pagination.  
+* Changed: Made pagination css full width to avoid layout problems.
+* Changed: Upgraded colorbox to most recent version (v1.4.29)  
+* Fixed: Fixed problem with target window and various other bugs.
 
 = Version 2.66.8 =
 * Fixed bug that caused error for outside cron jobs, added limited html option for shortcode excerpts, several small bugs fixed.

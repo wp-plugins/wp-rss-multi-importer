@@ -1,4 +1,5 @@
 <?php
+$readable='<div class="rssmi_wrap">';
 foreach($myarray as $items) {
 
 if ($pag!==1){ 	
@@ -74,7 +75,7 @@ $readable .=  '<div class="rss-output">';
 		}
 		
 		
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
 	
 	$readable .=  '</div>';	
 
@@ -90,6 +91,6 @@ $readable .=  '<div class="rss-output">';
 	
 	
 	}
-	
+	$readable .=  '</div>';
 	
 ?>

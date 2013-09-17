@@ -1,5 +1,6 @@
 <?php
-	
+$readable='<div class="rssmi_wrap">';
+
 		$readable.="<ul class='wprssmi_bullet_list'>";
 	//  don't mess with this php code 
 	foreach($myarray as $items) {
@@ -22,7 +23,7 @@
 }  	//  don't mess with this php code 
 
 		$readable.="</ul>";					
-
+	 $readable .=  '</div>';
 
 
 ?>

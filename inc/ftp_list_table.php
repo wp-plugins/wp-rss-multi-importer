@@ -274,10 +274,10 @@ function getDateUntil($postDate,$expSetting){
 
 function my_add_menu_items(){
   $hook = add_menu_page( 'My Plugin List Table', 'My List Table Example', 'activate_plugins', 'my_list_test', 'my_render_list_page' );
-  add_action( "load-$hook", 'add_options' );
+  add_action( "load-$hook", 'rssmi_add_options' );
 }
 
-function add_options() {
+function rssmi_add_options() {
   global $myListTable;
   $option = 'per_page';
   $args = array(
