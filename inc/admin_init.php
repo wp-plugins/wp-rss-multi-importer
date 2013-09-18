@@ -72,7 +72,9 @@ function startSimplePie(){
 	if(! class_exists('SimplePie')){
 	     		require_once(ABSPATH . WPINC . '/class-simplepie.php');
 	}
+
 	class SimplePie_RSSMI extends SimplePie {}	
+
 	
 }
 add_action('init', 'startSimplePie');
