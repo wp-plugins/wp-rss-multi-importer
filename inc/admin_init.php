@@ -202,7 +202,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			
 			 	global $myListTable;
 				my_add_menu_items();
-				add_options();
+				rssmi_add_options();
 				my_render_list_page();
 				$myListTable->admin_header(); 
 				
