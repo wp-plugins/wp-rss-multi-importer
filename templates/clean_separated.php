@@ -63,7 +63,7 @@ $readable .=  '</div>';
 
 }  	//  don't mess with this php code 
 
-	$readable=.'</div>';					
+	$readable .='</div>';					
 
 
 
