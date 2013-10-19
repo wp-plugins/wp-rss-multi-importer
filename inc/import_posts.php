@@ -609,15 +609,7 @@ $directFetch=1;
 
 				}
 
-/*  maybe useful for later on
-
-				preg_match('|<iframe [^>]*(src="([^"]+)")[^>]*|', $item->get_content(), $matches);
-				if (!empty($matches)){
-					$iframeURL= $matches[2];
-					}else{
-					$iframeURL='';	
-					}
-	*/			
+		
 
 
 
@@ -772,8 +764,7 @@ foreach($myarray as $items) {
 		}else if ($vt=='vm'){
 			$thisExcerpt = rssmi_vimeo_video_content($items["mydesc"])."<br>";
 		}
-	
-	//	$thisContent.="\r\n".$orig_video_link."\r\n";
+
 
 		$thisExcerpt .= '<iframe title=".$items["mytitle"]." width="420" height="315" src="'.$items["mylink"].'" frameborder="0" allowfullscreen allowTransparency="true"></iframe>';
 	}
@@ -809,7 +800,7 @@ foreach($myarray as $items) {
 	$thisContent .= '<span style="margin-left:10px;"><a href="http://www.facebook.com/sharer/sharer.php?u='.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'facebook.png"/></a>&nbsp;&nbsp;<a href="http://twitter.com/intent/tweet?text='.rawurlencode($items["mytitle"]).'%20'.$items["mylink"].'"><img src="'.WP_RSS_MULTI_IMAGES.'twitter.png"/></a>&nbsp;&nbsp;<a href="http://plus.google.com/share?url='.rawurlencode($items["mylink"]).'"><img src="'.WP_RSS_MULTI_IMAGES.'gplus.png"/></a></span>';
 	}
 	
-//	$thisContent.="\r\n".$vitem."\r\n";
+
 	
   	$post['post_content'] = $thisContent;
 
@@ -880,6 +871,16 @@ foreach($myarray as $items) {
 		if ($setFeaturedImage==1 || $setFeaturedImage==2){
 			global $featuredImage;
 			if (isset($featuredImage)){
+				
+				//facebook correction
+				if (strpos($featuredImage,"fbcdn")>0){
+					$fb_feature_img = str_replace('_s.jpg', '_n.jpg', $featuredImage);
+						if (rssmi_remoteFileExists($fb_feature_img)){
+							$featuredImage = str_replace($featuredImage, $fb_feature_img, $featuredImage);
+						}
+				}
+
+				
 				$featuredImageTitle=trim($items["mytitle"]);	
 				setFeaturedImage($post_id,$featuredImage,$featuredImageTitle);
 				unset($featuredImage);

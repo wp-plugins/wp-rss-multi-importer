@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.6
-Stable tag: 2.67.0
+Stable tag: 2.67.1
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -117,8 +117,12 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Changelog ==
 
+= Version 2.67.1 (2013-10-19) =
+* NEW: Facebook post images now automatically chosen for larger size.
+* NEW: Eliminates continue reading, read more, etc, that shows up in the text on some feeds.
+
 = Version 2.67.0 (2013-9-18) =
-* Fixed: Fixed problem with a template that causing some users to have the feeds disappear.
+* Fixed: Fixed problem with a template that caused some users to have the feeds disappear.
 
 = Version 2.66.9 (2013-9-17) =
 * NEW: Option to Load More instead of pagination.  
