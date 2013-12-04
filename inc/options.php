@@ -225,7 +225,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 620,000 have already</div>
+														<div class="txtwhite">Over 640,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -477,10 +477,10 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 
 <p><label class='o_textinput' for='sourcename'><?php _e("Feed Source Attribution Label", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[sourcename]">
-<OPTION VALUE="Source" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>><?php _e("Source", 'wp-rss-multi-importer')?></OPTION>
-<OPTION VALUE="Via" <?php if($options['sourcename']=='Via'){echo 'selected';} ?>><?php _e("Via", 'wp-rss-multi-importer')?></OPTION>
-<OPTION VALUE="Club" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>><?php _e("Club", 'wp-rss-multi-importer')?></OPTION>
-<OPTION VALUE="Sponsor" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>><?php _e("Sponsor", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="Source:" <?php if($options['sourcename']=='Source'){echo 'selected';} ?>><?php _e("Source", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="Via:" <?php if($options['sourcename']=='Via'){echo 'selected';} ?>><?php _e("Via", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="Club:" <?php if($options['sourcename']=='Club'){echo 'selected';} ?>><?php _e("Club", 'wp-rss-multi-importer')?></OPTION>
+<OPTION VALUE="Sponsor:" <?php if($options['sourcename']=='Sponsor'){echo 'selected';} ?>><?php _e("Sponsor", 'wp-rss-multi-importer')?></OPTION>
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>><?php _e("No Attribution", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 

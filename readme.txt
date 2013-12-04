@@ -117,6 +117,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Changelog ==
 
+= Version 2.67.2 (2013-12-2) =
+* Fixed: Fixed several bugs related to other plugin conflicts.
+
 = Version 2.67.1 (2013-10-19) =
 * NEW: Facebook post images now automatically chosen for larger size.
 * NEW: Eliminates continue reading, read more, etc, that shows up in the text on some feeds.

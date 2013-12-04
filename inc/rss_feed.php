@@ -100,7 +100,7 @@ $perPage=$options['perPage'];
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
-	$attribution=$options['sourcename'].': ';
+	$attribution=$options['sourcename'].' ';
 }
 
 if ($floatType=='1'){

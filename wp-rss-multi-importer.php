@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.67.1
+  Version: 2.67.2
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.671);
+define( 'WP_RSS_MULTI_VERSION', 2.672);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -126,32 +126,6 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
 
 
 
-//	CODE FOR LOAD MORE  - can be deleted
-
-function pbd_alp_init2($max,$paged,$nextPost) {
-
- 	// Add code to index pages.
- 		// Queue JS and CSS
- 		wp_enqueue_script(
- 			'pbd-alp-load-posts',
- 			plugin_dir_url( __FILE__ ) . 'scripts/load-posts.js',
- 			array('jquery'),
- 			'1.0',
- 			true
- 		);
-
- 		// Add some parameters for the JS.
- 		wp_localize_script(
- 			'pbd-alp-load-posts',
- 			'pbd_alp',
- 			array(
- 				'startPage' => $paged,
- 				'maxPages' => $max,
- 				'nextLink' => $nextPost
- 			)
- 		);
-
- }
 
 
 
@@ -164,7 +138,6 @@ function pbd_alp_init2($max,$paged,$nextPost) {
    
    function wp_rss_multi_importer_shortcode($atts=array()){
 	
-
 
 	
 	
@@ -212,6 +185,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 		'showmore'=>NULL,
 		'warnmsg'=>NULL,
 		'nofollow'=>NULL,
+		'sourcename'=>'',
 		'authorprep'=>'by',
 		'windowstyle'=>NULL,
 		'morestyle' =>'[...]'
@@ -249,6 +223,7 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	$mytemplate=$parms['mytemplate'];
 	$windowstyle=$parms['windowstyle'];
 	$excerptlength=$parms['excerptlength'];
+	$parsourcename=$parms['sourcename'];
    	$readable = '';
    	$options = get_option('rss_import_options');
 	$option_items = get_option('rss_import_items');
@@ -301,7 +276,7 @@ $warnmsg=(isset($options['warnmsg']) ? $options['warnmsg'] : 0);
 $directFetch=(isset($options['directFetch']) ? $options['directFetch'] : 0);
 $forceFeed=(isset($options['forceFeed']) ? $options['forceFeed'] : 0);
 $forceFeed= ($forceFeed==1 ? True:False);
-$timeout=(isset($options['timeout']) ? $options['timeout'] : 0);
+$timeout=(isset($options['timeout']) ? $options['timeout'] : 10);
 if (!isset($timeout)) {$timeout=10;}
 if (!isset($directFetch)) {$directFetch=0;}
 
@@ -322,8 +297,11 @@ if (!is_null($pnofollow)) {$noFollow=$pnofollow;}
 if(empty($options['sourcename'])){
 	$attribution='';
 }else{
-	$attribution=$options['sourcename'].': ';
+	$attribution=$options['sourcename'].' ';
 }
+
+if ($parsourcename!='') $attribution=$parsourcename;
+
 
 if ($floatType=='1'){
 	$float="left";
@@ -496,7 +474,7 @@ if (empty($url)) {continue;}
 		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
-			
+					
 		
 				if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 		
 					
@@ -533,14 +511,14 @@ if (empty($url)) {continue;}
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
 	
-	
+			
 				if (empty($item))	continue;	
 				
-							
+					
 	
 	if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
 
-				$x=1;
+			
 			if ($enclosure = $item->get_enclosure()){
 				if(!IS_NULL($item->get_enclosure()->get_thumbnails())){	
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
@@ -551,7 +529,7 @@ if (empty($url)) {continue;}
 				}	
 			}
 		
-	
+
 			
 			
 			if ($itemAuthor = $item->get_author())
@@ -703,7 +681,7 @@ $end = ($currentPage * $perPage) + $perPage;
 
 if ($pag==2 || $pag==3){
 		 
-add_action('rssmi_load_more_data', 'pbd_alp_init',10,5);
+add_action('rssmi_load_more_data', 'rssmi_pbd_alp_init',10,5);
 if (strpos($currentURL,'http')==0){
 $nextPost='http://'.$currentURL.'pg=' . ($currentPage+1);
 }else{
