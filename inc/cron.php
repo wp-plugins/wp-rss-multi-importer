@@ -11,7 +11,7 @@ function wp_rss_multi_activation() {
 	}
 	
 	$post_schedule_options = get_option('rss_post_options');
-		if(	$post_schedule_options['active']==1){
+		if(	isset($post_schedule_options['active']) && $post_schedule_options['active']==1){
 			
 			if (isset($post_schedule_options['fetch_schedule'])){
 					$periodnumber=$post_schedule_options['fetch_schedule'];

@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.67.2
+  Version: 2.67.3
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.672);
+define( 'WP_RSS_MULTI_VERSION', 2.673);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -248,27 +248,27 @@ $cat_array = preg_grep("^feed_cat_^", array_keys($option_items));
 	
 //GET PARAMETERS  
 global $RSSdefaultImage;
-$RSSdefaultImage=$options['RSSdefaultImage'];   // 0- process normally, 1=use default for category, 2=replace when no image available
+$RSSdefaultImage=(isset($options['RSSdefaultImage']) ? $options['RSSdefaultImage'] : 0);  // 0- process normally, 1=use default for category, 2=replace when no image available
 $size = count($option_items);
 $sortDir=$options['sortbydate'];  // 1 is ascending
 $stripAll=(isset($options['stripAll']) ? $options['stripAll'] : 0);
 $stripSome=(isset($options['stripSome']) ? $options['stripSome'] : null);
-$todaybefore=$options['todaybefore'];
-$adjustImageSize=$options['adjustImageSize'];
+$todaybefore=(isset($options['todaybefore']) ? $options['todaybefore'] : 0);
+$adjustImageSize=(isset($options['adjustImageSize']) ? $options['adjustImageSize'] : null);
 $showDesc=$options['showdesc'];  // 1 is show
 $descNum=$options['descnum'];
-$maxperPage=$options['maxperPage'];
+$maxperPage=(isset($options['maxperPage']) ? $options['maxperPage'] : 5);
 $showcategory=(isset($options['showcategory']) ? $options['showcategory'] : 0);
-$cacheMin=$options['cacheMin'];
+$cacheMin=(isset($options['cacheMin']) ? $options['cacheMin'] : 0);
 $maxposts=$options['maxfeed'];
 $showsocial=(isset($options['showsocial']) ? $options['showsocial'] : 0);
 $targetWindow=$options['targetWindow'];  // 0=LB, 1=same, 2=new
-$floatType=$options['floatType'];
+$floatType=(isset($options['floatType']) ? $options['floatType'] : 0);
 $noFollow=(isset($options['noFollow']) ? $options['noFollow'] : 0);
 $showmore=(isset($options['showmore']) ? $options['showmore'] : 0);
 $cb=(isset($options['cb']) ? $options['cb'] : null);  // 1 if colorbox should not be loaded
 $pag=$options['pag'];  // 1 if pagination 2 or 3 if load more
-$perPage=$options['perPage'];
+$perPage=(isset($options['perPage']) ? $options['perPage'] : 5);
 global $anyimage;
 $anyimage=(isset($options['anyimage']) ? $options['anyimage'] : 0);
 $addAuthor=(isset($options['addAuthor']) ? $options['addAuthor'] : 0);
@@ -499,7 +499,7 @@ if (empty($url)) {continue;}
 						
 						
 						
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
 				
 						unset($mediaImage);
 						unset($itemAuthor);
@@ -542,7 +542,7 @@ if (empty($url)) {continue;}
 			
 					
 	
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor);
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
 				
 					
 						unset($mediaImage);

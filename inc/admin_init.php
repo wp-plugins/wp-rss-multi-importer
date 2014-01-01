@@ -37,7 +37,7 @@ add_action('init', 'wp_rss_multi_importer_post_to_feed');
 function wp_rss_multi_importer_post_to_feed(){
   $post_options = get_option('rss_post_options'); 
 	if (!empty($post_options)) {
-		if ($post_options['targetWindow']==0 && $post_options['active']==1){
+		if ((isset($post_options['targetWindow']) && $post_options['targetWindow']==0) && ((isset($post_options['active'])) && $post_options['active']==1)){
 			add_action('wp_footer','colorbox_scripts');
 		}
 		if (isset($post_options['noindex']) && $post_options['noindex']==1){

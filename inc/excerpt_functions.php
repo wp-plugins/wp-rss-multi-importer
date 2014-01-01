@@ -24,7 +24,7 @@ function include_post($catID,$content,$title){
 		}	
 	}
 
-	if ($exclude==1) {
+	if (isset($exclude) && $exclude==1) {
 		($msg==1 ? $msg=0 :$msg=1);		
 	}
 
@@ -374,6 +374,32 @@ if ($noFollow==1){
 
 
 
+
+		preg_match_all('#<img.*src=(.*)(\.ico)(.*)\/?>#', $content, $matches);  //get all links
+			
+		foreach ($matches[0] as $val) {
+		
+						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
+				
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	return 	$content;
 	}
 	
@@ -564,6 +590,8 @@ if ($noFollow==1){
 		$mediaImage = $matches[2];
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
+		
+	
 	
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
@@ -574,7 +602,7 @@ if ($noFollow==1){
 			
 	}else if (isset($leadMatch) && $leadMatch==3 && intval($anyimage)==1){
 
-		
+
 		$mediaImage=$matches[2];	
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
@@ -600,7 +628,8 @@ if ($noFollow==1){
 				}
 			}		
 		}
-			
+
+	
 	return $content;
 		
 	}

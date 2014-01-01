@@ -38,7 +38,11 @@ function wp_rss_multi_importer_category_images_page() {
 				
 		$size = count($options);
 
-
+	$cat_default_image="";	
+	$cat_default_tags="";
+	$cat_default_filterwords="";
+	$checkmsg="";
+		
 		for ( $i=1; $i<=$size; 	$i++ ) {   
 		   
 if( $i % 2== 0 ) continue;
@@ -49,11 +53,15 @@ if( $i % 2== 0 ) continue;
 	$j = cat_get_id_number($key);
 	$textUpper=strtoupper($options[$key]);
 		if (!empty($options_images) ) {
+			
+
 
 	$cat_default_image=(isset($options_images[$j]['imageURL']) ? $options_images[$j]['imageURL'] : null);
 	$cat_default_tags=(isset($options_images[$j]['tags']) ? $options_images[$j]['tags'] : null);
 	$cat_default_filterwords=(isset($options_images[$j]['filterwords']) ? $options_images[$j]['filterwords'] : null);
 	$cat_default_filterwords_exclude=(isset($options_images[$j]['exclude']) ? $options_images[$j]['exclude'] : null);
+	
+
 
 	if (isset($cat_default_filterwords_exclude) && $cat_default_filterwords_exclude==1) {$checkmsg='checked=checked';}else{$checkmsg='';}
 		}
@@ -366,7 +374,7 @@ $thistemplate=$options['template'];
 ?>
 
 <?php
-if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
+if (!isset($options['maxperPage'])  || $options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 ?>
 <H2 class="save_warning"><?php _e("You must choose and then click Save Settings for the plugin to function correctly.  If not sure which options to choose right now, don't worry - the most common settings have been set for you - just click Save Settings.", 'wp-rss-multi-importer')?></H2>
 <?php
@@ -389,40 +397,40 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 		<p><label class='o_textinput' for='todaybefore'><?php _e("Separate Today and Earlier Posts", 'wp-rss-multi-importer')?></label>
 
 		<SELECT NAME="rss_import_options[todaybefore]">
-		<OPTION VALUE="1" <?php if($options['todaybefore']==1){echo 'selected';} ?>><?php _e("Yes", 'wp-rss-multi-importer')?></OPTION>
-		<OPTION VALUE="0" <?php if($options['todaybefore']==0){echo 'selected';} ?>><?php _e("No", 'wp-rss-multi-importer')?></OPTION>
+		<OPTION VALUE="1" <?php if(isset($options['todaybefore']) && $options['todaybefore']==1){echo 'selected';} ?>><?php _e("Yes", 'wp-rss-multi-importer')?></OPTION>
+		<OPTION VALUE="0" <?php if(isset($options['todaybefore']) && $options['todaybefore']==0){echo 'selected';} ?>><?php _e("No", 'wp-rss-multi-importer')?></OPTION>
 
 		</SELECT></p>
 	
 <h3><?php _e("Number of Posts, Pagination and Load More", 'wp-rss-multi-importer')?></h3>
 <p><label class='o_textinput' for='maxfeed'><?php _e("Number of Posts per Feed", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxfeed]">
-<OPTION VALUE="1" <?php if($options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
-<OPTION VALUE="2" <?php if($options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
-<OPTION VALUE="3" <?php if($options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
-<OPTION VALUE="4" <?php if($options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
-<OPTION VALUE="5" <?php if($options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
-<OPTION VALUE="10" <?php if($options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="15" <?php if($options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
-<OPTION VALUE="20" <?php if($options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
-<OPTION VALUE="30" <?php if($options['maxfeed']==30){echo 'selected';} ?>>30</OPTION>
-<OPTION VALUE="40" <?php if($options['maxfeed']==40){echo 'selected';} ?>>40</OPTION>
-<OPTION VALUE="50" <?php if($options['maxfeed']==50){echo 'selected';} ?>>50</OPTION>
-<OPTION VALUE="60" <?php if($options['maxfeed']==60){echo 'selected';} ?>>60</OPTION>
-<OPTION VALUE="70" <?php if($options['maxfeed']==70){echo 'selected';} ?>>70</OPTION>
-<OPTION VALUE="80" <?php if($options['maxfeed']==80){echo 'selected';} ?>>80</OPTION>
+<OPTION VALUE="1" <?php if(isset($options['maxfeed']) && $options['maxfeed']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="2" <?php if(isset($options['maxfeed']) && $options['maxfeed']==2){echo 'selected';} ?>>2</OPTION>
+<OPTION VALUE="3" <?php if(isset($options['maxfeed']) && $options['maxfeed']==3){echo 'selected';} ?>>3</OPTION>
+<OPTION VALUE="4" <?php if(isset($options['maxfeed']) && $options['maxfeed']==4){echo 'selected';} ?>>4</OPTION>
+<OPTION VALUE="5" <?php if(isset($options['maxfeed']) && $options['maxfeed']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if(isset($options['maxfeed']) && $options['maxfeed']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="15" <?php if(isset($options['maxfeed']) && $options['maxfeed']==15){echo 'selected';} ?>>15</OPTION>
+<OPTION VALUE="20" <?php if(isset($options['maxfeed']) && $options['maxfeed']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if(isset($options['maxfeed']) && $options['maxfeed']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if(isset($options['maxfeed']) && $options['maxfeed']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="50" <?php if(isset($options['maxfeed']) && $options['maxfeed']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="60" <?php if(isset($options['maxfeed']) && $options['maxfeed']==60){echo 'selected';} ?>>60</OPTION>
+<OPTION VALUE="70" <?php if(isset($options['maxfeed']) && $options['maxfeed']==70){echo 'selected';} ?>>70</OPTION>
+<OPTION VALUE="80" <?php if(isset($options['maxfeed']) && $options['maxfeed']==80){echo 'selected';} ?>>80</OPTION>
 </SELECT></p>
 
 <span id="posts_per_pag_options" <?php if($options['pag']==1 || $options['pag']==2 || $options['pag']==3){echo 'style="display:none"';}?>>
 <p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
-<OPTION VALUE="5" <?php if($options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
-<OPTION VALUE="10" <?php if($options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="20" <?php if($options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
-<OPTION VALUE="30" <?php if($options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
-<OPTION VALUE="40" <?php if($options['maxperPage']==40){echo 'selected';} ?>>40</OPTION>
-<OPTION VALUE="50" <?php if($options['maxperPage']==50){echo 'selected';} ?>>50</OPTION>
-<OPTION VALUE="100" <?php if($options['maxperPage']==100){echo 'selected';} ?>>100</OPTION>
+<OPTION VALUE="5" <?php if(isset($options['maxperPage']) && $options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if(isset($options['maxperPage']) && $options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if(isset($options['maxperPage']) && $options['maxperPage']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if(isset($options['maxperPage']) && $options['maxperPage']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if(isset($options['maxperPage']) && $options['maxperPage']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="50" <?php if(isset($options['maxperPage']) && $options['maxperPage']==50){echo 'selected';} ?>>50</OPTION>
+<OPTION VALUE="100" <?php if(isset($options['maxperPage']) && $options['maxperPage']==100){echo 'selected';} ?>>100</OPTION>
 </SELECT></p>
 
 </span>
@@ -549,9 +557,9 @@ echo 'Your server is not configured to accept images from outside sources.  Plea
 
 	<p style="padding-left:15px"><label class='o_textinput' for='RSSdefaultImage'><?php _e("Default category image setting", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rss_import_options[RSSdefaultImage]" id="RSSdefaultImage">
-	<OPTION VALUE="0" <?php if($options['RSSdefaultImage']==0){echo 'selected';} ?>>Process normally</OPTION>
-	<OPTION VALUE="1" <?php if($options['RSSdefaultImage']==1){echo 'selected';} ?>>Use default image for category</OPTION>
-	<OPTION VALUE="2" <?php if($options['RSSdefaultImage']==2){echo 'selected';} ?>>Replace articles with no image with default category image</OPTION>
+	<OPTION VALUE="0" <?php if(isset($options['RSSdefaultImage']) && $options['RSSdefaultImage']==0){echo 'selected';} ?>>Process normally</OPTION>
+	<OPTION VALUE="1" <?php if(isset($options['RSSdefaultImage']) && $options['RSSdefaultImage']==1){echo 'selected';} ?>>Use default image for category</OPTION>
+	<OPTION VALUE="2" <?php if(isset($options['RSSdefaultImage']) && $options['RSSdefaultImage']==2){echo 'selected';} ?>>Replace articles with no image with default category image</OPTION>
 
 	</SELECT></p>
 
@@ -567,18 +575,18 @@ echo 'Your server is not configured to accept images from outside sources.  Plea
 
 <p><label class='o_textinput' for='cacheMin'><?php _e("Number of minutes you want the post data held in cache (match to how often your feeds are updated)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[cacheMin]" id="cacheMin">
-<OPTION VALUE="0" <?php if($options['cacheMin']==0){echo 'selected';} ?>>Turn off caching</OPTION>
-<OPTION VALUE="1" <?php if($options['cacheMin']==1){echo 'selected';} ?>>1</OPTION>
-<OPTION VALUE="5" <?php if($options['cacheMin']==5){echo 'selected';} ?>>5</OPTION>
-<OPTION VALUE="10" <?php if($options['cacheMin']==10){echo 'selected';} ?>>10</OPTION>
-<OPTION VALUE="20" <?php if($options['cacheMin']==20){echo 'selected';} ?>>20</OPTION>
-<OPTION VALUE="30" <?php if($options['cacheMin']==30){echo 'selected';} ?>>30</OPTION>
-<OPTION VALUE="40" <?php if($options['cacheMin']==40){echo 'selected';} ?>>40</OPTION>
-<OPTION VALUE="60" <?php if($options['cacheMin']==60){echo 'selected';} ?>>60</OPTION>
-<OPTION VALUE="120" <?php if($options['cacheMin']==120){echo 'selected';} ?>>120</OPTION>
-<OPTION VALUE="180" <?php if($options['cacheMin']==180){echo 'selected';} ?>>180</OPTION>
-<OPTION VALUE="240" <?php if($options['cacheMin']==240){echo 'selected';} ?>>240</OPTION>
-<OPTION VALUE="300" <?php if($options['cacheMin']==300){echo 'selected';} ?>>300</OPTION>
+<OPTION VALUE="0" <?php if(isset($options['cacheMin']) && $options['cacheMin']==0){echo 'selected';} ?>>Turn off caching</OPTION>
+<OPTION VALUE="1" <?php if(isset($options['cacheMin']) && $options['cacheMin']==1){echo 'selected';} ?>>1</OPTION>
+<OPTION VALUE="5" <?php if(isset($options['cacheMin']) && $options['cacheMin']==5){echo 'selected';} ?>>5</OPTION>
+<OPTION VALUE="10" <?php if(isset($options['cacheMin']) && $options['cacheMin']==10){echo 'selected';} ?>>10</OPTION>
+<OPTION VALUE="20" <?php if(isset($options['cacheMin']) && $options['cacheMin']==20){echo 'selected';} ?>>20</OPTION>
+<OPTION VALUE="30" <?php if(isset($options['cacheMin']) && $options['cacheMin']==30){echo 'selected';} ?>>30</OPTION>
+<OPTION VALUE="40" <?php if(isset($options['cacheMin']) && $options['cacheMin']==40){echo 'selected';} ?>>40</OPTION>
+<OPTION VALUE="60" <?php if(isset($options['cacheMin']) && $options['cacheMin']==60){echo 'selected';} ?>>60</OPTION>
+<OPTION VALUE="120" <?php if(isset($options['cacheMin']) && $options['cacheMin']==120){echo 'selected';} ?>>120</OPTION>
+<OPTION VALUE="180" <?php if(isset($options['cacheMin']) && $options['cacheMin']==180){echo 'selected';} ?>>180</OPTION>
+<OPTION VALUE="240" <?php if(isset($options['cacheMin']) && $options['cacheMin']==240){echo 'selected';} ?>>240</OPTION>
+<OPTION VALUE="300" <?php if(isset($options['cacheMin']) && $options['cacheMin']==300){echo 'selected';} ?>>300</OPTION>
 </SELECT></p>
 
 
@@ -997,10 +1005,10 @@ function wp_rss_multi_importer_post_page() {
 
 
 
-<p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if ($post_options['active']==1){echo 'checked="checked"';} ?></label><?php if ($post_options['active']!=1){echo "   <span style=\"color:red\">This feature is not active</span>";}?>
+<p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if (isset($post_options['active']) && $post_options['active']==1){echo 'checked="checked"';} ?></label><?php if (isset($post_options['active']) && $post_options['active']!=1){echo "   <span style=\"color:red\">This feature is not active</span>";}?>
 </p>
 <?php
-if ($post_options['active']==1){
+if (isset($post_options['active']) && $post_options['active']==1){
 wp_rss_multi_deactivation();
 wp_rss_multi_activation();
 }else{	
@@ -1179,7 +1187,7 @@ wp_rss_multi_deactivation();
 
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
 	
-	<p ><label class='o_textinput' for='floatType'><?php _e("Float images to the left.", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[floatType]" Value="1" <?php if ($post_options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+	<p ><label class='o_textinput' for='floatType'><?php _e("Float images to the left.", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[floatType]" Value="1" <?php if (isset($post_options['floatType']) && $post_options['floatType']==1){echo 'checked="checked"';} ?></label></p>
 		
 	
 	<p ><label class='o_textinput' for='stripSome'><?php _e("Eliminate all hyperlinks   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if (isset($post_options['stripSome']) && $post_options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>

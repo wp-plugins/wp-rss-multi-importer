@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.8
-Stable tag: 2.67.2
+Stable tag: 2.67.3
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -116,6 +116,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 2.67.3 (2014-1-1) =
+* Fixed: Notices due to users having debug on.  Several small bugs fixed.
 
 = Version 2.67.2 (2013-12-2) =
 * Fixed: Fixed several bugs related to other plugin conflicts.
