@@ -26,6 +26,20 @@ echo '<meta name="robots" content="noindex, nofollow">';
 }
 
 
+function rssmi_canonical_function(){
+	
+		global $wp_query;
+		$postID=$wp_query->post->ID;
+		$myLink = get_post_meta($postID, 'rssmi_source_link' , true);
+			if (!empty($myLink) && !is_front_page()  ){
+				
+	echo '<link rel="canonical" href="'.$myLink.'"/>';
+	}			
+}
+
+
+
+
 /*
 
 Load more scripts

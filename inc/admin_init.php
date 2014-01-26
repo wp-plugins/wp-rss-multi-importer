@@ -44,6 +44,12 @@ function wp_rss_multi_importer_post_to_feed(){
 			add_action('wp_head', 'rssmi_noindex_function');
 		}
 		
+		if (isset($post_options['addcanonical']) && $post_options['addcanonical']==1){
+			remove_action('wp_head', 'rel_canonical');
+			add_action('wp_head', 'rssmi_canonical_function');
+		}
+		
+		
 	}
 }
 

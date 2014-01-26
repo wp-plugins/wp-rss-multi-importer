@@ -1241,11 +1241,15 @@ wp_rss_multi_deactivation();
 </p>
 
 
-<h3><?php _e("No Index, No Follow ", 'wp-rss-multi-importer')?></h3>
+<h3><?php _e("No Index, No Follow, Canonical ", 'wp-rss-multi-importer')?></h3>
 <p ><label class='o_textinput' for='noindex'><?php _e("Make the Feed to Post items not search engine visible (It is up to search engines to honor this request.). ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[noindex]" Value="1" <?php if (isset($post_options['noindex']) && $post_options['noindex']==1){echo 'checked="checked"';} ?></label>
 </p>
 
 <p ><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_post_options[noFollow]" Value="1" <?php if (isset($post_options['noFollow']) && $post_options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
+
+<p ><label class='o_textinput' for='addcanonical'>Add canonical URL to page linking back to original article.  <input type="checkbox" Name="rss_post_options[addcanonical]" Value="1" <?php if (isset($post_options['addcanonical']) && $post_options['addcanonical']==1){echo 'checked="checked"';} ?></label></p>
+
+
 
 <h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 
