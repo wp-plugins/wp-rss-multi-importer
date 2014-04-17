@@ -3,8 +3,8 @@ Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
-Tested up to: 3.8
-Stable tag: 2.67.4
+Tested up to: 3.9
+Stable tag: 2.67.5
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -59,7 +59,7 @@ These features are all available in the admin panel.
 
 = Credit = 
 
-[__Allen Weiss__](http://www.allenweiss.com/wp_plugin)
+[__Allen Weiss__](http://www.wprssimporter.com/)
 
 == Installation ==
 
