@@ -3,8 +3,8 @@ Contributors: allenweiss
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
-Tested up to: 3.9
-Stable tag: 2.67.4
+Tested up to: 3.9.1
+Stable tag: 2.67.5
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -116,6 +116,11 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 2.67.5 (2014-5-8) =
+* NEW: Added option to save only posts that have comments to feed to post entries.  Increased number of total fetch items.
+* Fixed:  Problem with decoding posts from Facebook RSS feeds
+* Fixed:  Fixed several bugs related to other plugin conflicts.
 
 = Version 2.67.4 (2014-1-26) =
 * NEW: Added option to add canonical URLS to feed to post entries.

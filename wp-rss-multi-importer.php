@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.allenweiss.com/wp_plugin
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.67.4
+  Version: 2.67.5
   Author: Allen Weiss
   Author URI: http://www.allenweiss.com/wp_plugin
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.674);
+define( 'WP_RSS_MULTI_VERSION', 2.675);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -442,7 +442,7 @@ if (empty($url)) {continue;}
 				echo $feed->get_error_message();
 				}	
 		if ($size<4){
-			return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
+			return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
 			exit;
 
 		}else{
@@ -470,13 +470,16 @@ if (empty($url)) {continue;}
 //SORT DEPENDING ON SETTINGS
 
 	if($sortDir==1){
+		
+	
 
 		for ($i=$maxfeed-1;$i>=$maxfeed-$maxposts;$i--){
 			$item = $feed->get_item($i);
 			 if (empty($item))	continue;
 					
+				$thisTitle= html_entity_decode($item->get_title(),ENT_QUOTES,'UTF-8');
 		
-				if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 		
+				if(include_post($feeditem["FeedCatID"],$item->get_content(),$thisTitle)==0) continue;   // FILTER 		
 					
 						if ($enclosure = $item->get_enclosure()){
 							if(!IS_NULL($item->get_enclosure()->get_thumbnail())){			
@@ -492,14 +495,15 @@ if (empty($url)) {continue;}
 						if ($itemAuthor = $item->get_author())
 						{
 							$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+							$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');	
 						}else if (!IS_NULL($feedAuthor)){
 							$itemAuthor=$feedAuthor;
-							
+							$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
 						}
 						
 						
 						
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$thisTitle,"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
 				
 						unset($mediaImage);
 						unset($itemAuthor);
@@ -510,17 +514,22 @@ if (empty($url)) {continue;}
 
 		for ($i=0;$i<=$maxposts-1;$i++){
 				$item = $feed->get_item($i);
-	
+				
+		
+		
+		
 			
 				if (empty($item))	continue;	
 				
-					
+					$thisTitle= html_entity_decode($item->get_title(),ENT_QUOTES,'UTF-8');		
 	
-	if(include_post($feeditem["FeedCatID"],$item->get_content(),$item->get_title())==0) continue;   // FILTER 
+	if(include_post($feeditem["FeedCatID"],$item->get_content(),$thisTitle)==0) continue;   // FILTER 
 
 			
 			if ($enclosure = $item->get_enclosure()){
-				if(!IS_NULL($item->get_enclosure()->get_thumbnails())){	
+				
+				if(!IS_NULL($item->get_enclosure()->get_thumbnail())){	
+				
 					$mediaImage=$item->get_enclosure()->get_thumbnail();
 				}else if (!IS_NULL($item->get_enclosure()->get_link())){
 					$mediaImage=$item->get_enclosure()->get_link();	
@@ -534,15 +543,16 @@ if (empty($url)) {continue;}
 			
 			if ($itemAuthor = $item->get_author())
 			{
-			$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
-			
+				$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+				$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');	
 			}else if (!IS_NULL($feedAuthor)){
-				$itemAuthor=$feedAuthor;	
+				$itemAuthor=$feedAuthor;
+				$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
 			}
 			
-					
+		
 	
-			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$item->get_title(),"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
+			$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$thisTitle,"mylink"=>$item->get_link(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"itemcategory"=>$item->get_category());
 				
 					
 						unset($mediaImage);
@@ -581,7 +591,7 @@ if ($dumpthis==1){
 if (!isset($myarray) || empty($myarray)){
 	if(!$warnmsg==1 && current_user_can('edit_post')){
 	
-	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
+	return _e("There is a problem with the feeds you entered.  Go to our <a href='http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/'>support page</a> to see how to solve this.", 'wp-rss-multi-importer');
 	}
 	return;
 }

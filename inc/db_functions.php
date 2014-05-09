@@ -66,8 +66,8 @@ function rssmi_delete_posts(){
 	$post_options_delete = get_option('rss_post_options');
 	$expiration=$post_options_delete['expiration'];
 	$oldPostStatus=$post_options_delete['oldPostStatus'];
+	$keepcomments= $post_options_delete['keepcomments'];
 	$serverTimezone=$post_options['timezone'];
-	
 	if (isset($serverTimezone) && $serverTimezone!=''){
 		date_default_timezone_set($serverTimezone);
 	}
@@ -81,20 +81,28 @@ function rssmi_delete_posts(){
 		if(get_post_meta($id->ID, 'rssmi_source_protect', true)==1) continue;
 		if (!empty($mypostids)){
 			
-			if($oldPostStatus==0){
-				rssmi_delete_attachment($id->ID);
-				wp_delete_post($id->ID, true);
-			}elseif ($oldPostStatus==1){
-				wp_delete_post($id->ID, false);
-			}elseif($oldPostStatus==2){
-				rssmi_change_post_status($id->ID,'pending');
-			}
-		
+		if ($keepcomments==1 && get_comments_number($id->ID)==0){
+			$okToDelete=1;
+		}elseif ($keepcomments==1 && get_comments_number($id->ID)>0){
+			add_post_meta($id->ID, 'rssmi_source_protect', 1);
+			$okToDelete=0;
+		}elseif ($keepcomments!=1){
+			$okToDelete=1;
 		}
-
-	}
-	
+				
+		if($oldPostStatus==0  && $okToDelete==1){
+			rssmi_delete_attachment($id->ID);
+			wp_delete_post($id->ID, true);
+		}elseif ($oldPostStatus==1){
+			wp_delete_post($id->ID, false);
+		}elseif($oldPostStatus==2){
+			rssmi_change_post_status($id->ID,'pending');
+			}
+		}
+	}	
 }
+
+
 
 
 

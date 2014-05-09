@@ -232,7 +232,7 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	
 	global $ftp;	
 	global $morestyle;
-    $content=CleanHTML($content,$thisLink);
+    $content=RSSMI_CleanHTML($content,$thisLink);
 
 
 
@@ -241,8 +241,8 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 			$content= limitwords($maxchars,$content);	
 	}else{
 			if ($ftp==1){
-				$content=html_entity_decode(pre_esc_html($content));
-			//	$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
+			//	$content=html_entity_decode(pre_esc_html($content));
+				$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
 			//	$content=pre_esc_html($content);
 			}else{				
 				if($maxchars !=99){
@@ -310,7 +310,7 @@ if ($noFollow==1){
 	
 	
 	
-	function CleanHTML($content,$thisLink){
+	function RSSMI_CleanHTML($content,$thisLink){
 	
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);

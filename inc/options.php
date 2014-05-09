@@ -290,9 +290,9 @@ function wp_rss_multi_importer_intro_page() {
 		<h2 class="MP_title">Need Plugin Help?</h2>
 	</div>
 	
-	<p><a href="http://www.allenweiss.com/faqs/" target="_blank" style="color:white">Go here</a> to find FAQs, our discussion board, template examples, and more.</p>
-	<p><a href="http://www.allenweiss.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>			
-				
+	<p><a href="http://www.wprssimporter.com/faqs/" target="_blank" style="color:white">Go here</a> to find FAQs.</p>
+	<p><a href="http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>			
+	
 				</div>
 			
 			
@@ -422,7 +422,7 @@ if (!isset($options['maxperPage'])  || $options['maxperPage']=='' || $options['m
 </SELECT></p>
 
 <span id="posts_per_pag_options" <?php if($options['pag']==1 || $options['pag']==2 || $options['pag']==3){echo 'style="display:none"';}?>>
-<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
 <OPTION VALUE="5" <?php if(isset($options['maxperPage']) && $options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if(isset($options['maxperPage']) && $options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
@@ -1016,7 +1016,7 @@ wp_rss_multi_deactivation();
 }
 ?>
 
-<p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (<a href=\"http://www.allenweiss.com/faqs/how-to-have-more-control-over-scheduling-of-feteching-feeds//\" target=\"_blank\">click here to learn how to have more control over this</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (<a href=\"http://www.wprssimporter.com/faqs/how-to-have-more-control-over-scheduling-of-feteching-feeds//\" target=\"_blank\">click here to learn how to have more control over this</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[fetch_schedule]" id="post_status">
 <OPTION VALUE="2" <?php if($post_options['fetch_schedule']=="2"){echo 'selected';} ?>>Every 10 Min.</OPTION>
 <OPTION VALUE="3" <?php if($post_options['fetch_schedule']=="3"){echo 'selected';} ?>>Every 15 Min.</OPTION>
@@ -1066,7 +1066,7 @@ wp_rss_multi_deactivation();
 <p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if (isset($post_options['overridedate']) && $post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-<p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php echo $post_options['timezone'] ?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.allenweiss.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
+<p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php echo $post_options['timezone'] ?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.wprssimporter.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
 
 <h3><?php _e("Fetch Quantity Settings", 'wp-rss-multi-importer')?></h3>
 
@@ -1092,7 +1092,7 @@ wp_rss_multi_deactivation();
 
 
 
-<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperfetch'><?php _e("Number of Total Post Entries per Fetch (<a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maxperfetch]">
 <OPTION VALUE="1" <?php if($post_options['maxperfetch']==1){echo 'selected';} ?>>1</OPTION>
 <OPTION VALUE="2" <?php if($post_options['maxperfetch']==2){echo 'selected';} ?>>2</OPTION>
@@ -1108,6 +1108,12 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="100" <?php if($post_options['maxperfetch']==100){echo 'selected';} ?>>100</OPTION>
 <OPTION VALUE="200" <?php if($post_options['maxperfetch']==200){echo 'selected';} ?>>200</OPTION>
 <OPTION VALUE="300" <?php if($post_options['maxperfetch']==300){echo 'selected';} ?>>300</OPTION>
+<OPTION VALUE="400" <?php if($post_options['maxperfetch']==400){echo 'selected';} ?>>400</OPTION>
+<OPTION VALUE="500" <?php if($post_options['maxperfetch']==500){echo 'selected';} ?>>500</OPTION>
+<OPTION VALUE="600" <?php if($post_options['maxperfetch']==600){echo 'selected';} ?>>600</OPTION>
+<OPTION VALUE="700" <?php if($post_options['maxperfetch']==700){echo 'selected';} ?>>700</OPTION>
+<OPTION VALUE="800" <?php if($post_options['maxperfetch']==800){echo 'selected';} ?>>800</OPTION>
+
 </SELECT></p>
 
 
@@ -1213,7 +1219,7 @@ wp_rss_multi_deactivation();
 
 <p><label class='o_textinput' for='showVideo'><?php _e("Embed video into the post when available (IMPORTANT:  For this to work, your server must be configured to accept iFrames.)", 'wp-rss-multi-importer')?></label>
 	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if (isset($post_options['showVideo']) && $post_options['showVideo']==1){echo 'checked="checked"';} ?></label>
-	<?php _e("(<a href=\"http://www.allenweiss.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
+	<?php _e("(<a href=\"http://www.wprssimporter.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
 	</p>
 
 
@@ -1279,6 +1285,9 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="1" <?php if($post_options['oldPostStatus']==1){echo 'selected';} ?>>Trash (but don't permanently delete)</OPTION>
 <OPTION VALUE="2" <?php if($post_options['oldPostStatus']==2){echo 'selected';} ?>>Pending</OPTION>
 </SELECT><?php _e("  NOTE: Choosing Permanently Delete may result in posts being imported again", 'wp-rss-multi-importer')?></p>
+
+<p ><label class='o_textinput' for='keepcomments'><?php _e("Only delete posts with no comments. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[keepcomments]" Value="1" <?php if (isset($post_options['keepcomments']) && $post_options['keepcomments']==1){echo 'checked="checked"';} ?></label>
+</p>
 
 </span>
 <?php
