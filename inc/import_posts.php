@@ -635,7 +635,7 @@ $forceFeed=1;
 
 				$myarray[] = array("mystrdate"=>strtotime($item->get_date()),"mytitle"=>$thisTitle,"mylink"=>$item->get_permalink(),"myGroup"=>$feeditem["FeedName"],"mydesc"=>$item->get_content(),"myimage"=>$mediaImage,"mycatid"=>$feeditem["FeedCatID"],"myAuthor"=>$itemAuthor,"feedURL"=>$feeditem["FeedURL"],"itemcategory"=>$postCategories);
 
-
+							unset($postCategories);
 							unset($mediaImage);
 							unset($itemAuthor);
 					}	
@@ -814,7 +814,7 @@ foreach($myarray as $items) {
 
 
 	if(!empty($items["itemcategory"])){
-		$thisContent .= ' <p>Category: <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["itemcategory"].'</a></p>';
+	//	$thisContent .= ' <p>Category: <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["itemcategory"].'</a></p>';
 	}
 	
 	
