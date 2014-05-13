@@ -318,6 +318,11 @@ $sourceWords=$post_options['sourceWords'];
 $readMore=$post_options['readmore'];
 $showVideo=(isset($post_options['showVideo']) ? $post_options['showVideo']: null);
 $includeExcerpt=(isset($post_options['includeExcerpt']) ? $post_options['includeExcerpt']: null);
+$addRSSCategories=(isset($post_options['addRSSCategories']) ? $post_options['addRSSCategories']: null);
+
+
+
+
 global $morestyle;
 $morestyle=' ...read more';
 $sourceWords_Label=$post_options['sourceWords_Label'];
@@ -722,6 +727,7 @@ foreach($myarray as $items) {
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 	
 
+//	$thisLink=mysql_real_escape_string($thisLink);
 	$thisLink=esc_url($thisLink);
 
 
@@ -752,7 +758,10 @@ foreach($myarray as $items) {
 	}else{
   		$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
 	}
-
+//echo $items["mytitle"];  //FIX THIS
+//echo $post['post_date'] ;
+//echo $rightNow;
+//exit;
 
 
 	$post['post_title'] = trim($items["mytitle"]);
@@ -813,8 +822,8 @@ foreach($myarray as $items) {
 	}
 
 
-	if(!empty($items["itemcategory"])){
-	//	$thisContent .= ' <p>Category: <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["itemcategory"].'</a></p>';
+	if(!empty($items["itemcategory"])  && $addRSSCategories==1){
+		$thisContent .= ' <p>Category: <a href='.$items["mylink"].'  '.$openWindow.'  title="'.$items["mytitle"].'" '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["itemcategory"].'</a></p>';
 	}
 	
 	

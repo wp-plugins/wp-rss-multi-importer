@@ -292,7 +292,7 @@ function wp_rss_multi_importer_intro_page() {
 	
 	<p><a href="http://www.wprssimporter.com/faqs/" target="_blank" style="color:white">Go here</a> to find FAQs.</p>
 	<p><a href="http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>			
-	
+		
 				</div>
 			
 			
@@ -422,7 +422,7 @@ if (!isset($options['maxperPage'])  || $options['maxperPage']=='' || $options['m
 </SELECT></p>
 
 <span id="posts_per_pag_options" <?php if($options['pag']==1 || $options['pag']==2 || $options['pag']==3){echo 'style="display:none"';}?>>
-<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
 <OPTION VALUE="5" <?php if(isset($options['maxperPage']) && $options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if(isset($options['maxperPage']) && $options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
@@ -1108,11 +1108,16 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="100" <?php if($post_options['maxperfetch']==100){echo 'selected';} ?>>100</OPTION>
 <OPTION VALUE="200" <?php if($post_options['maxperfetch']==200){echo 'selected';} ?>>200</OPTION>
 <OPTION VALUE="300" <?php if($post_options['maxperfetch']==300){echo 'selected';} ?>>300</OPTION>
+
+
 <OPTION VALUE="400" <?php if($post_options['maxperfetch']==400){echo 'selected';} ?>>400</OPTION>
 <OPTION VALUE="500" <?php if($post_options['maxperfetch']==500){echo 'selected';} ?>>500</OPTION>
 <OPTION VALUE="600" <?php if($post_options['maxperfetch']==600){echo 'selected';} ?>>600</OPTION>
 <OPTION VALUE="700" <?php if($post_options['maxperfetch']==700){echo 'selected';} ?>>700</OPTION>
 <OPTION VALUE="800" <?php if($post_options['maxperfetch']==800){echo 'selected';} ?>>800</OPTION>
+
+
+
 
 </SELECT></p>
 
@@ -1175,6 +1180,8 @@ wp_rss_multi_deactivation();
 	</SELECT></p>
 
 
+<p ><label class='o_textinput' for='addRSSCategories'><?php _e("Include RSS Feed Categories (if present)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addRSSCategories]" Value="1" <?php if (isset($post_options['addRSSCategories']) && $post_options['addRSSCategories']==1){echo 'checked="checked"';} ?></label></p>
+
 <h3><?php _e("HTML, Image, and Video Handling", 'wp-rss-multi-importer')?></h3>
 
 
@@ -1219,7 +1226,7 @@ wp_rss_multi_deactivation();
 
 <p><label class='o_textinput' for='showVideo'><?php _e("Embed video into the post when available (IMPORTANT:  For this to work, your server must be configured to accept iFrames.)", 'wp-rss-multi-importer')?></label>
 	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if (isset($post_options['showVideo']) && $post_options['showVideo']==1){echo 'checked="checked"';} ?></label>
-	<?php _e("(<a href=\"http://www.wprssimporter.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
+	<?php _e("(<a href=\"http://www.allenweiss.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
 	</p>
 
 
@@ -1288,6 +1295,8 @@ wp_rss_multi_deactivation();
 
 <p ><label class='o_textinput' for='keepcomments'><?php _e("Only delete posts with no comments. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[keepcomments]" Value="1" <?php if (isset($post_options['keepcomments']) && $post_options['keepcomments']==1){echo 'checked="checked"';} ?></label>
 </p>
+
+
 
 </span>
 <?php

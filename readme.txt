@@ -117,6 +117,9 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 
 == Changelog ==
 
+= Version 2.67.6 (2014-5-13) =
+* Fixed:  Problem with RSS feed categories showing up..now is an option for the feed to post.
+
 = Version 2.67.5 (2014-5-8) =
 * NEW: Added option to save only posts that have comments to feed to post entries.  Increased number of total fetch items.
 * Fixed:  Problem with decoding posts from Facebook RSS feeds
