@@ -705,7 +705,7 @@ foreach($myarray as $items) {
 	$total = $total +1;
 	if ($total>$maxperfetch) break;
 	$thisLink=trim($items["mylink"]);
-	
+	$thisTitle=trim($items["mytitle"]);
 	$orig_video_link=$items["mylink"];
 
 	// VIDEO CHECK
@@ -717,33 +717,30 @@ foreach($myarray as $items) {
 		$vt=$getVideoArray[2];
 	}
 	
-
-	
-
-	
-
 	
 	
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
-	
 
-//	$thisLink=mysql_real_escape_string($thisLink);
 	$thisLink=esc_url($thisLink);
 
 
 
 			$wpdb->flush();
+			
+			//  CHECK THAT THIS LINK HAS NOT ALREADY BEEN IMPORTED
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
-			
-	//	if (!empty($items["mytitle"])){
-			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".esc_url(trim($items["mytitle"]))."%'");	
-	//	}
-			
+
+			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED
+			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".$thisTitle."%'");	
 		
+	
+
+
+
 		
 		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
 		
-		
+	
 			$added=$added+1;
 		
 			$thisContent='';
@@ -758,20 +755,19 @@ foreach($myarray as $items) {
 	}else{
   		$post['post_date'] = date('Y-m-d H:i:s',$items['mystrdate']);
 	}
-//echo $items["mytitle"];  //FIX THIS
-//echo $post['post_date'] ;
-//echo $rightNow;
-//exit;
+	
+	
 
 
-	$post['post_title'] = trim($items["mytitle"]);
+
+	$post['post_title'] = $thisTitle;
 
 
 
 	$authorPrep="By ";
 
 		if(!empty($items["myAuthor"]) && $addAuthor==1){
-		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>  ';  
+		 	$thisContent .=  '<span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href="'.$items["mylink"].'"" '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>  ';  
 			}
 
 			$items["feedHomePage"] = isset($items["feedHomePage"]) ? $items["feedHomePage"] : null;
@@ -905,14 +901,20 @@ foreach($myarray as $items) {
 				
 				//facebook correction
 				if (strpos($featuredImage,"fbcdn")>0){
-					$fb_feature_img = str_replace('_s.jpg', '_n.jpg', $featuredImage);
+		
+				
+					if (strpos($featuredImage,".png")>0){
+						$fb_feature_img = str_replace('_s.png', '_n.png', $featuredImage);
+					}else{
+						$fb_feature_img = str_replace('_s.jpg', '_n.jpg', $featuredImage);
+					}
 						if (rssmi_remoteFileExists($fb_feature_img)){
 							$featuredImage = str_replace($featuredImage, $fb_feature_img, $featuredImage);
 						}
 				}
 
 				
-				$featuredImageTitle=trim($items["mytitle"]);	
+				$featuredImageTitle=$thisTitle;	
 				setFeaturedImage($post_id,$featuredImage,$featuredImageTitle);
 				unset($featuredImage);
 			}
