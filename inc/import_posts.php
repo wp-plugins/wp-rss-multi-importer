@@ -722,7 +722,7 @@ foreach($myarray as $items) {
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 
 	$thisLink=esc_url($thisLink);
-
+//	$thisSqlTitle=str_replace("'", "\'", $thisTitle); // NOT USED ANYMORE
 
 
 			$wpdb->flush();
@@ -730,15 +730,15 @@ foreach($myarray as $items) {
 			//  CHECK THAT THIS LINK HAS NOT ALREADY BEEN IMPORTED
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
 
-			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED
-			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string($thisTitle)."%'");	
+			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED - NOT USED ANYMORE - CAUSES TOO MANY OTHER PROBLEMS
+//			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".$thisSqlTitle."%'");	
 		
 	
 
 
-
+		if ((empty( $mypostids ) && $mypostids !== false) ){ 
 		
-		if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
+	//	if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
 		
 	
 			$added=$added+1;
