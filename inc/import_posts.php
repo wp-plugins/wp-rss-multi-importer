@@ -409,7 +409,7 @@ $stripAll=$post_options['stripAll'];
 $maxperfetch=$post_options['maxperfetch'];
 $showsocial=(isset($post_options['showsocial']) ? $post_options['showsocial']: null);
 $overridedate=(isset($post_options['overridedate']) ? $post_options['overridedate']: null);
-$commentStatus=(isset($post_options['commentStatus']) ? $post_options['commentStatus']: null);
+$commentStatus=(isset($post_options['commentstatus']) ? $post_options['commentstatus']: null);
 $noFollow=(isset($post_options['noFollow']) ? $post_options['noFollow'] : 0 );
 $floatType=(isset($post_options['floatType']) ? $post_options['floatType'] : 0);
 $stripSome=(isset($post_options['stripSome']) ? $post_options['stripSome'] : null);
@@ -731,7 +731,7 @@ foreach($myarray as $items) {
 			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
 
 			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED
-			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".$thisTitle."%'");	
+			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".mysql_real_escape_string($thisTitle)."%'");	
 		
 	
 
