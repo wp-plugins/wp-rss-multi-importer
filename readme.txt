@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.9.1
-Stable tag: 2.67.62
+Stable tag: 2.67.63
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
 
-All-In-One solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site.  Using this plugin you can do 4 things (separately or at the same time):
+All-In-One solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 30 of Wordpress plugins) and popular (Top 100). Using this plugin you can do 4 things (separately or at the same time):
 
 * Display the aggregated feed items on a page in one of __9 different templates that you can customize__ 
 * __Create blog posts (autoblog)__ from the feed items so readers can comment on them
@@ -103,7 +103,7 @@ Yes.  Just add feeds and then go to the Feed to Posts Options tab in the admin s
 Yes.  Just add feeds and then go to the Export Feed Options tab in the admin section.
 
 
-Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
+Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 
 == Screenshots ==
 
@@ -116,6 +116,10 @@ Go here to find [__more FAQs__](http://www.allenweiss.com/faqs)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 2.67.63 (2014-5-27) =
+* NEW: Added diagnostics page which gives information on the plugin to help you diagnose problems.
+* Fixed:  Problems due to upgraded PHP5.0 systems and discontinued functions.
 
 = Version 2.67.62 (2014-5-18) =
 * Fixed:  Problem with stopping comments on posts and other bugs.

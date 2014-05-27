@@ -74,8 +74,18 @@ function upgrade_db() {
 
 		$post_options = get_option('rss_post_options');
 		$catOptions= get_option( 'rss_import_categories' ); 
+		
+		if (!(isset(
+		        //$post_options['categoryid'], 
+		        //$post_options['categoryid']['wpcatid'], 
+		        $post_options['categoryid']['wpcatid'][1]
+		       ) && 
+		    is_array($post_options['categoryid']['wpcatid'][1])
+		)) {
 
-	if (!is_array($post_options['categoryid']['wpcatid'][1])) {
+		
+	//	if (!is_array($post_options['categoryid']['wpcatid'][1])) {  // define
+		
 
 
 		foreach ( $post_options as $key => $value) {

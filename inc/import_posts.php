@@ -523,7 +523,7 @@ $forceFeed=1;
 						}
 					
 	
-	
+
 
 	if (is_wp_error( $feed ) ) {
 	
@@ -606,6 +606,8 @@ $forceFeed=1;
 				    	$categoryTerms .= $category->get_term().', ';
 				    }
 				$postCategories=rtrim($categoryTerms,', ');
+				}else{
+					$postCategories=Null;
 				}
 				
 			
@@ -722,25 +724,41 @@ foreach($myarray as $items) {
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 
 	$thisLink=esc_url($thisLink);
-//	$thisSqlTitle=str_replace("'", "\'", $thisTitle); // NOT USED ANYMORE
+
 
 
 			$wpdb->flush();
 			
 			//  CHECK THAT THIS LINK HAS NOT ALREADY BEEN IMPORTED
-			$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_source_link' and meta_value like '%".$thisLink."%'");
-
+			
+			$postQuery = $wpdb->prepare(
+			  "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link' and meta_value LIKE %s",
+			  "%" . $thisLink . "%"
+			) ;
+			
+				$mypostids=$wpdb->get_col( $postQuery );
+		
+;
 			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED - NOT USED ANYMORE - CAUSES TOO MANY OTHER PROBLEMS
 //			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".$thisSqlTitle."%'");	
-		
+	//	$thisTitleE=esc_sql($thisTitle);
+	//$query = $wpdb->prepare(
+//	  "SELECT post_title from $wpdb->posts
+//	  WHERE post_title LIKE %s",
+//	  "%" . $thisTitleE . "%"
+//	);
+//	$myposttitle = $wpdb->get_col( $query );
 	
+if (!is_array($mypostids)){
+	echo "Bad database connection";  //  Check to make sure the database was queried
+}
 
-
+//  NOT BEING USED SINCE TITLES ARE NOT BEING CHECKED ANYMORE
+//if ((empty($mypostids) && is_array($mypostids)) && (empty($myposttitle) && is_array($myposttitle))){
+		
+		
 		if ((empty( $mypostids ) && $mypostids !== false) ){ 
-		
-	//	if ((empty( $mypostids ) && $mypostids !== false) && empty($myposttitle) ){ 
-		
-	
+			
 			$added=$added+1;
 		
 			$thisContent='';
@@ -789,7 +807,7 @@ foreach($myarray as $items) {
 		}
 
 
-		$thisExcerpt .= '<iframe title=".$items["mytitle"]." width="420" height="315" src="'.$items["mylink"].'" frameborder="0" allowfullscreen allowTransparency="true"></iframe>';
+		$thisExcerpt .= '<iframe class="rss_multi_frame" title=".$items["mytitle"]." width="420" height="315" src="'.$items["mylink"].'" frameborder="0" allowfullscreen allowTransparency="true"></iframe>';
 	}
 	
 
@@ -924,12 +942,16 @@ foreach($myarray as $items) {
 	
 	wp_delete_post($post_id, true);
 	unset($post);
+	unset($myposttitle);
+	unset($mypostids);
 	continue;	
 		
 		
 	}
 
 	unset($post);
+	unset($myposttitle);
+	unset($mypostids);
 }
 
 

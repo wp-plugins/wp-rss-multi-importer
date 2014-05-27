@@ -156,6 +156,8 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 			$active_tab = 'items_list';
 		} else if( $active_tab == 'posts_list' ){
 			$active_tab = 'posts_list';
+		} else if( $active_tab == 'diagnostics' ){
+			$active_tab = 'diagnostics';
 		} else { $active_tab = 'intro';	
 			
 		} // end if/else ?>
@@ -171,7 +173,7 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 				<a href="?page=wp_rss_multi_importer_admin&tab=posts_list" class="nav-tab <?php echo $active_tab == 'posts_list' ? 'nav-tab-active' : ''; ?>"><?php  _e("Manage Posts", 'wp-rss-multi-importer')?></a>
 				<a href="?page=wp_rss_multi_importer_admin&tab=feed_options" class="nav-tab <?php echo $active_tab == 'feed_options' ? 'nav-tab-active' : ''; ?>"><?php  _e("Export RSS", 'wp-rss-multi-importer')?></a>
 				
-				
+					<a href="?page=wp_rss_multi_importer_admin&tab=diagnostics" class="nav-tab <?php echo $active_tab == 'diagnostics' ? 'nav-tab-active' : ''; ?>"><?php  _e("Diagnostics", 'wp-rss-multi-importer')?></a>
 		</h2>
 
 			<?php
@@ -205,6 +207,10 @@ function wp_rss_multi_importer_display( $active_tab = '' ) {
 		} else if ( $active_tab == 'feed_to_post_options' ) {
 				
 			wp_rss_multi_importer_post_page();
+		
+		} else if ( $active_tab == 'diagnostics' ) {
+				
+			wp_rss_multi_importer_diagnostics();
 		
 		} else if ( $active_tab == 'posts_list' ) {
 			

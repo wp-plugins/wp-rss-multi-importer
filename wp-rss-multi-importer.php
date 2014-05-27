@@ -1,8 +1,8 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.wprssimporter.com/
-  Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 8 templates, categorize and more. 
-  Version: 2.67.62
+  Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 9 templates, categorize and more. 
+  Version: 2.67.63
   Author: Allen Weiss
   Author URI: http://www.wprssimporter.com/
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 2.6762);
+define( 'WP_RSS_MULTI_VERSION', 2.6763);
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  

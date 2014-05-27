@@ -34,7 +34,7 @@ function wp_rss_multi_importer_template_page(){
 
 <div class="inside"><p>Many people have asked about styling their own RSS feed layouts on their sites.  While I've tried to provide many ways to do this, the first way is for me to construct various templates..which I've done and are now available in the pull-down menu on the Shortcode Settings panel.  If you don't want to mess with other templates, just use the default template (called DEFAULT).</p>
 	
-<p><a href="http://www.allenweiss.com/templates/" target="_blank">Go here to see what various templates look like</a>.</p>
+<p><a href="http://www.wprssimporter.com/templates/" target="_blank">Go here to see what various templates look like</a>.</p>
 
 <p>First, if you know some CSS you can change the styles of all the templates..and then save the CSS for use when the next update of the plugin happens.</p>
 

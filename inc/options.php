@@ -1,8 +1,178 @@
 <?php
 
+function wp_rss_multi_importer_getfeeds(){
+		$option_items = get_option('rss_import_items');
+		if(!empty($option_items)){
+		
+		$size = count($option_items);
+		   for ($i=1;$i<=$size;$i=$i+1){
+				$key =key($option_items);
+					if ( !strpos( $key, '_' ) > 0 ) continue; 
+				$rssName= $option_items[$key];
+				next($option_items);
+				$key =key($option_items);
+				$rssURL=$option_items[$key];
+					$myfeedsURLs[] = array("FeedName"=>$rssName,"FeedURL"=>$rssURL);
+				next($option_items);
+				next($option_items);			
+	}
+		return $myfeedsURLs;
+}
+	
 
+}
 
+function wp_rss_multi_importer_diagnostics(){
+	
+	$myUrlList=wp_rss_multi_importer_getfeeds();
+ 	$post_options = get_option('rss_post_options');  
+  
+_e('<h1>Diagnostics</h1><p>A quick check of basic diagnostics (feeds, filters, cron scheduler, php settings, text settings) are now being run and will let you know if there are any obvious problems below. <a href="http://www.wprssimporter.com/faqs" target=\"_blank\">Go here to see all FAQs about typical problems and how they can be solved.</a></p>','wp-rss-multi-importer' );
+	if(!empty($myUrlList)){
+	//  Check invalid Feed URLS
+		$badURL=0;
+		   foreach($myUrlList as $ListItem){
+			$rssURL= $ListItem["FeedURL"];	
+	
+					 if( ! empty( $rssURL ) ) {    
+				 
+				           $feed = wp_rss_fetchFeed( $rssURL,20,true,0 ); 
+				           if ( $feed->error()) {
+					
+								if ($badURL==0){
+									_e('<div style="border-bottom:1px solid black;padding-bottom:20px"><h2>These RSS Feed URL are either invalid or not making a connection to their servers:</h2><p>If after checking, you find the feed is valid then  <a href="http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/" target=\"_blank\">go here to learn more about what might be wrong</a>.</p>','wp-rss-multi-importer');
+									$badURL=1;
+								}
 
+				               _e('<h3> ' . $rssURL . '</h3>','wp-rss-multi-importer'); 
+				            
+		
+				           _e("<strong>Error: Invalid feed URL or feed is not being served.</strong> - Validate this feed source URL by <a href=\"http://feedvalidator.org/check?url=".$rssURL."\" target=\"_blank\">clicking here</a>.",'wp-rss-multi-importer');
+				       }
+				if($badURL==1){echo "</div>";}
+				}
+
+				     
+
+}
+
+		}
+	//  Check FOPEN for Images
+		if (ini_get('allow_url_fopen')==0){
+		_e('<h3>Your server is not configured to accept images from outside sources.  Please contact your web host to set allow_url_fopen to ON.  You might be able to do this for yourself if your host gives you a way to edit the php.ini file.</h3>','wp-rss-multi-importer');	
+		}
+		
+//  Check the Cron Scheduler		
+if (isset($post_options['active']) && $post_options['active']==1){		
+echo '<h3>Cron Schedule</h3>';
+		
+		$cronSchedule=get_option('cron');
+		
+			foreach ( $cronSchedule as $timestamp => $cronhooks ) {
+				foreach ( (array) $cronhooks as $hook => $events ) {
+					foreach ( (array) $events as $key => $event ) {		
+						if (stripos($hook,'wp_rss_multi_event_feedtopost')!== false){
+						//echo  $hook.' is scheduled for every '.friendly_event_schedule_name($event[ 'schedule' ]).'<br>' ;
+						_e('<p style="margin-left:30px"> The Feed to Post is successfully scheduled in Wordpress for every '.friendly_event_schedule_name($event[ 'schedule' ]).'. This means if you still have a problem, <a href="http://www.wprssimporter.com/faqs/the-cron-scheduler-isnt-working-whats-happening/" target="_blank">read this to learn what is going on.</a></p>','wp-rss-multi-importer') ;
+					}
+					}
+				}
+			}
+		
+}	
+	
+	
+	// check for Word Filters
+	
+	$options = get_option('rss_import_categories' );
+	$option_category = get_option('rss_import_categories_images'); 
+	if ( !empty($options) ) {
+		$size = count($options);
+		for ( $i=1; $i<=$size; $i++ ) {   
+
+				if( $i % 2== 0 ) continue;
+				   $key = key( $options );
+
+	$j = cat_get_id_number($key);
+		$myCatIDs[] = array("CatID"=>$j);
+
+		next( $options );	
+		next( $options );
+		}
+	}
+
+	if (!empty($myCatIDs)){
+	foreach($myCatIDs as $myCatID){
+	
+	$catID=$myCatID['CatID'];
+
+	if(!empty($option_category)){
+		$filterString=(isset($option_category[$catID]['filterwords']) ? $option_category[$catID]['filterwords'] : null);	
+		$exclude=(isset($option_category[$catID]['exclude']) ? $option_category[$catID]['exclude'] : null);		
+		$filterWords=explode(',', $filterString);
+		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
+			foreach($filterWords as $filterWord){
+					if ($filterWord!=''){	
+							$msg=1;
+							break;	
+						}else{
+							$msg=0;
+						}
+					}
+			}
+		}
+	
+		if ($msg==1){
+			_e("<h3>Category Word Filters are On</h3><p style='margin-left:30px'>This could be a reason you are getting no new posts.</p>", 'wp-rss-multi-importer');
+		}
+	}
+}
+
+//  Check for 0 for amount of text
+
+$text_options = get_option('rss_import_options');
+$post_options = get_option('rss_post_options'); 
+
+if (isset($post_options['active']) && $post_options['active']==1){	
+	if ($post_options['descnum']==0){
+		_e("<h3>You appear to be running the Feed to Post and chosen to have no text</h3><p style='margin-left:30px'>This is the most likely reason you have no text in your posts.  If you want text to show, set that in the Feed to Post admin page.</p>",'wp-rss-multi-importer');
+	}
+	}elseif ($text_options['descnum']==0){
+			_e("<h3>Notice: You appear to be using the Shortcode and chosen to have no text</h3><p style='margin-left:30px'>This is the most likely reason you have no text in your posts.  If you want text to show and are using the Shortcode, set that in the Shortcode admin page.</p>",'wp-rss-multi-importer');
+	} 
+	
+	// Check for feed numbers
+	
+	$feed_options = get_option('rss_import_items'); 
+	$numFeeds= count($feed_options)/3;
+	
+	if (isset($post_options['active']) && $post_options['active']==1){	
+		if ($post_options['maxfeed']*$numFeeds>$post_options['maxperfetch']){
+			_e("<h3>You appear to be running the Feed to Post and configured the number of feeds incorrectly.</h3><p style='margin-left:30px'>This is the most likely reason you have problems.  <a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a></p>",'wp-rss-multi-importer');
+		}
+	}elseif ($text_options['maxfeed']*$numFeeds>$text_options['maxperPage']){
+				_e("<h3>Notice: You appear to be using the Shortcode and configured the feeds incorrectly.</h3><p style='margin-left:30px'>This is the most likely reason you have problems.  <a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a></p>",'wp-rss-multi-importer');
+		}
+	
+	
+	
+}
+
+function friendly_event_schedule_name($scheduleName){
+
+	if (stripos($scheduleName,'minutes')>0){
+		$scheduleName = str_replace('minutes',' minutes',$scheduleName);
+	}
+	if (stripos($scheduleName,'hours')>0){
+		$scheduleName = str_replace('hours',' hours',$scheduleName);
+	}
+	if (stripos($scheduleName,'daily')>0){
+		$scheduleName = str_replace('daily',' daily',$scheduleName);
+	}
+	
+	
+	return $scheduleName;
+}
 
 
 //  Categories Page
@@ -233,7 +403,7 @@ function wp_rss_multi_importer_intro_page() {
 											
 												
 													<div class="txtorange">Join MarketingProfs.com</div>
-														<div class="txtwhite">Over 640,000 have already</div>
+														<div class="txtwhite">Over 620,000 have already</div>
 													<div class="txtorange">Your Free Membership Includes:</div>
 													<ul class="padding_nomargin txtleft" style="margin-left:30px;padding-top:5px;padding-bottom:5px;margin-top:0px;">
 														<li style="margin:3px;"><b>FREE</b> access to all marketing articles</li>
@@ -422,7 +592,7 @@ if (!isset($options['maxperPage'])  || $options['maxperPage']=='' || $options['m
 </SELECT></p>
 
 <span id="posts_per_pag_options" <?php if($options['pag']==1 || $options['pag']==2 || $options['pag']==3){echo 'style="display:none"';}?>>
-<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.allenweiss.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
+<p><label class='o_textinput' for='maxperPage'><?php _e("Number of Posts Shown per Page of Output (<a href=\"http://www.wprssimporter.com/faqs/how-does-the-number-of-entries-per-feed-and-page-or-fetch-work//\" target=\"_blank\">GO HERE TO SEE HOW TO SET THIS OPTION</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_import_options[maxperPage]">
 <OPTION VALUE="5" <?php if(isset($options['maxperPage']) && $options['maxperPage']==5){echo 'selected';} ?>>5</OPTION>
 <OPTION VALUE="10" <?php if(isset($options['maxperPage']) && $options['maxperPage']==10){echo 'selected';} ?>>10</OPTION>
@@ -458,6 +628,7 @@ if (!isset($options['maxperPage'])  || $options['maxperPage']=='' || $options['m
 	<OPTION VALUE="20" <?php if($options['perPage']==20){echo 'selected';} ?>>20</OPTION>
 	<OPTION VALUE="25" <?php if($options['perPage']==25){echo 'selected';} ?>>25</OPTION>
 	<OPTION VALUE="30" <?php if($options['perPage']==30){echo 'selected';} ?>>30</OPTION>
+	<OPTION VALUE="50" <?php if($options['perPage']==50){echo 'selected';} ?>>50</OPTION>
 	</SELECT></p>	
 	
 </span>
@@ -920,6 +1091,8 @@ function wp_rss_multi_importer_feed_page() {
       settings_fields('wp_rss_multi_importer_feed_options');
       $options = get_option('rss_feed_options');    
 
+	
+
        ?>
 
 
@@ -992,6 +1165,9 @@ function wp_rss_multi_importer_post_page() {
 
       settings_fields('wp_rss_multi_importer_post_options');
       $post_options = get_option('rss_post_options');    
+	$bloguserid=(isset($post_options['bloguserid']) ? $post_options['bloguserid'] : null);
+	$sourcewords=(isset($post_options['sourceWords_Label']) ? $post_options['sourceWords_Label'] : null);
+	$readmoreWords=(isset($post_options['readmore']) ? $post_options['readmore'] : null);
 
        ?>
 
@@ -1018,16 +1194,16 @@ wp_rss_multi_deactivation();
 
 <p><label class='o_textinput' for='fetch_schedule'><?php _e("How often to import feeds (<a href=\"http://www.wprssimporter.com/faqs/how-to-have-more-control-over-scheduling-of-feteching-feeds//\" target=\"_blank\">click here to learn how to have more control over this</a>)", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[fetch_schedule]" id="post_status">
-<OPTION VALUE="2" <?php if($post_options['fetch_schedule']=="2"){echo 'selected';} ?>>Every 10 Min.</OPTION>
-<OPTION VALUE="3" <?php if($post_options['fetch_schedule']=="3"){echo 'selected';} ?>>Every 15 Min.</OPTION>
-<OPTION VALUE="4" <?php if($post_options['fetch_schedule']=="4"){echo 'selected';} ?>>Every 20 Min.</OPTION>
-<OPTION VALUE="5" <?php if($post_options['fetch_schedule']=="5"){echo 'selected';} ?>>Every 30 Min.</OPTION>
-<OPTION VALUE="1" <?php if($post_options['fetch_schedule']=="1"){echo 'selected';} ?>>Hourly</OPTION>
-<OPTION VALUE="6" <?php if($post_options['fetch_schedule']=="6"){echo 'selected';} ?>>Every Two Hours</OPTION>
-<OPTION VALUE="7" <?php if($post_options['fetch_schedule']=="7"){echo 'selected';} ?>>Every Four Hours</OPTION>
-<OPTION VALUE="12" <?php if($post_options['fetch_schedule']=="12"){echo 'selected';} ?>>Twice Daily</OPTION>
-<OPTION VALUE="24" <?php if($post_options['fetch_schedule']=="24"){echo 'selected';} ?>>Daily</OPTION>
-<OPTION VALUE="168" <?php if($post_options['fetch_schedule']=="168"){echo 'selected';} ?>>Weekly</OPTION>
+<OPTION VALUE="2" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="2"){echo 'selected';} ?>>Every 10 Min.</OPTION>
+<OPTION VALUE="3" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="3"){echo 'selected';} ?>>Every 15 Min.</OPTION>
+<OPTION VALUE="4" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="4"){echo 'selected';} ?>>Every 20 Min.</OPTION>
+<OPTION VALUE="5" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="5"){echo 'selected';} ?>>Every 30 Min.</OPTION>
+<OPTION VALUE="1" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="1"){echo 'selected';} ?>>Hourly</OPTION>
+<OPTION VALUE="6" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="6"){echo 'selected';} ?>>Every Two Hours</OPTION>
+<OPTION VALUE="7" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="7"){echo 'selected';} ?>>Every Four Hours</OPTION>
+<OPTION VALUE="12" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="12"){echo 'selected';} ?>>Twice Daily</OPTION>
+<OPTION VALUE="24" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="24"){echo 'selected';} ?>>Daily</OPTION>
+<OPTION VALUE="168" <?php if(isset($post_options['fetch_schedule']) && $post_options['fetch_schedule']=="168"){echo 'selected';} ?>>Weekly</OPTION>
 </SELECT></p>
 
 
@@ -1044,18 +1220,17 @@ wp_rss_multi_deactivation();
 
 <p><label class='o_textinput' for='post_format'><?php _e("Default post format", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[post_format]" id="post_format">
-<OPTION VALUE="standard" <?php if($post_options['post_format']=="standard"){echo 'selected';} ?>>Standard</OPTION>
-<OPTION VALUE="aside" <?php if($post_options['post_format']=="aside"){echo 'selected';} ?>>Aside</OPTION>
-<OPTION VALUE="gallery" <?php if($post_options['post_format']=="gallery"){echo 'selected';} ?>>Gallery</OPTION>
-<OPTION VALUE="link" <?php if($post_options['post_format']=="link"){echo 'selected';} ?>>Link</OPTION>
-<OPTION VALUE="image" <?php if($post_options['post_format']=="image"){echo 'selected';} ?>>Image</OPTION>
-<OPTION VALUE="quote" <?php if($post_options['post_format']=="quote"){echo 'selected';} ?>>Quote</OPTION>
-<OPTION VALUE="status" <?php if($post_options['post_format']=="status"){echo 'selected';} ?>>Status</OPTION>
+<OPTION VALUE="standard" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="standard"){echo 'selected';} ?>>Standard</OPTION>
+<OPTION VALUE="aside" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="aside"){echo 'selected';} ?>>Aside</OPTION>
+<OPTION VALUE="gallery" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="gallery"){echo 'selected';} ?>>Gallery</OPTION>
+<OPTION VALUE="link" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="link"){echo 'selected';} ?>>Link</OPTION>
+<OPTION VALUE="image" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="image"){echo 'selected';} ?>>Image</OPTION>
+<OPTION VALUE="quote" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="quote"){echo 'selected';} ?>>Quote</OPTION>
+<OPTION VALUE="status" <?php if(isset($post_options['post_format']) && $post_options['post_format']=="status"){echo 'selected';} ?>>Status</OPTION>
 </SELECT></p>
 
 
-
-<p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='4' maxlength='4' Name="rss_post_options[bloguserid]" Value="<?php echo $post_options['bloguserid'] ?>">(if left blank, the admin will be the user)</label></p>
+<p ><label class='o_textinput' for='bloguserid'><?php _e("Post to blog user_id", 'wp-rss-multi-importer')?>   <input  id='bloguserid' type="text" size='4' maxlength='4' Name="rss_post_options[bloguserid]" Value="<?php echo $bloguserid  ?>">(if left blank, the admin will be the user)</label></p>
 
 
 <p ><label class='o_textinput' for='plugindelete'><span style="color:red"><?php _e("IMPORTANT: Check to delete all posts and featured images created by this plugin if this plugin is deleted  ", 'wp-rss-multi-importer')?></span><input type="checkbox" Name="rss_post_options[plugindelete]" Value="1" <?php if (isset($post_options['plugindelete']) && $post_options['plugindelete']==1){echo 'checked="checked"';} ?></label>
@@ -1066,7 +1241,7 @@ wp_rss_multi_deactivation();
 <p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if (isset($post_options['overridedate']) && $post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
 </p>
 
-<p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php echo $post_options['timezone'] ?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.wprssimporter.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
+<p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php if (isset($post_options['timezone'])){echo $post_options['timezone'] ;}?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.wprssimporter.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
 
 <h3><?php _e("Fetch Quantity Settings", 'wp-rss-multi-importer')?></h3>
 
@@ -1134,7 +1309,7 @@ wp_rss_multi_deactivation();
 	
 		<p ><label class='o_textinput' for='titleFilter'><?php _e("Make title clickable on listing page with same settings as above", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[titleFilter]" Value="1" <?php if (isset($post_options['titleFilter']) && $post_options['titleFilter']==1){echo 'checked="checked"';} ?></label></p>
 	
-	<p ><label class='o_textinput' for='readmore'><?php _e("Text to use for Read More (default is ...Read More)", 'wp-rss-multi-importer')?>   <input  id='readmore' type="text" size='18' Name="rss_post_options[readmore]" Value="<?php echo $post_options['readmore'] ?>"></label></p>
+	<p ><label class='o_textinput' for='readmore'><?php _e("Text to use for Read More (default is ...Read More)", 'wp-rss-multi-importer')?>   <input  id='readmore' type="text" size='18' Name="rss_post_options[readmore]" Value="<?php echo $readmoreWords ;?>"></label></p>
 	
 	
 
@@ -1170,7 +1345,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="5" <?php if($post_options['sourceWords']==5){echo 'selected';} ?>><?php _e("Other (fill in below)", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
-<p style="padding-left:15px"><label class='o_textinput' for='sourceWords_Label'><?php _e("Your own attribution label", 'wp-rss-multi-importer')?>   <input  id='sourceWords_Label' type="text" size='12'  Name="rss_post_options[sourceWords_Label]" Value="<?php echo $post_options['sourceWords_Label'] ?>">(make sure to choose Other in drop down list)</label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='sourceWords_Label'><?php _e("Your own attribution label", 'wp-rss-multi-importer')?>   <input  id='sourceWords_Label' type="text" size='12'  Name="rss_post_options[sourceWords_Label]" Value="<?php echo $sourceWords_Label ?>">(make sure to choose Other in drop down list)</label></p>
 
 <p><label class='o_textinput' for='sourceAnchorText'><?php _e("Read More anchor text", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rss_post_options[sourceAnchorText]" id="sourceAnchorText">
@@ -1226,7 +1401,7 @@ wp_rss_multi_deactivation();
 
 <p><label class='o_textinput' for='showVideo'><?php _e("Embed video into the post when available (IMPORTANT:  For this to work, your server must be configured to accept iFrames.)", 'wp-rss-multi-importer')?></label>
 	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if (isset($post_options['showVideo']) && $post_options['showVideo']==1){echo 'checked="checked"';} ?></label>
-	<?php _e("(<a href=\"http://www.allenweiss.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
+	<?php _e("(<a href=\"http://www.wprssimporter.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
 	</p>
 
 
