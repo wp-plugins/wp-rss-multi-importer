@@ -243,6 +243,15 @@ function getAllWPCats(){
 
 
 
+function strip_qs_var_match($sourcestr,$url,$key){
+    if (strpos($url,$sourcestr)>0){
+        $parts = parse_url(html_entity_decode($url));
+        parse_str($parts['query'], $query);
+        return $query[$key];
+    }else{
+        return $url;
+    }
+}
 
 
 
@@ -695,10 +704,12 @@ if($targetWindow==0){
 	$added=0;
 
 
-global $wpdb; // get all links that have been previously processed
+global $wpdb; 
 
 $wpdb->show_errors = true;
 
+
+$permalink_array=$wpdb->get_col("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link'"); // get all links that have been previously processed
 
 
 foreach($myarray as $items) {
@@ -720,7 +731,7 @@ foreach($myarray as $items) {
 	}
 	
 	
-	
+	$thisLink = strip_qs_var_match('news.google.com',$thisLink,'url');  // clean all parameters except the url from links from Google News
 	$thisLink = strip_qs_var('bing.com',$thisLink,'tid');  // clean time based links from Bing
 
 	$thisLink=esc_url($thisLink);
@@ -729,35 +740,11 @@ foreach($myarray as $items) {
 
 			$wpdb->flush();
 			
-			//  CHECK THAT THIS LINK HAS NOT ALREADY BEEN IMPORTED
-			
-			$postQuery = $wpdb->prepare(
-			  "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link' and meta_value LIKE %s",
-			  "%" . $thisLink . "%"
-			) ;
-			
-				$mypostids=$wpdb->get_col( $postQuery );
-		
-;
-			//  CHECK THAT THIS TITLE HAS NOT ALREADY BEEN IMPORTED - NOT USED ANYMORE - CAUSES TOO MANY OTHER PROBLEMS
-//			$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_title like '%".$thisSqlTitle."%'");	
-	//	$thisTitleE=esc_sql($thisTitle);
-	//$query = $wpdb->prepare(
-//	  "SELECT post_title from $wpdb->posts
-//	  WHERE post_title LIKE %s",
-//	  "%" . $thisTitleE . "%"
-//	);
-//	$myposttitle = $wpdb->get_col( $query );
-	
-if (!is_array($mypostids)){
-	echo "Bad database connection";  //  Check to make sure the database was queried
-}
 
-//  NOT BEING USED SINCE TITLES ARE NOT BEING CHECKED ANYMORE
-//if ((empty($mypostids) && is_array($mypostids)) && (empty($myposttitle) && is_array($myposttitle))){
 		
-		
-		if ((empty( $mypostids ) && $mypostids !== false) ){ 
+
+		if(!in_array($thisLink, $permalink_array)){  //check that this link has not beeen entered before
+
 			
 			$added=$added+1;
 		

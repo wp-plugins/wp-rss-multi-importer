@@ -1309,7 +1309,7 @@ wp_rss_multi_deactivation();
 	
 		<p ><label class='o_textinput' for='titleFilter'><?php _e("Make title clickable on listing page with same settings as above", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[titleFilter]" Value="1" <?php if (isset($post_options['titleFilter']) && $post_options['titleFilter']==1){echo 'checked="checked"';} ?></label></p>
 	
-	<p ><label class='o_textinput' for='readmore'><?php _e("Text to use for Read More (default is ...Read More)", 'wp-rss-multi-importer')?>   <input  id='readmore' type="text" size='18' Name="rss_post_options[readmore]" Value="<?php echo $readmoreWords ;?>"></label></p>
+	<p ><label class='o_textinput' for='readmore'><?php _e("Text to use for Read More (default is ...Read More)", 'wp-rss-multi-importer')?>   <input  id='readmore' type="text" size='18' Name="rss_post_options[readmore]" Value="<?php echo $readmoreWords ;?>">(Write in NONE if you do not want Read More text)</label></p>
 	
 	
 
@@ -1345,7 +1345,7 @@ wp_rss_multi_deactivation();
 <OPTION VALUE="5" <?php if($post_options['sourceWords']==5){echo 'selected';} ?>><?php _e("Other (fill in below)", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
-<p style="padding-left:15px"><label class='o_textinput' for='sourceWords_Label'><?php _e("Your own attribution label", 'wp-rss-multi-importer')?>   <input  id='sourceWords_Label' type="text" size='12'  Name="rss_post_options[sourceWords_Label]" Value="<?php echo $sourceWords_Label ?>">(make sure to choose Other in drop down list)</label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='sourceWords_Label'><?php _e("Your own attribution label", 'wp-rss-multi-importer')?>   <input  id='sourceWords_Label' type="text" size='12'  Name="rss_post_options[sourceWords_Label]" Value="<?php echo $sourceWords ?>">(make sure to choose Other in drop down list)</label></p>
 
 <p><label class='o_textinput' for='sourceAnchorText'><?php _e("Read More anchor text", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rss_post_options[sourceAnchorText]" id="sourceAnchorText">
