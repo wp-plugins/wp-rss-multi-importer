@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.9.1
-Stable tag: 2.67.64
+Stable tag: 2.67.65
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 9 templates, categorize and more.
 
 == Description ==
@@ -116,6 +116,9 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 2.67.65 (2014-8-2) =
+* Fixed: Bug that caused problems in viewing the custom pane for themes when the widget as active.
 
 = Version 2.67.64 (2014-6-19) =
 * Fixed: Problem with Google news and duplicate posts (may get some duplicates due to a change in the way the permalinks are processed).

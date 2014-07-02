@@ -96,12 +96,6 @@ add_options_page('WP RSS Multi-Importer','RSS Multi-Importer','manage_options','
 
 
 
-add_action( 'widgets_init', 'src_load_widgets');  //load widget
-
-function src_load_widgets() {
-register_widget('WP_Multi_Importer_Widget');
-}
-
 
 
 
