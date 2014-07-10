@@ -445,12 +445,13 @@ if ($noFollow==1){
 	
 
 		
-		if ($adjustImageSize==1){
-
+	
+		
+		if ($adjustImageSize==1  && $ftp==1){
 			$mediaImage=resize_image($mediaImage);
+		}elseif ($adjustImageSize==1  && $ftp!=1){
+			$mediaImage=rssmi_resize_image_for_shortcode($mediaImage);	
 		}
-		
-		
 		
 
 	
@@ -695,6 +696,15 @@ if ($noFollow==1){
 			}
 		}
 	}
+
+
+	function rssmi_resize_image_for_shortcode($imghtml){
+		global $maximgwidth;
+
+		return str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));		
+		
+	}
+
 
 
 	function rssmi_remoteFileExists($url) {
