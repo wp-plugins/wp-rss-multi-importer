@@ -1140,9 +1140,57 @@ function wp_rss_multi_importer_feed_page() {
 	}
 
 	?>
+	
+	<h2><?php _e("Export Your Feeds", 'wp-rss-multi-importer')?></h2>
+	<p><?php _e("Export a text file with all of the feed URLS you have stored in this plugin", 'wp-rss-multi-importer')?> </p>
+		<form method="post">
+	      <p class="submit">
+
+	          <input type="submit" name="rssmi_export" value="<?php _e( 'Export Your Feeds', 'wp-rss-multi-importer' ); ?>"  class="button" />
+	      </p>
+	  </form>
+	
 
 </div></div></div>
 <?php
+}
+
+
+function wp_rssmi_download_feed_stream(){
+		$rssmi_url_download='';
+		$option_items = get_option( 'rss_import_items' ); 
+		$option_values = array_values($option_items);
+		
+		for ($i = 0; $i <= count($option_items) - 1; $i++) {
+			$name=$option_values[$i];
+			$i=$i+1;
+			$url=$option_values[$i];
+			$i=$i+1;
+			$cat=$option_values[$i];
+			
+			$rssmi_url_download .= $name.",".$url;
+				if ($cat!=0){
+			$rssmi_url_download .=",".$cat; 		
+				}
+			$rssmi_url_download .="\n" ;
+		}
+			
+	echo $rssmi_url_download;
+	die();	
+}
+
+add_action( 'admin_init', 'wp_rssmi_download_feeds', 1 );
+
+
+function wp_rssmi_download_feeds() {
+    if ( isset( $_POST['rssmi_export'] ) ) {  //watch for post
+        $file_name = "feeds.text";
+        header( 'Content-Description: File Transfer' );
+        header( "Content-Type: text/plain; charset=" . get_option( 'blog_charset' ) );
+        header( "Content-Disposition: attachment; filename=$file_name." );
+        wp_rssmi_download_feed_stream();
+        die();
+    }
 }
 
 
