@@ -3,7 +3,7 @@
 
 
 
-//  RSS FEED FUNCTIONS
+//  RSS FEED FUNCTIONS Go here
 
 function rssmi_feed() {
 	
