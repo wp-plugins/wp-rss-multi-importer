@@ -384,22 +384,6 @@ if ($noFollow==1){
 		}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	return 	$content;
 	}
 	
@@ -422,7 +406,43 @@ if ($noFollow==1){
 	    );
 	}
 	
+
+
+
+
+	function rssmi_facebook_fix($mediaImage){  ///this fixes the ever present facebook image problem	
+		preg_match('@src="([^"]+)"@', $mediaImage, $match);
+		if (strpos($match[1],"fbcdn")>0){
+			
+			$fb_img=$match[1];
+			
+			
+			$fb_img = str_replace('/s130x130', '', $fb_img);
+			$fb_img = str_replace('_s.jpg', '_n.jpg', $fb_img);
+
+				if (rssmi_remoteFileExists($fb_img)){
+					$mediaImage = str_replace($match[1], $fb_img, $mediaImage);
+				}			
+		}
+		
+		return $mediaImage;
+
+	}
 	
+	
+	function rssmi_facebook_autopost($mediaImage){  ///this fixes the ever present facebook image problem	
+		
+		if (strpos($mediaImage,"fbcdn")>0){
+
+			$fb_img = str_replace('/s130x130', '', $mediaImage);
+			$fb_img = str_replace('_s.jpg', '_n.jpg', $fb_img);
+
+				if (rssmi_remoteFileExists($fb_img)){
+					$mediaImage = $fb_img;
+				}			
+		}
+		return $mediaImage;
+	}	
 	
 	
 	
@@ -434,14 +454,7 @@ if ($noFollow==1){
 		
 		
 		//facebook correction
-		preg_match('@src="([^"]+)"@', $mediaImage, $match);
-		if (strpos($match[1],"fbcdn")>0){
-			$fb_img=$match[1];
-			$fb_img = str_replace('_s.jpg', '_n.jpg', $match[1]);
-				if (rssmi_remoteFileExists($fb_img)){
-					$mediaImage = str_replace($match[1], $fb_img, $mediaImage);
-				}
-		}
+		$mediaImage=rssmi_facebook_fix($mediaImage);
 	
 
 		

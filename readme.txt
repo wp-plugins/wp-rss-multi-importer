@@ -4,12 +4,12 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.1
 Tested up to: 3.9.1
-Stable tag: 2.67.67
+Stable tag: 2.67.68
 Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
 
-All-In-One solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 30 of Wordpress plugins) and popular (Top 300). Using this plugin you can do 4 things (separately or at the same time):
+All-In-One free solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 30 of Wordpress plugins) and popular (Top 300). Using this plugin you can do 4 things (separately or at the same time):
 
 * Display the aggregated feed items on a page in one of __13 different templates that you can customize__ 
 * __Create blog posts (autoblog)__ from the feed items so readers can comment on them
@@ -117,14 +117,17 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 
 == Changelog ==
 
-= Version 2.67.67 (2014-8-13) =
+= Version 2.67.68 (2014-7-31) =
+* Enhanced: Facebook feeds now pick up larger size images.
+
+= Version 2.67.67 (2014-7-13) =
 * NEW: Export all your feeds (title, URL and category) in a text file.
 * NEW: New template of smooth scroll with image and title.
 
-= Version 2.67.66 (2014-8-10) =
+= Version 2.67.66 (2014-7-10) =
 * Fixed: Bug that caused resizing image not to work in the shortcode using parameters.  Should improve performance of shortcode.
 
-= Version 2.67.65 (2014-8-2) =
+= Version 2.67.65 (2014-7-2) =
 * Fixed: Bug that caused problems in viewing the custom pane for themes when the widget as active.
 
 = Version 2.67.64 (2014-6-19) =

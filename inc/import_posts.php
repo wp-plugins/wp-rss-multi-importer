@@ -917,6 +917,8 @@ foreach($myarray as $items) {
 							$featuredImage = str_replace($featuredImage, $fb_feature_img, $featuredImage);
 						}
 				}
+				
+				$featuredImage=rssmi_facebook_autopost($featuredImage);
 
 				
 				$featuredImageTitle=$thisTitle;	
