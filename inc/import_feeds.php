@@ -1,12 +1,12 @@
 <?php
 /*
-Shortcode Imports - The code on this page was adapted and expanded from an earlier version of WP RSS Aggregator by jeangalea
+Feed Item Imports - The code on this page was adapted and expanded from an earlier version of WP RSS Aggregator by jeangalea
 */
 
 function rssmi_fetch_all_feed_items( ) {     
 	
 	$rssmi_global_options = get_option('rssmi_global_options'); 
-	$single_feed_max=$rssmi_global_options['single_feed_max'];
+	$single_feed_max=(isset($rssmi_global_options['single_feed_max']) ? $rssmi_global_options['single_feed_max'] : 20);
        
 	$directFetch=1; 
 	$timeout=20;

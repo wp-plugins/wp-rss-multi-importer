@@ -731,10 +731,12 @@ echo '<div id="feedposts_note"></div><div id="fetch_items_note"></div><div id="r
 
 	function fetch_feeds_for_id(){
 		$post_id=$_POST["pid"];
+		$rssmi_global_options = get_option('rssmi_global_options'); 
+		$max=(isset($rssmi_global_options['single_feed_max']) ? $rssmi_global_options['single_feed_max'] : 20);
 
 		if (isset($post_id)){
 	wp_rss_multi_importer_post($post_id,$catID=NULL);	
-	rssmi_fetch_feed_items( $post_id,25 );	//bring in up to 25 items
+	rssmi_fetch_feed_items( $post_id,$max );	
 	echo "Most recent feed items have been imported";	
 		
 		}
