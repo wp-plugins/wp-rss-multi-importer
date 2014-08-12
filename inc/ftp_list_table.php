@@ -25,6 +25,7 @@ class My_List_Table extends WP_List_Table {
 
   function admin_header() {
     $page = ( isset($_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : false;
+
     if( 'wp_rss_multi_importer_admin' != $page )
 
     return;
@@ -49,6 +50,7 @@ class My_List_Table extends WP_List_Table {
     switch( $column_name ) { 
         case 'posttitle':
         case 'postdate':
+		case 'posttype':
         case 'postid':
 		case 'postprotect':
             return $item[ $column_name ];
@@ -57,10 +59,14 @@ class My_List_Table extends WP_List_Table {
     }
   }
 
+
+
+
 function get_sortable_columns() {
   $sortable_columns = array(
     'posttitle'  => array('posttitle',false),
     'postdate' => array('postdate',false),
+    'posttype' => array('posttype',false),
     'postid'   => array('postid',false),
 	'postprotect'=> array('postprotect',false)
   );
@@ -72,6 +78,7 @@ function get_columns(){
             'cb'        => '<input type="checkbox" />',
             'posttitle' => __( 'Post Title', 'mylisttable' ),
             'postdate'    => __( 'Post Date', 'mylisttable' ),
+			'posttype' => __( 'Post Type', 'mylisttable' ),
             'postid'      => __( 'Time Until Deletion', 'mylisttable' ),
  			'postprotect'      => __( 'Do Not Delete', 'mylisttable' )
         );
@@ -82,13 +89,12 @@ function usort_reorder( $a, $b ) {
   // If no sort, default to title
   $orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'postdate';
   // If no order, default to asc
-  $order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'asc';
+  $order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'desc';
   // Determine sort order
   $result = strcmp( $a[$orderby], $b[$orderby] );
   // Send final sort direction to usort
   return ( $order === 'asc' ) ? $result : -$result;
 }
-
 
 function column_posttitle($item){
 	$pt_page=(isset($_REQUEST['page']) ? $_REQUEST['page']: null);	
@@ -99,21 +105,6 @@ function column_posttitle($item){
         );
 		if(!$item['postprotect']){$actions['preserve'] =sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$pt_page,'preserve',$item['ID'],$pt_getpage);}
 		if($item['postprotect']){ $actions['readydelete'] = sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Auto Delete</a>',$pt_page,'readydelete',$item['ID'],$pt_getpage); }
-
-  return sprintf('%1$s %2$s', $item['posttitle'], $this->row_actions($actions) );
-}
-
-
-
-
-
-function column_posttitle_old($item){
-  $actions = array(
-            'delete'    => sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Do Not Delete</a>',$_REQUEST['page'],'preserve',$item['ID'],$_GET['paged']),
-			'view'    => sprintf('<a href="%s">View</a>',$item['guid']),
-        );
-
-		if($item['postprotect']){ $actions['readydelete'] = sprintf('<a href="?page=%s&tab=posts_list&action=%s&post=%s&paged=%s">Auto Delete</a>',$_REQUEST['page'],'readydelete',$item['ID'],$_GET['paged']); }
 
   return sprintf('%1$s %2$s', $item['posttitle'], $this->row_actions($actions) );
 }
@@ -150,7 +141,8 @@ function column_cb($item) {
     }
 
 function prepare_items() {
-	$search=(isset($_POST['s']) ? trim($_POST['s']) : null);	
+	$search = (isset($_POST['s']) ? trim($_POST['s']) : null);
+	//$search = trim($_POST['s']);
   	global $wpdb;
   	$columns  = $this->get_columns();
   	$hidden   = array();
@@ -177,13 +169,13 @@ function prepare_items() {
 	if ($search != NULL){
 	
 	
-		$query = "SELECT ID, post_date, post_title, guid FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND `post_title` LIKE '%$search%' AND DATEDIFF(NOW(), `post_date`) > ".$expiration. " AND ID IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link')";	
+		$query = "SELECT ID, post_date, post_title, post_type, guid FROM $wpdb->posts WHERE post_status = 'publish'  AND `post_title` LIKE '%$search%' AND DATEDIFF(NOW(), `post_date`) > ".$expiration. " AND ID IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link')";	
 		
 	
 		
 	}else{
 	
-		$query = "SELECT ID, post_date, post_title, guid FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND DATEDIFF(NOW(), `post_date`) > ".$expiration. " AND ID IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link')";
+		$query = "SELECT ID, post_date, post_title, post_type, guid FROM $wpdb->posts WHERE post_status = 'publish'  AND DATEDIFF(NOW(), `post_date`) > ".$expiration. " AND ID IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link')";
 		
 
 		
@@ -211,7 +203,7 @@ foreach ($ids as $id){
 	if (get_post_meta($id->ID, 'rssmi_source_protect', true)){$protectThis='<span style="color:green;">TRUE</span>';$timeToExpire='n/a';}else{$protectThis='';}
 	
 			
-			$data[]=array("ID" => $id->ID,"postdate"=>$id->post_date,"posttitle"=>$id->post_title, "postid"=>$timeToExpire,'guid'=>$id->guid,'postprotect'=>$protectThis);
+			$data[]=array("ID" => $id->ID,"postdate"=>$id->post_date,"posttitle"=>$id->post_title, "posttype"=>$id->post_type, "postid"=>$timeToExpire,'guid'=>$id->guid,'postprotect'=>$protectThis);
 			unset($timeToExpire);		
 }
   
@@ -220,7 +212,7 @@ foreach ($ids as $id){
   
   	usort( $this->example_data, array( &$this, 'usort_reorder' ) );
   
-  	$per_page = 10;
+  	$per_page = 20;
   	$current_page = $this->get_pagenum();
   	$total_items = count( $this->example_data );
 
@@ -244,6 +236,7 @@ foreach ($ids as $id){
 
 
 function getDateUntil($postDate,$expSetting){
+	$timeSince='';
 	$originalPost=$postDate;
 	$deleteDate=$originalPost+($expSetting*60*60*24);
 	$rightNow=time();
@@ -296,6 +289,8 @@ function rssmi_add_options() {
 
 
 
+
+
 if ( isset($_GET['action']) && $_GET['action']=='preserve' ){
 	$mypostid=$_GET['post'];
 	delete_single_meta_post($mypostid);
@@ -320,8 +315,9 @@ function undelete_single_meta_post($mypostid){			//  DELETE META POST DATA FUNCT
    
 
 function my_render_list_page(){
+
   global $myListTable;
-  echo '</pre><div class="wrap"><h2>Manage Feed to Post Auto Delete Actions</h2>'; 
+  echo '</pre><div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div><div class="wrap"><h2>Manage AutoPost & Auto Delete Actions</h2>'; 
 
 
 	if( isset($_POST['s']) ){
@@ -335,7 +331,7 @@ function my_render_list_page(){
     <div style="background:#ECECEC;border:1px solid #CCC;padding:0 10px;margin-top:5px;border-radius:5px;-moz-border-radius:5px;-webkit-border-radius:5px;">
         <p>This page lists all the articles you have imported using the plugin using Feed to Post.  If the articles are set to be deleted, you'll see the time until deletion in the last column (otherwise it is marked with n/a).</p> 
         <p>If you've set the plugin to automatically delete imported articles but want one or more imported articles NOT to be deleted, you can do this using the page.  Click Do Not Delete for any single article you don't want automatically deleted or check off all the articles you want to be preserved and choose Do Not Delete from the drop down menu and click Apply.</p>
-		<p style="color:red">If at any time you want to delete all the post created by this plugin and all the featured images associated with these posts, click this button once (then wait a minute or so and refresh this page) - NOTE:  This will delete only the posts created by this plugin.<button type="button" name="fetchdelete" id="fetch-delete" value=""><?php _e("CLICK TO DELETE ALL PLUGIN POSTS NOW", 'wp-rss-multi-importer')?></button> </p>
+<p>If at any time you want to delete all the posts created by this plugin and all the featured images associated with these posts, click this button once (then wait a minute or so and refresh this page) - NOTE:  This will delete only the posts created by this plugin (but not posts with a custom post type name).<button type="button" name="fetchdelete" id="fetch-delete" value=""><?php _e("CLICK TO DELETE ALL PLUGIN POSTS NOW", 'wp-rss-multi-importer')?></button> </p><div id="fnote"></div>
     </div>
 
 
@@ -347,4 +343,20 @@ function my_render_list_page(){
   $myListTable->display(); 
   echo '</form></div>'; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

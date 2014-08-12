@@ -14,7 +14,7 @@ jQuery(function(){
 
 
 <?php
-
+$strDate=rssmi_get_default_date_format();
 $charstoshow=50;  //  This number can be changed..indicates how many characters of the excerpt to show
 
 	
@@ -41,6 +41,7 @@ $charstoshow=50;  //  This number can be changed..indicates how many characters 
 	
 	
 	
+	$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 	
 	
 				$readable .=  '<li><div>';
@@ -59,7 +60,7 @@ $charstoshow=50;  //  This number can be changed..indicates how many characters 
 			}
 
 			if (!empty($items["mystrdate"])  && $showdate==1){
-			 	$readable .=   date_i18n("D, M d, Y",$items["mystrdate"]).'<br />';
+			 	$readable .=   date_i18n($strDate,$items["mystrdate"]).'<br />';
 			}
 				if (!empty($items["myGroup"])){
 		    	$readable .=  '<span style="font-style:italic;">'.$attribution.''.$items["myGroup"].'</span>';

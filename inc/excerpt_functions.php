@@ -1,13 +1,27 @@
 <?php
 
+function show_start(){
+	
+	$time_start = microtime(true);
+}
+
+function show_end(){
+	$time_end = microtime(true);	//****
+	$time = $time_end - $time_start;	//****
+	return $time."<br>";	//****
+	
+}
+
 // Helper functions
 
 function include_post($catID,$content,$title){
 	$msg=1;
 	$option_category = get_option('rss_import_categories_images');
 	if(!empty($option_category)){
-		$filterString=(isset($option_category[$catID]['filterwords']) ? $option_category[$catID]['filterwords'] : null);	
-		$exclude=(isset($option_category[$catID]['exclude']) ? $option_category[$catID]['exclude'] : null);		
+		$filterString = (isset($option_category[$catID]['filterwords']) ? $option_category[$catID]['filterwords'] : null);
+		//$filterString=$option_category[$catID]['filterwords'];  //construct array from string	
+		$exclude=(isset($option_category[$catID]['exclude']) ? $option_category[$catID]['exclude'] : null);	
+	//	$exclude=$option_category[$catID]['exclude'];	
 		$filterWords=explode(',', $filterString);
 		if (!is_null($filterWords) && !empty($filterWords) && is_array($filterWords)){
 			foreach($filterWords as $filterWord){
@@ -24,12 +38,13 @@ function include_post($catID,$content,$title){
 		}	
 	}
 
-	if (isset($exclude) && $exclude==1) {
+	if ($exclude==1) {
 		($msg==1 ? $msg=0 :$msg=1);		
 	}
 
 	return $msg;
 }	
+
 
 
 function rssmi_video($link,$targetWindow){  //  CHECKS IF VIDEO COMES FROM YOUTUBE OR VIMEO 
@@ -41,45 +56,29 @@ function rssmi_video($link,$targetWindow){  //  CHECKS IF VIDEO COMES FROM YOUTU
 			$t="yt";
 		}
 	} else if (strpos($link,'vimeo.com')>0){	
-
-	//	if (preg_match_all('#(http://vimeo.com)/([0-9]+)#i',$link,$match)){
-			
 		if(preg_match_all('#vimeo\.com/(\w*/)*(\d+)#i',$link,$match)){
-		
 			$video_id = $match[2][0];
 			$vlink='http://player.vimeo.com/video/'.$video_id;
 			$openWindow='class="rssmi_vimeo"';
 			$t="vm";
 		}				
 	} else {
-			if($targetWindow==0){
-				$openWindow='class="colorbox"';
-			}elseif ($targetWindow==1){
-				$openWindow='target=_self';		
-			}else{
-				$openWindow='target=_blank ';	
-			}
-		//$openWindow='class="colorbox"';	
-		$vlink=$link;
-		$video_id=null;
-		$t='';
+		if($targetWindow==0){
+			$openWindow='class="colorbox"';
+		}elseif ($targetWindow==1){
+			$openWindow='target=_self';		
+		}else{
+			$openWindow='target=_blank ';	
+		}
+	//$openWindow='class="colorbox"';	
+	$vlink=$link;
+	$video_id=null;
+	$t='';
 	}
-	return array($vlink,$openWindow,$video_id,$t);		
+	return array($vlink,$openWindow,$video_id);		
 }
 
 
-
-
-function pre_esc_html($content) {
-  return preg_replace_callback(
-    '#(<pre.*?>)(.*?)(</pre>)#imsu',
-    create_function(
-      '$i',
-      'return $i[1].htmlentities($i[2]).$i[3];'
-    ),
-    $content
-  );
-}
 
 
 function rssmi_strip_attributes($text){
@@ -96,7 +95,7 @@ function rssmi_ParseTag($content, $starttag, $endtag){
 	$ParseTag=str_replace("</a>", "", $ParseTag);
 
 	$output=$ParseTag;
-
+	
 	return $output;
 }
 
@@ -112,6 +111,7 @@ function rssmi_yt_video_content($content){
 	return $v_content;
 }
 
+
 function rssmi_vimeo_video_content($content){
 	$x=rssmi_strip_attributes($content);
 	preg_match_all('#<p.*?>(.*?)<\/p>#', $x, $matches);  //get all links
@@ -122,6 +122,21 @@ function rssmi_vimeo_video_content($content){
 	}
 	return $vv_content;
 }
+
+
+
+function pre_esc_html($content) {
+  return preg_replace_callback(
+    '#(<pre.*?>)(.*?)(</pre>)#imsu',
+    create_function(
+      '$i',
+      'return $i[1].htmlentities($i[2]).$i[3];'
+    ),
+    $content
+  );
+}
+
+
 
 
 function getDateSince($postDate,$nowDate){
@@ -155,9 +170,10 @@ function getDateSince($postDate,$nowDate){
 function getDefaultCatImage($catID){
 		$option_category_images = get_option('rss_import_categories_images');
 		if(!empty($option_category_images)){
-		$defaultCatImage=(isset($option_category_images[$catID]['imageURL']) ? $option_category_images[$catID]['imageURL'] : null);	
-			
+		
 	//	$defaultCatImage=$option_category_images[$catID]['imageURL'];
+		
+		$defaultCatImage=(isset($option_category_images[$catID]['imageURL']) ? $option_category_images[$catID]['imageURL'] : null);	
 		//echo $defaultCatImage;
 		if(verifyimage($defaultCatImage)==True){
 			return array(True,$defaultCatImage);
@@ -174,28 +190,17 @@ function wp_getCategoryName($catID){  //  Get the category name from the categor
 
 	$catOptions=get_option('rss_import_categories');
 	if(!empty($catOptions)){
-		$idnum='cat_name_'.$catID;
-		$rssmi_cat_name=(isset($catOptions[$idnum]) ? $catOptions[$idnum] : null);	
-		return	$rssmi_cat_name;
-	}
-}
-
-/*  function to parse input html tags into stripsome list */
-
-function rssmi_html_tags($str){
-	$htmlArray=array("<p>","<a>","<br>");
-	$str=strtolower($str);
-	$str=str_replace("<","",$str);
-	$str=str_replace(">","",$str);
-	$strA=explode(",", $str);
-	$strHTML='';
-	foreach ($strA as $val){
-			$val = "<".$val.">";
-		if (in_array($val,$htmlArray)){
-		 	$strHTML.= $val;
+		$idprefix='cat_name_';
+		$idnum=$idprefix.$catID;
+		if (isset($catID)  && !empty($catID)){
+			$idnum='cat_name_'.$catID;	
+			$rcatOptions=$catOptions[$idnum];
+		}else{
+			$rcatOptions=Null;	
 		}
+		//$idnum='cat_name_'.$catID;
+		return	$rcatOptions;
 	}
-	return $strHTML;	
 }
 
 
@@ -205,9 +210,7 @@ function rssmi_strip_read_more($content){
 	$read_more_list = array(
 	 'Read more',
 	'Read Full Story',
-	'Read full story',
-	'Continue reading',
-	'Continue reading...'
+	'Continue reading'
 	 );
 	 return preg_replace(
 	  '#(<a.*?>)'. implode('|', $read_more_list) .'(</a>)#',
@@ -221,20 +224,16 @@ function rssmi_strip_read_more($content){
 
 
 
-
-
-
-
-function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0,$feedHomePage=Null)  //show excerpt function
+function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0,$feedHomePage=Null,$noProcess=0,$useMediaImage=0)  //show excerpt function
 	{
-
-	$content=	rssmi_strip_read_more($content);
 	
+	$content=	rssmi_strip_read_more($content);
+		
 	global $ftp;	
 	global $morestyle;
-    $content=RSSMI_CleanHTML($content,$thisLink);
+    $content=CleanHTML($content,$thisLink);
 
-
+if ($noProcess==0){ 
 
 	if ($stripAll==1){
 			$content=strip_tags(html_entity_decode($content));	
@@ -242,36 +241,43 @@ function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjust
 	}else{
 			if ($ftp==1){
 			//	$content=html_entity_decode(pre_esc_html($content));
-				$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
-			//	$content=pre_esc_html($content);
+						$content=html_entity_decode(pre_esc_html($content), ENT_QUOTES,'UTF-8');
+					//	$content=pre_esc_html($content);
 			}else{				
 				if($maxchars !=99){
 					$content=strip_tags(html_entity_decode($content),'<a><img><p><br>');
 				}
 			}
 			
-
-		$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome);	
-
+		
+			
+				$content=findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome,$useMediaImage);	
+				
+				
+				
+		}
 	}
 	
-
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
 
 
-	if ($morestyle!='' || $morestyle=="NONE"){
+		if (($ftp!=1 && $morestyle!='') || ($ftp==1 && $morestyle!="NONE")){
+
+			$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." id=\"rssmi_more\">".$morestyle."</a>", $content);
+		}
 	
-		$content= str_replace($morestyle, "<a href=\"".$thisLink."\" ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"':'')." class=\"rssmi_more\">".$morestyle."</a>", $content);
-	}
+		if ($noFollow==1){
+			$content=dont_follow_links($content);
+		}
+	
+	
 
-if ($noFollow==1){
-	$content=dont_follow_links($content);
-}
-
+	
+	
+	
+	
 	return $content;
-	
 }
-	
 	
 	
 	
@@ -291,13 +297,11 @@ if ($noFollow==1){
 				}
 
 		}else if ($maxchars==0) {
-		
 			$content='';
 		}else{
 			$content=$content."";				
 		}
 		
-	
 		
 		if ($maxchars!=0  && $maxchars!=99){
 			if (($ftp!=1 && $morestyle!='') || ($ftp==1 && $morestyle!="NONE")){
@@ -310,8 +314,8 @@ if ($noFollow==1){
 	
 	
 	
-	function RSSMI_CleanHTML($content,$thisLink){
-	
+	function CleanHTML($content,$thisLink){
+		
 		$content=str_replace("&nbsp;&raquo;", "", $content);
 		$content=str_replace("&nbsp;", " ", $content);
 		$content=str_replace("&#160;&#187;","",$content);
@@ -328,15 +332,15 @@ if ($noFollow==1){
 			
 		foreach ($matches[0] as $val) {
 		
-					if (preg_match('/<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal)(.*)\/?>/i',$val)){
+					if (preg_match('/<img.*src=(.*)(tweetmeme|feedburner|ebuzzing|feedsportal|adportal|feedblitz)(.*)\/?>/i',$val)){
 
 						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
 					}
 										}
 																							
+		$content = preg_replace('(<img[^>]*height[:|=] *(\"?)[0|1](px|\"| )[^>]*>)', '', $content);  //clean bugs
 		
-		$content = preg_replace('(<img[^>]*height[:|=] *([\'"]?)[0|1](px|[\'"]| )[^>]*>)', '', $content);  //clean bugs
-									
+										
 			/*  clean empty tables and divs */							
 										
 										
@@ -362,27 +366,17 @@ if ($noFollow==1){
 		}
 																		
 			/* end clean tables and divs */
+			
+			
+			if (strpos($thisLink,'feeds.mashable.com')>0){	//  FIX MASHABLE PROBLEM
+
+				$content = str_replace('href="/', 'href="http://www.mashable.com/', $content);
+
+			}
+			
 		
 	$content =_decodeAccented($content);
 	
-
-	if (strpos($thisLink,'feeds.mashable.com')>0){	//  FIX MASHABLE PROBLEM
-
-		$content = str_replace('href="/', 'href="http://www.mashable.com/', $content);
-
-	}
-
-
-
-
-		preg_match_all('#<img.*src=(.*)(\.ico)(.*)\/?>#', $content, $matches);  //get all links
-			
-		foreach ($matches[0] as $val) {
-		
-						$content = str_replace($val, '', $content);  //clean rss embedded share links and bugs
-				
-		}
-
 
 	return 	$content;
 	}
@@ -406,17 +400,12 @@ if ($noFollow==1){
 	    );
 	}
 	
-
-
-
-
+	
+	
 	function rssmi_facebook_fix($mediaImage){  ///this fixes the ever present facebook image problem	
 		preg_match('@src="([^"]+)"@', $mediaImage, $match);
 		if (strpos($match[1],"fbcdn")>0){
-			
 			$fb_img=$match[1];
-			
-			
 			$fb_img = str_replace('/s130x130', '', $fb_img);
 			$fb_img = str_replace('_s.jpg', '_n.jpg', $fb_img);
 
@@ -441,86 +430,139 @@ if ($noFollow==1){
 					$mediaImage = $fb_img;
 				}			
 		}
-		return $mediaImage;
-	}	
-	
-	
-	
-	
-	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome){
-		global $ftp;
-		global $setFeaturedImage;
-		global $featuredImage;
 		
-		
-		//facebook correction
-		$mediaImage=rssmi_facebook_fix($mediaImage);
-	
+	return $mediaImage;
 
-		
-	
-		
-		if ($adjustImageSize==1  && $ftp==1){
-			$mediaImage=resize_image($mediaImage);
-		}elseif ($adjustImageSize==1  && $ftp!=1){
-			$mediaImage=rssmi_resize_image_for_shortcode($mediaImage);	
-		}
-		
-
-	
-		
-		if ($stripSome==1 && $ftp==1){
-			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
-		}else{
-			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
-		}
-		
-		
-	
-			
-
-	
-	if($ftp==1 && $maxchars==99){  // GETS RID OF REDUNDANCY OF IMAGES IN FEED TO POST WHEN ALL CONTENT REQUESTED
-					$j=0;
-				preg_match_all('/<a.*?>(<img.*?>)<\/a>/im', $content, $matches);  //get all links
-
-				if (!empty($matches)){
-				foreach ($matches as $val) {
-					$j=$j+1;
-					if(strpos($val[0],$featuredImage)>0 || $j==1){
-						$content = str_replace($val[0], '', $content);
-					}	
-				}
-		}
-				$j=0;
-				preg_match_all('/<img.*?>/im', $content, $matches);  //get all links
-
-					foreach ($matches as $val) {
-						$j=$j+1;
-
-						if(strpos($val[0],$featuredImage)>0 || $j==1){
-							$content = str_replace($val[0], '', $content);
-						}
-					}
-		
-	}elseif ($ftp==1 && $maxchars!=99)	{  // GETS RID OF ALL IMAGES IN FEED TO POST WHEN WHEN LESS THAN ALL CONTENT REQUESTED
-		
-		$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
-		$content = preg_replace("/<img.*?>/im","",$content,1);
-		$content = limitwords($maxchars,$content);
-			
-	}else{ // SHORTCODE
-		
-		if ($stripSome==1){
-			$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
-		}else{
-			$content = limitwords($maxchars,strip_tags($content));
-		}
-		
-		
 	}
 	
 	
+
+
+
+function rssmi_lightbox_filter($link,$targetWindow){
+
+
+	if($targetWindow==0){
+		$openWindow='class="colorbox"';
+	}elseif ($targetWindow==1){
+		$openWindow='target="_self"';	
+	}else{
+		$openWindow='target="_blank"';	
+	}
+		
+	$lb_filter=rssmi_lb_filter_callback();  // in global settings
+		
+	if (!empty($lb_filter)){
+		
+		foreach($lb_filter as $a){
+		
+			if(strpos($link,$a)!==false){
+				$openWindow='target="_blank"';
+				continue;
+			}
+		}
+	}
+	return $openWindow;
+}
+
+
+
+
+
+
+
+	
+	
+	function joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome){
+		global $ftp;
+		global $featuredImage;
+		global $setFeaturedImage;
+		
+
+		$mediaImage=rssmi_facebook_fix($mediaImage);
+
+		/*
+			//facebook correction
+			preg_match('@src="([^"]+)"@', $mediaImage, $match);
+			if (strpos($match[1],"fbcdn")>0){
+				$fb_img=$match[1];
+
+				$fb_img = str_replace('/s130x130', '', $fb_img);
+				$fb_img = str_replace('_s.jpg', '_n.jpg', $fb_img);
+				
+				
+					if (rssmi_remoteFileExists($fb_img)){
+						$mediaImage = str_replace($match[1], $fb_img, $mediaImage);
+					}
+						
+			}
+		
+		*/
+		
+	
+		
+			if ($adjustImageSize==1  && $ftp==1){
+				$mediaImage=rssmi_resize_image($mediaImage);
+			}elseif ($adjustImageSize==1  && $ftp!=1){
+				$mediaImage=rssmi_resize_image_for_shortcode($mediaImage);	
+			}
+	
+		
+
+		
+		if ($stripSome==1){
+			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
+		}else{
+			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$anchorLink.$mediaImage."</a></div>";
+		}	
+		
+	
+	
+		if($ftp==1 && $maxchars==99){  // GETS RID OF REDUNDANCY OF IMAGES IN FEED TO POST
+						$j=0;
+					preg_match_all('/<a.*?>(<img.*?>)<\/a>/im', $content, $matches);  //get all links
+
+					if (!empty($matches)){
+					foreach ($matches as $val) {
+						$j=$j+1;
+					//	if(strpos($val[0],$featuredImage)>0 || $j==1){
+							
+							if((!empty($featuredImage) && strpos($val[0],$featuredImage)>0) || $j==1){
+							
+							
+							$content = str_replace($val[0], '', $content);
+						}	
+					}
+			}
+					$j=0;
+					preg_match_all('/<img.*?>/im', $content, $matches);  //get all links
+
+						foreach ($matches as $val) {
+							$j=$j+1;
+
+							if((!empty($featuredImage) && strpos($val[0],$featuredImage)>0) || $j==1){
+								$content = str_replace($val[0], '', $content);
+							}
+						}
+
+		}elseif ($ftp==1 && $maxchars!=99)	{
+
+			$content = preg_replace("/<a.*?>(<img.*?>)<\/a>/im","",$content,1); 
+			$content = preg_replace("/<img.*?>/im","",$content,1);
+			if ($stripSome==1){ 
+					$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+			}else{
+					$content = limitwords($maxchars,$content);
+			}
+
+		}else{
+
+				if ($stripSome==1){
+					$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+				}else{
+					$content = limitwords($maxchars,strip_tags($content));
+				}
+		}
 	
 	
 	if($ftp!=1){  //  only return if not Feed to Post
@@ -534,21 +576,20 @@ if ($noFollow==1){
 		}
 	}
 	
-	
-	
+
 	return 	$content;	
 	}
 	
 	
 	
 	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome){
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome,$useMediaImage){
 		
-		if (strpos($mediaImage,"//t1.gstatic")>0 && strpos($mediaImage,"http")==0){$mediaImage=str_replace("//t1.gstatic", "http//t1.gstatic");}
+		
 		
 		$leadmatch=0;	
 		global $YTmatch;
-		global $anyimage;
+
 		global $ftp;
 		global $RSSdefaultImage;
 		global $featuredImage;
@@ -559,6 +600,9 @@ if ($noFollow==1){
 		}else{
 			$imagefix="imagefix";	
 		}
+		
+
+		
 		
 		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
 
@@ -576,6 +620,9 @@ if ($noFollow==1){
 	}else if (preg_match("/$strmatch3/sU", $content, $matches)) { //matches first image
 		$leadMatch=3;
 	}
+	
+//	if(isset($matches[2]) && verifyimage($matches[2])==False){$leadMatch=Null;}  ///maybe take out until verifyimage really works
+
 
 
 
@@ -583,67 +630,71 @@ if ($noFollow==1){
 	$catImageArray= getDefaultCatImage($catID);
 	
 	//var_dump($catImageArray);
+
+
 	
-	if($RSSdefaultImage==1 && $catImageArray[0]==True){
-		
+	if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True && $useMediaImage==1){  //  priority on using media image
+
+		$featuredImage=$mediaImage;
+		$mediaImage="<img src=\"$mediaImage\">";		
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
+	
+	}else if($RSSdefaultImage==1 && $catImageArray[0]==True){		
 
 		$mediaImage="<img src=\"$catImageArray[1]\">";	
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage=$catImageArray[1];
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-
 	
-	}else if ((isset($leadMatch) && $leadMatch==1) && isbug($matches[2])==False ){
+	}else if ((isset($leadMatch) && $leadMatch==1) && isbug($matches[2])==False){
 
 		$mediaImage = $matches[2];
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-
 		
-	}else if ((isset($leadMatch) && $leadMatch==2) && isbug($matches[2])==False){
+		
+	}else if ((isset($leadMatch) && $leadMatch==2) || (isset($leadMatch) && $leadMatch==3) && isbug($matches[2])==False){
+
 
 		$mediaImage = $matches[2];
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-		
 	
-	
+
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
 		$featuredImage=$mediaImage;
 		$mediaImage="<img src=\"$mediaImage\">";		
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
+		
 	
-			
-	}else if (isset($leadMatch) && $leadMatch==3 && intval($anyimage)==1){
-
-
-		$mediaImage=$matches[2];	
-		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-
 	}else if($RSSdefaultImage==2 && $catImageArray[1]==True){
 
 
-		$mediaImage="<img src=\"$catImageArray[1]\">";	
-		$featuredImage=$catImageArray[1];	
-		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$thisLink,$stripSome);
-
+		$mediaImage="<img src=\"$catImageArray[1]\">";		
+		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
+		$featuredImage=$catImageArray[1];
 	
 	}else{  //matches no leading image or media enclosure and no default category image
 
-			if($ftp==1){ 
-				$content = limitwords($maxchars,$content);
+			if($ftp==1){  
+					if ($stripSome==1){ 
+						$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+					}else{
+						$content = limitwords($maxchars,$content);
+					}
 			}else{
-			
-				if ($stripSome==1){  //  NO IMAGE MATCH SO CHECK FOR HOW MUCH TO STRIP HTML FOR SHORTCODE
-					$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
-				}else{
-					$content = limitwords($maxchars,strip_tags($content));
-				}
-			}		
+		
+					if ($stripSome==1){  //  NO IMAGE MATCH SO CHECK FOR HOW MUCH TO STRIP HTML FOR SHORTCODE
+						$content = limitwords($maxchars,strip_tags($content,'<a><p><br>'));
+					}else{
+						$content = limitwords($maxchars,strip_tags($content));
+					}
+			}
+		
 		}
-
-	
+		
+		
+		
 	return $content;
 		
 	}
@@ -654,14 +705,25 @@ if ($noFollow==1){
 	function verifyimage($imageURL) {
 		$imageURL = preg_replace('/\?.*/', '', $imageURL);
 		
+	//	$pattern='#^img.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i';
+	
+	$pattern='#^.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i';
+	
+	if( preg_match($pattern, $imageURL))
+		
+//if( preg_match('#^.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i', $imageURL))
 
 
-	    if( preg_match('#^(http|https):\/\/(.*)\.(gif|png|jpg|jpeg|dhtml)$#i', $imageURL)  || strpos($imageURL,"gstatic")>0)
+
+
+	 //   if( preg_match('#^(http|https):\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
 	    {
 	        $msg = TRUE; 
+
 	    }
 	    else
 	    {
+
 	        $msg = FALSE; 
 	    }
 
@@ -670,7 +732,7 @@ if ($noFollow==1){
 	
 	function isbug($imageLink){
 		
-		if(strpos($imageLink,'width="1"')>0 || strpos($imageLink,'height="1"')>0){
+		if(strpos($imageLink,'width="1"')>0){
 			$msg = TRUE; 
 		}
 		else
@@ -683,41 +745,55 @@ if ($noFollow==1){
 
 	
 	function remove_img_hw( $imghtml ) {
+	
 	 $imghtml = preg_replace( '/(width|height)=\"\d*\"\s?/', "", $imghtml );
 	    return $imghtml;
 	}
 	
-	function resize_image($imghtml){
+	function rssmi_resize_image($imghtml){
+		
+		
+		
 		global $maximgwidth;
 		global $ftp;
 		global $fopenIsSet;
 		$imghtml= preg_replace('/style=\"[^\"]*\"/', '', $imghtml); //get rid of inline style
 		if (preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches)) {
 			if (!empty($matches[1])  && verifyimage($matches[1])){	
-				if ($fopenIsSet==1  && rssmi_remoteFileExists($matches[1])){
-					$thisWidth=getimagesize($matches[1]);
+			
+				if ($fopenIsSet==1 && rssmi_remoteFileExists($matches[1])){  
+						
+					$imageArray=getimagesize($matches[1]);
+					
+					if (!empty($imageArray)){
+						$thisWidth=$imageArray[0];
+					}else{
+						$thisWidth="150";	
+					}
 				}else{
 					$thisWidth="150";	
 				}
 					if ($ftp==1 && $maximgwidth==999){
-							return str_replace("<img", "<img", remove_img_hw($imghtml));
+							$returnImage= str_replace("<img", "<img", remove_img_hw($imghtml));
 						}else if ($thisWidth > $maximgwidth){
-						return str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));
-						}else{								
-							return str_replace("<img", "<img width=\"".$thisWidth."\"", remove_img_hw($imghtml));		
-					}
-			}
+							$returnImage= str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));		
+						}else{	
+							$returnImage= str_replace("<img", "<img width=\"".$thisWidth."\"", remove_img_hw($imghtml));		
+					}	
+			}	
 		}
+		
+		
+		
+		return $returnImage;
 	}
-
-
+	
+	
 	function rssmi_resize_image_for_shortcode($imghtml){
 		global $maximgwidth;
-
 		return str_replace("<img", "<img width=\"".$maximgwidth."\"", remove_img_hw($imghtml));		
 		
 	}
-
 
 
 	function rssmi_remoteFileExists($url) {
@@ -757,7 +833,6 @@ if ($noFollow==1){
 	  '$1$2$3"$4 rel="nofollow">',
 	  $html);
 	}
-
 
 
 ?>

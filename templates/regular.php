@@ -1,4 +1,5 @@
 <?php
+$strDate=rssmi_get_default_date_format();
 //  this is the regular template...the default template but without any styling
 $readable='<div class="rssmi_wrap">';
 foreach($myarray as $items) {
@@ -43,6 +44,7 @@ if ($nodays==0){
 }
 
 
+$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 
 
@@ -80,7 +82,7 @@ if ($nodays==0){
 	
 	if (!empty($items["mystrdate"]) && $showdate==1){
 	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use if you want time to show
-	$readable .=  '<span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
+	$readable .=  '<span class="date">'. date_i18n($strDate,$items["mystrdate"]).'</span><br />';
 	}
 		if (!empty($items["myGroup"]) && $showgroup==1){
      $readable .=  '<span class="source">'.$attribution.''.$items["myGroup"].'</span>';

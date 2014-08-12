@@ -1,7 +1,7 @@
 <?php
 
 
-add_action('wp', 'wp_rss_multi_activation');
+add_action('init', 'wp_rss_multi_activation');
 
 
 function wp_rss_multi_activation() {
@@ -10,8 +10,24 @@ function wp_rss_multi_activation() {
 		wp_schedule_event( time(), 'hourly', 'wp_rss_multi_event');
 	}
 	
+	if ( !wp_next_scheduled( 'wp_rss_multi_event_delete_custom_posts' ) ) {
+		wp_schedule_event( time(), 'hourly', 'wp_rss_multi_event_delete_custom_posts');
+	}
+	
+}
+
+add_action('wp_rss_multi_event', 'wp_rss_multi_cron');
+add_action('wp_rss_multi_event_delete_custom_posts', 'wp_rss_multi_delete_custom_posts');
+
+
+
+
+add_action('init', 'rssmi_schedule_autopost');	
+
+function rssmi_schedule_autopost(){
+	
 	$post_schedule_options = get_option('rss_post_options');
-		if(	isset($post_schedule_options['active']) && $post_schedule_options['active']==1){
+		if(isset($post_schedule_options['active']) && $post_schedule_options['active']==1 ){
 			
 			if (isset($post_schedule_options['fetch_schedule'])){
 					$periodnumber=$post_schedule_options['fetch_schedule'];
@@ -32,21 +48,64 @@ function wp_rss_multi_activation() {
 			case 168: $display_period='weekly'; break;
 		}	
 					
-							
-	$cronStartTime=time()+60;
+
 	
 	if( !wp_next_scheduled( 'wp_rss_multi_event_feedtopost' ) ){
-	     wp_schedule_event( $cronStartTime, $display_period, 'wp_rss_multi_event_feedtopost' );
+	     wp_schedule_event( time(), $display_period, 'wp_rss_multi_event_feedtopost' );
 	  }	
 	
+	add_action('wp_rss_multi_event_feedtopost', 'wp_rss_multi_cron_feedtopost');
+	
 	}else{
-		wp_rss_multi_deactivation();
+		wp_rss_multi_deactivation(2);
 	}
 }
 
-add_action('wp_rss_multi_event', 'wp_rss_multi_cron');
 
-add_action('wp_rss_multi_event_feedtopost', 'wp_rss_multi_cron_feedtopost');
+
+add_action('init', 'rssmi_schedule_import_feeds');	
+
+function rssmi_schedule_import_feeds(){	
+
+		$rssmi_global_options = get_option( 'rssmi_global_options' ); 
+		
+			
+			if (isset($rssmi_global_options['fetch_schedule'])){
+					$feedperiodnumber=$rssmi_global_options['fetch_schedule'];
+				}else{
+			   		$feedperiodnumber = 1;
+			}
+
+		switch ($feedperiodnumber) {
+			case 1: $feed_display_period='hourly'; break;
+			case 2: $feed_display_period='tenminutes'; break;
+			case 3: $feed_display_period='fifteenminutes'; break;
+			case 4: $feed_display_period='twentyminutes'; break;
+			case 5: $feed_display_period='thirtyminutes'; break;
+			case 6: $display_period='twohours'; break;
+			case 7: $display_period='fourhours'; break;
+			case 12: $feed_display_period='twicedaily'; break;
+			case 24: $feed_display_period='daily'; break;
+			case 168: $feed_display_period='weekly'; break;
+		}	
+		
+
+	
+	if( !wp_next_scheduled( 'wp_rss_multi_event_importfeeds' ) ){
+	     wp_schedule_event( time(), $feed_display_period, 'wp_rss_multi_event_importfeeds' );
+	  }
+	
+	add_action('wp_rss_multi_event_importfeeds', 'wp_rss_multi_cron_importfeeds');
+}
+
+
+
+
+
+
+
+
+
 
 add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule' );
 
@@ -113,8 +172,6 @@ function cron_add_wprssmi_schedule_30( $schedules ) {  //add a 30 min schedule t
 	return $schedules;	
 }
 
-
-
 add_filter( 'cron_schedules', 'cron_add_wprssmi_schedule_120' );
 
 function cron_add_wprssmi_schedule_120( $schedules ) {  //add a 2 hourly schedule to cron
@@ -143,17 +200,27 @@ function cron_add_wprssmi_schedule_240( $schedules ) {  //add a 4 hourly schedul
 
 
 
-
 function wp_rss_multi_cron() {
 	find_db_transients();
 }
 
 
-function wp_rss_multi_cron_feedtopost() {
+function wp_rss_multi_delete_custom_posts(){
+	rssmi_delete_custom_posts(); //  Delete feed items 
+}
+
+
+function wp_rss_multi_cron_feedtopost() {  //Fetch AutoPost items from database
 	rssmi_import_feed_post();
 
 }
 
+
+function wp_rss_multi_cron_importfeeds(){  //Import feed items
+	
+	rssmi_fetch_all_feed_items();
+
+}
 
 
 function find_db_transients() {
@@ -174,8 +241,10 @@ function find_db_transients() {
 
 register_deactivation_hook(__FILE__, 'wp_rss_multi_deactivation');
 
-function wp_rss_multi_deactivation() {
+function wp_rss_multi_deactivation($hook_event) {
+	if ($hook_event==1){
 	wp_clear_scheduled_hook('wp_rss_multi_event_feedtopost');
+	}
 }
 
 

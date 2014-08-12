@@ -25,7 +25,10 @@
 
 #colorbox{border-radius:10px;}
 
-
+a.colorbox.cboxElement {
+   
+    font-size:88%;
+}
 
 #cboxContent{background:#fff; overflow:hidden;}
         .cboxIframe{background:#fff;}

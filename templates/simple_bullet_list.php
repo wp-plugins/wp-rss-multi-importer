@@ -1,4 +1,5 @@
 <?php
+$strDate=rssmi_get_default_date_format();
 $readable='<div class="rssmi_wrap">';
 
 		$readable.="<ul class='wprssmi_bullet_list'>";
@@ -15,7 +16,7 @@ $readable='<div class="rssmi_wrap">';
 	
 	
 
-	$readable .= '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>  <span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span></li>';
+	$readable .= '<li class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>  <span class="date">'. date_i18n($strDate,$items["mystrdate"]).'</span></li>';
 
 	
 	

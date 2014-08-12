@@ -1,8 +1,11 @@
 <?php
+$strDate=rssmi_get_default_date_format();
 	$readable='<div class="rssmi_wrap">';
 	
 	//  don't mess with this php code 
 	foreach($myarray as $items) {
+
+$useMediaImage=$items["useMediaImage"];
 
 	if ($pag!==1){ 	
 		$total = $total +1;
@@ -13,7 +16,7 @@
 	//  END don't mess with this php code 
 	
 	
-	
+$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter	
 	
 	$readable .= '<div class="wprssmi-cs-items">';
 //	$readable .= '<div class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'>'.$items["mytitle"].'</a>';
@@ -45,16 +48,16 @@ if (!empty($items["mydesc"]) && $showDesc==1){
 	}
 	
 	
-$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
+$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome,$useMediaImage);
 
 $readable .=  '</div>';	
 	
 }
 	
 	
-
+$strDate=rssmi_get_default_date_format();
 	
-	$readable .= '<div class="wprssmi-cs-source">'.date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).', Continue reading <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">at the source</a></div></div>';
+	$readable .= '<div class="wprssmi-cs-source">'.date_i18n($strDate,$items["mystrdate"]).', Continue reading <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">at the source</a></div></div>';
 	
 	
 	
@@ -63,7 +66,7 @@ $readable .=  '</div>';
 
 }  	//  don't mess with this php code 
 
-	$readable .='</div>';					
+	$readable.='</div>';					
 
 
 

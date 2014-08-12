@@ -2,32 +2,28 @@
 Contributors: amweiss98
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
-Requires at least: 3.1
-Tested up to: 3.9.1
-Stable tag: 2.67.68
-Aggregate RSS feeds. Auto post or use shortcode, excerpts w/ images, 13 templates, categorize and more.
+Requires at least: 3.3
+Tested up to: 3.9.2
+Stable tag: 3.00
+Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
 
-All-In-One free solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 30 of Wordpress plugins) and popular (Top 300). Using this plugin you can do 4 things (separately or at the same time):
+All-In-One totally free solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 25 of Wordpress plugins). Using this plugin you can do 4 things (separately or at the same time):
 
 * Display the aggregated feed items on a page in one of __13 different templates that you can customize__ 
-* __Create blog posts (autoblog)__ from the feed items so readers can comment on them
+* __Create blog posts (AutoPost)__ from the feed items so readers can comment on them
 * Display the aggregated feed items in a __theme widget__, in one of 3 different displays
 * Display the aggregated feed items in __your own RSS feed__
 
-= Newest Features =
-
-Feed to Post has options to make the image into a Featured Image and auto-remove posts.
-
 = See How It Works =
 
-[youtube http://www.youtube.com/watch?v=S-Ixus8Maz0]
-
+[youtube http://www.youtube.com/watch?v=m1_h_Y7eOOI]
 
 = Main Features =
 
-* Templates - choose from 9 different templates, create and style your own and save it
+* Templates - choose from 13 different templates, create and style your own and save it
+* Pick up author's name in the RSS feed if it exists
 * Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
 * When posting to your blog, have the image be the Featured Image which you can use in the most current themes
 * Auto remove posts to your blog based on expiration time
@@ -49,7 +45,7 @@ Feed to Post has options to make the image into a Featured Image and auto-remove
 * Allow users to determine whether to show-hide excerpts
 * Export all the feeds as a single RSS feed
 * Add social links (Twitter and Facebook)
-* Over 18 shortcode parameters you can use to further customize the output
+* Over 25 shortcode parameters you can use to further customize the output
 
 These features are all available in the admin panel.
 
@@ -66,10 +62,10 @@ These features are all available in the admin panel.
 1. Upload the `wp-rss-multi-importer` folder to the `/wp-content/plugins/` directory
 2. Activate the WP RSS Multi Importer plugin through the 'Plugins' menu in WordPress
 3. Configure the plugin by going to the `RSS Multi Importer` submenu that appears in your `Settings` admin menu.
-3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget, or use the Feed to Post option.
+3. Use the shortcode in your posts or pages: `[wp_rss_multi_importer]` or use the widget, or use the AutoPost option.
 4. Limit which feeds get shown on a page by using a parameter in the shortcode, like: [wp_rss_multi_importer category="#,#"] or choose the categories in the widget.
 
-You can also use other over 20 other parameters for the DEFAULT template which can be customized in the shortcode.
+You can also use other over 25 other parameters for the DEFAULT template which can be customized in the shortcode.
 
 == Frequently Asked Questions ==
 = How can I output the feeds in my theme? =
@@ -84,7 +80,7 @@ assign the feed to a category, then use this shortcode on your page or post:
 Assign multiple categories using a comma delimited list:
 [wp_rss_multi_importer category="#,#,#"]
 
-Use the Feed to Post option and turn the feed articles into blog posts. 
+Use the AutoPost option and turn the feed articles into blog posts. 
 
 
 Use the widget.  If your theme allows for widgets, you'll find the RSS Multi Importer Widget there.
@@ -96,7 +92,7 @@ echo do_shortcode('[wp_rss_multi_importer]');
 
 = Can I have the feeds go directly into blog posts? =
 
-Yes.  Just add feeds and then go to the Feed to Posts Options tab in the admin section.
+Yes.  Just add feeds and then go to the AutoPosts Options tab in the admin section.
 
 = Can I export my own feed of the aggregated feed? =
 
@@ -107,20 +103,32 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 
 == Screenshots ==
 
-1. Adding feeds and assigning categories.
+1. Feed list and upload feature.
 
-2. Adding new categories.
+2. Manage AutoPosts with delete actions
 
-3. Options panel.
+3. Partial list of shortcode parameters.
 
 4. User view - with excerpts and images.
 
 == Changelog ==
 
+= Version 3.00 (2014-8-12) =
+* NEW: Assign a blog user to each feed.
+* NEW: Assign a specific media image, if it exists, for a feed.
+* NEW: Easily upload a number of feeds at the same time.
+* NEW: Scrolling template that includes an image and title.
+* NEW: Customize your date format.
+* NEW: Make Facebook titles not cutoff mid-word.
+* NEW: Lightbox filter to suppress on sites that don't allow lightbox access.
+* Enhanced:  View of feeds to see if they have images, enclosures, how many items in database and more.
+* Improved:  Better diagnostics and directions.
+* Improved:  Performance for shortcode.
+
 = Version 2.67.68 (2014-7-31) =
 * Enhanced: Facebook feeds now pick up larger size images.
 
-= Version 2.67.67 (2014-7-13) =
+= Version 2.67.67 (2014-7-14) =
 * NEW: Export all your feeds (title, URL and category) in a text file.
 * NEW: New template of smooth scroll with image and title.
 
@@ -296,6 +304,9 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 * Added option to include short descriptions - excerpts (if they exist in the RSS feed)
 
 == Upgrade Notice ==
+
+= 3.00
+This version is a major upgrade that changes the way the data is imported and includes several improvement (e.g., unlimited feeds, selection of specific media images, bulk uploading of feeds, assigning blog user to feeds), bug fixes and improved performance of the shortcode results.
 
 = 2.60 =
 This version includes several improvements (e.g. featured image, auto remove, default image, filtering) and bug fixes for the Feed to Post option and added improved flexibility for the shortcode option.

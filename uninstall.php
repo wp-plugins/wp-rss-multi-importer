@@ -12,6 +12,7 @@ if (is_multisite()) {
 			$post_options_uninstall = get_option('rss_post_options');
 			if ($post_options_uninstall['plugindelete']==1){
 				rssmi_uninstall_delete_posts_admin();
+				delete_post_meta_by_key('rssmi_feed');
 			}
             delete_option('rss_import_items');
 			delete_option('rss_import_options');
@@ -20,12 +21,15 @@ if (is_multisite()) {
 			delete_option('rss_admin_options');
 			delete_option('rss_feed_options');
 			delete_option('rss_post_options');
+			delete_option('rssmi_dismiss_rating');
 			delete_option('rss_import_categories_images');
+			delete_option('rssmi_global_options');
 			$allposts = get_posts('numberposts=-1&post_type=post&post_status=any');
 			foreach( $allposts as $postinfo) {
 			    delete_post_meta($postinfo->ID, 'rssmi_source_link');
 			    delete_post_meta($postinfo->ID, 'rssmi_source_protect');
 			  }
+				rssmi_uninstall_restore_all();
         }
         restore_current_blog();
     }
@@ -33,6 +37,7 @@ if (is_multisite()) {
 	$post_options_uninstall = get_option('rss_post_options');
 	if ($post_options_uninstall['plugindelete']==1){
 		rssmi_uninstall_delete_posts_admin();
+		delete_post_meta_by_key('rssmi_feed');
 	}
     delete_option('rss_import_items');
     delete_option('rss_import_categories');
@@ -41,14 +46,16 @@ if (is_multisite()) {
 	delete_option('rss_admin_options');
 	delete_option('rss_feed_options');
 	delete_option('rss_post_options');
+	delete_option('rssmi_dismiss_rating');
 	delete_option('rss_import_categories_images');
+	delete_option('rssmi_global_options');
 	
 	$allposts = get_posts('numberposts=-1&post_type=post&post_status=any');
 	foreach( $allposts as $postinfo) {
 	    delete_post_meta($postinfo->ID, 'rssmi_source_link');
 	    delete_post_meta($postinfo->ID, 'rssmi_source_protect');
 	  }
-	
+		rssmi_uninstall_restore_all();
 }
 //
 function rssmi_uninstall_delete_attachment($id_ID){ // DELETE ATTACHMENTS CREATED BY THIS PLUGIN
@@ -78,5 +85,21 @@ function rssmi_uninstall_delete_posts_admin(){  // DELETE BLOG POSTS CREATED BY 
 	
 }
 
+
+function rssmi_uninstall_restore_all(){  //  DELETES EVERYTHING CAUSED BY THIS PLUGIN IN THE POST AND POST META TABLES
+	global $wpdb;	
+
+	$query = "SELECT ID FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'rssmi_feed_item' OR post_type = 'rssmi_feed'";
+
+	$ids = $wpdb->get_results($query);
+
+	if (!empty($ids)){
+		foreach ($ids as $id){
+			wp_delete_post($id->ID, true);
+			}
+
+		}
+	
+}
 
 ?>

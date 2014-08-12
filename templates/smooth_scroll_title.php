@@ -1,8 +1,9 @@
 <?php
 	add_action('wp_footer','smooth_scroll_scripts');  // DON'T MESS WITH THIS
 
-
+$strDate=rssmi_get_default_date_format();
 	
+
 
 	
 	$readable .= '	<div id="wprssmi_main_container">';
@@ -23,7 +24,7 @@
 
 	$idnum=$idnum +1;
 	//  END don't mess with this php code
-
+$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 
 				

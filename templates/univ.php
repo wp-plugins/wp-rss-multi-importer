@@ -13,6 +13,7 @@
 	//  END don't mess with this php code 
 	
 	
+	$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 	$readable .= '<li class="title"><a href="#msq'.$total.'">'.$items["mytitle"].'</a> </li>';
 
@@ -36,7 +37,6 @@
 	
 	
 	
-		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 	
 		$readable .= '<a name="msq'.$total.'"></a><div class="wprssmi-cs-items">';
 
@@ -65,7 +65,7 @@
 	
 
 	
-		//$readable .= '<div class="wprssmi-cs-source">'.date_i18n($strDate,$items["mystrdate"]).', Continue reading <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">at the source</a></div></div>';
+		//$readable .= '<div class="wprssmi-cs-source">'.date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).', Continue reading <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').'">at the source</a></div></div>';
 	
 	
 	

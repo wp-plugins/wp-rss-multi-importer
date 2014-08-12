@@ -1,7 +1,7 @@
 <?php
 	add_action('wp_footer','smooth_scroll_scripts');  // DON'T MESS WITH THIS
 
-
+$strDate=rssmi_get_default_date_format();
 	
 
 	
@@ -15,7 +15,9 @@
 	
 	//  BEGIN don't mess with this php code below
 	foreach($myarray as $items) {
-
+		
+		$useMediaImage=$items["useMediaImage"];
+		
 	if ($pag!==1){ 	
 		$total = $total +1;
 		if ($maxperPage>0 && $total>=$maxperPage) break;
@@ -25,6 +27,7 @@
 	//  END don't mess with this php code
 
 
+	$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 				
 					$readable .= '	<div class="wprssmi_item_inner">';
@@ -33,8 +36,8 @@
 
 		            $readable .= '<div class="wprssmi_container">';
 		            $readable .= '<p class="wprssmi_title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></p>';
-		            $readable .= '<p><div class="wprssmi-excerpt">'.showexcerpt($items["mydesc"],10,$openWindow,1,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"]).'</span></div></p>';
-					$readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
+		            $readable .= '<p><div class="wprssmi-excerpt">'.showexcerpt($items["mydesc"],10,$openWindow,1,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome,$useMediaImage).'</span></div></p>';
+					$readable .=  '<span style="'.$datestyle.'">'. date_i18n($strDate,$items["mystrdate"]).'</span><br />';
 		            $readable .= '<p><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["myGroup"].'</a></p>';
 		           	$readable .= '</div>';
 		          	$readable .= '</div>';

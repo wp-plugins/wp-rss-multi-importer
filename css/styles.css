@@ -116,6 +116,20 @@ color:white !important;
 text-align:center;
 }
 
+
+.activate_box{
+	border: 1px solid #CCC;
+	border-radius: 25px 25px;
+	margin: 10px 0 10px 0;
+	padding: 10px 15px;	
+	background:#FF6600;
+	
+}
+.activate_title{
+color:white !important;	
+text-align:center;
+}
+
 .txtorange{
 	color: #FF6600;
 	font-size:15px;
@@ -144,7 +158,7 @@ text-align:center;
 	margin-left:10px;
 }
 .default-tags-text{
-	margin-left:125px;
+	margin-left:80px;
 	font-size:18px;
 
 }
@@ -184,4 +198,133 @@ text-align:center;
 
 .default-image-wrapper{
 	margin-top:15px;
+}
+
+
+.button-delete-red{
+	background-color: #9B2124;
+	color: #FFFFFF;
+	 padding: 5px;
+}
+
+
+.button-fetch-green{
+	background-color: #B9C558;
+	color: #FFFFFF;
+	 padding: 5px;
+	margin-left:80px;
+}
+
+
+.button-delete-feeds-red{
+	background-color: #9B2124;
+	color: #FFFFFF;
+	 padding: 5px;
+	margin-left:80px;
+}
+
+
+p#vtip { width: 400px;display: none; position: absolute; padding: 10px; left: 5px; font-size: 1em; line-height: 1.5em; background-color: white; border: 6px solid #9aabb7; -moz-border-radius: 5px;border-radius: 5px; -webkit-border-radius: 5px; z-index: 9999}
+
+
+span.vtip {
+    background: url("../css/images/q.png") no-repeat scroll 0 0 transparent;
+    display: inline-block;
+    height: 16px;
+    margin: 0 10px 0 2px !important;
+    opacity: 0.7;
+    text-indent: -9999px;
+    width: 16px;
+}
+
+
+
+
+div#rssmi-big-ajax-loader {
+	
+	display: none;
+	  margin: 0px 0px 0px -50px; /* left margin is half width of the div, to centre it */
+	  padding: 30px 10px 10px 10px;
+	  position: absolute;
+	  left: 40%;
+	  top: 125px;
+	  width: 150px;
+	  height: 150px;
+	  text-align: center;
+	  background: #e8e8e8 url("../css/images/big_ajax_loader.gif") no-repeat center center;
+
+}
+
+
+
+div#rssmi-ajax-loader {
+	
+	display: none;
+	  margin: 0px 0px 0px -50px; /* left margin is half width of the div, to centre it */
+	  padding: 30px 10px 10px 10px;
+	  position: absolute;
+	  left: 20%;
+	  top: -225px;
+	  width: 100px;
+	  height: 100px;
+	  text-align: center;
+	  z-index: 1000;
+	  background: #e8e8e8 url("../css/images/ajax-loader.gif") no-repeat center center;
+
+}
+
+
+div#rssmi-ajax-loader-delete-fetch {
+	
+	display: none;
+	  margin: 0px 0px 0px -50px; /* left margin is half width of the div, to centre it */
+	  padding: 30px 10px 10px 10px;
+	  position: absolute;
+	  left: 20%;
+	  top: -10px;
+	  width: 50px;
+	  height: 50px;
+	  text-align: center;
+	  z-index: 1000;
+	  background: #e8e8e8 url("../css/images/ajax-loader.gif") no-repeat center center;
+
+}
+
+
+div#rssmi-ajax-loader-center {
+	
+	display: none;
+	  margin: 0px 0px 0px -50px; /* left margin is half width of the div, to centre it */
+	  padding: 30px 10px 10px 10px;
+	  position: fixed;
+	  top: 60%;
+	  left: 50%;
+	  width: 50px;
+	  height: 50px;
+	  text-align: center;
+	  z-index: 1000;
+	  background: #e8e8e8 url("../css/images/ajax-loader.gif") no-repeat center center;
+
+}
+
+
+
+
+
+
+
+div.rssmi-upgrade {
+    background-color: #fff;
+    border-left: 4px solid #7ad03a;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+    padding: 1px 12px;
+}
+
+
+#submitpost, #submitpost #major-publishing-actions
+{
+	border:none !important;
+	padding:0 0 0 0 !important;
+	margin:0 0 0 0 !important;
+	background-color:#FFFFFF !important;
 }

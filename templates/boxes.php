@@ -1,4 +1,5 @@
 <?php
+$strDate=rssmi_get_default_date_format();
 $readable .=  '<div id="wprssmi_center_box">';
 $readable .=  '<div id="wprssmi_main_container">';
 $readable .=  '<ul id="wprssmi_rss_list">';
@@ -14,7 +15,7 @@ $readable .=  '<ul id="wprssmi_rss_list">';
 
 	$idnum=$idnum +1;
 	//  END don't mess with this php code 
-	
+	$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 	$readable .= '<li class="item">';
 	
@@ -30,7 +31,10 @@ $readable .=  '<ul id="wprssmi_rss_list">';
             	 
 				            	
           $readable .=    '	</div>';
-          $readable .=    '	<p class="date">'.date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).' | <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">Visit source ›</a></p>';
+  
+$readable .=    '	<p class="date">'.date_i18n($strDate,$items["mystrdate"]).' | <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">Visit source ›</a></p>';
+        
+ // $readable .=    '	<p class="date">'.date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).' | <a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">Visit source ›</a></p>';
 
          $readable .=    ' </li>';
 

@@ -1,6 +1,9 @@
 <?php
+$strDate=rssmi_get_default_date_format();
 $readable='<div class="rssmi_wrap">';
 foreach($myarray as $items) {
+
+$useMediaImage=$items["useMediaImage"];
 
 if ($pag!==1){ 	
 	$total = $total +1;
@@ -42,13 +45,13 @@ if ($nodays==0){
 	
 }
 
-
+$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 
 $readable .=  '<div class="rss-output">';
 
 	if (!empty($items["mystrdate"]) && $showdate==1){
 
-	$readable .=  '<span class="date">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span>';
+	$readable .=  '<span class="date">'. date_i18n($strDate,$items["mystrdate"]).'</span>';
 	}
 	
 		$readable .=  '<div class="title"><a '.$openWindow.' href='.$items["mylink"].' '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a>';
@@ -75,7 +78,7 @@ $readable .=  '<div class="rss-output">';
 		}
 		
 		
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome,$useMediaImage);
 	
 	$readable .=  '</div>';	
 

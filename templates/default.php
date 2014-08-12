@@ -1,9 +1,13 @@
 <?php
-//  this is the default template
-$readable='<div class="rssmi_wrap">';
-foreach((array)$myarray as $items) {
-	
 
+
+//  this is the default template
+$strDate=rssmi_get_default_date_format();
+
+$readable='<div class="rssmi_wrap">';
+foreach($myarray as $items) {
+
+$useMediaImage=$items["useMediaImage"];
 
 if ($pag!==1){ 	
 	$total = $total +1;
@@ -45,23 +49,25 @@ if ($nodays==0){
 }
 
 
+
 // VIDEO CHECK
 if ($targetWindow==0){
 	$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
 	$openWindow=$getVideoArray[1];
 	$items["mylink"]=$getVideoArray[0];
-	
 }
 
 
 
+
+$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
+
+
+
+
+
 	
-
-
-
-
-	
-		$readable .=  '<div class="rss-output" style="float:'.$divfloat.'"><div class="title"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.$items["mytitle"].'</a></span>';
+		$readable .=  '<div class="rss-output" style="float:'.$divfloat.'"><div class="title"><span style="font-size:'.$hdsize.'; font-weight:'.$hdweight.';"><a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').' style="color:'.$anchorcolor.'">'.html_entity_decode($items["mytitle"]).'</a></span>';
 		if(!empty($items["myAuthor"]) && $addAuthor==1){
 		 $readable .=  '<br><span style="font-style:italic; font-size:16px;">'.$authorPrep.' <a '.$openWindow.' href="'.$items["mylink"].'" '.($noFollow==1 ? 'rel=nofollow':'').'">'.$items["myAuthor"].'</a></span>';  
 			}
@@ -85,9 +91,11 @@ if ($targetWindow==0){
 		}else{
 			$readable .=  '<div class="body">';		
 		}
-		
 
-	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome);
+
+	$readable .=  showexcerpt($items["mydesc"],$descNum,$openWindow,$stripAll,$items["mylink"],$adjustImageSize,$float,$noFollow,$items["myimage"],$items["mycatid"],$stripSome,$useMediaImage);
+	
+
 
 	
 	$readable .=  '</div>';	
@@ -96,10 +104,11 @@ if ($targetWindow==0){
 }
 
 
+
 	
 	if (!empty($items["mystrdate"]) && $showdate==1){
 	// $readable .=  '<span style="'.$datestyle.'">'. date_i18n("D, M d, Y g:i:s A",$items["mystrdate"]).'</span><br />';  // use this instead if you want time to show
-	$readable .=  '<span class="date" style="'.$datestyle.'">'. date_i18n("D, M d, Y",$items["mystrdate"]).'</span><br />';
+	$readable .=  '<span class="date" style="'.$datestyle.'">'. date_i18n($strDate,$items["mystrdate"]).'</span><br />';
 	
 //	$readable .=  '<span class="date" style="'.$datestyle.'">'. getDateSince($items["mystrdate"],time()).'</span><br />';  // use this to show published how long ago
 
@@ -121,9 +130,10 @@ if ($targetWindow==0){
 	
 	 $readable .=  '</div>';
 	
-	
+
 	
 		}
 		 $readable .=  '</div>';
 	//  This is the end of the default template
+	
 ?>

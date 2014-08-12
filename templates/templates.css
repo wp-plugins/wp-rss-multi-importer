@@ -1,7 +1,12 @@
 
 iframe.rss_multi_frame{
- width: 560px;  /*  Change for iframe size */
- height: 315px; 
+/*  width: 560px; */  /*  Change for iframe size */
+/* height: 315px; */
+}
+
+iframe{
+width: 560px; */  /*  Change for iframe size */
+height: 315px; */
 }
 
 
@@ -30,8 +35,6 @@ div.news a{
 	/*  color:#cccccc !important; */    /* change to any color you want for the wdiget title */
 	
 }
-
-
    
 /* End */
 
@@ -42,8 +45,9 @@ div.rss-output {
 	
 	padding: 1.025em;
 /* float: left; */  /*  uncomment to float all posts to the left */
-	
+/*	background: #f1f1e2; */
 /*  border-bottom: 1px solid #DADADA; */  /*  uncomment to make a line in between each entry */
+/* width:100%; */   /*  uncomment if you are getting output where two entries are side by side */
 }
 
 span.headline {  /* headline css */
@@ -99,7 +103,7 @@ div#wprssmi_main_container {
     float: left;
     margin: 5px 0 0;
     padding: 3px;
-    width: 666px;  /* change the width to match your themes width */
+    width: 666px;  //change the width to match your themes width
 
     color: #1E1E1E;
     font-family: "Lucida Grande",Arial,Helvetica,sans-serif;
@@ -119,7 +123,7 @@ ul#wprssmi_rss_list li.item {
     float: left;
     margin: 0 15px 15px 0;
     overflow: hidden;
-    width: 211px;  /* change this width to the size of the boxes you want */
+    width: 211px;  // change this width to the size of the boxes you want
 }
 
 div.item_inner {
@@ -144,7 +148,7 @@ ul#wprssmi_rss_list li.item p.date {
 }
 
 a {
-      /*color: #1E1E1E;  // you can change the color of the hyperlinked title here */
+    //color: #1E1E1E;  // you can change the color of the hyperlinked title here
 }
 
 ul#wprssmi_rss_list li.item p.site_info
@@ -291,10 +295,10 @@ div#wprssmi_center_box {
 	div.wprssmi_item_inner {
 	    background: none repeat scroll 0 0 #FCFCFC;
 	    border: 1px solid #DDDDDD;
-	    height: 245px;  /* 245px;  300px; */
+	    height: 245px;  //245px;  //300px;
 	    overflow: hidden;
 	    position: relative;
-		width:220px;  /* 220px;  250px; */
+		width:220px;  //220px;  //250px;
 		margin:5px;
 	}
 
@@ -306,20 +310,19 @@ div#wprssmi_center_box {
 	p.wprssmi_title {
 	    margin: 8px 0 4px;
 	    text-transform: uppercase;
-	font-size:12px;  /* change the title font size here */
+	font-size:12px;  //change the title font size here
 	}
 		
 		div#wprssmi_main_container {
 		    //float: left;
-		   margin: 5px 0 0;
+		    margin: 5px 0 0;
 		    padding: 3px;
 		    width: 666px;
 		}
 		
 	div.wprssmi-excerpt{
-			font-size:12px;  /* change the text font size here */
-			/*	color:;    change the text color here */
-		 	/*	padding-left:;  put padding here */
+			font-size:12px;  //change the text font size here
+			color:;   //change the text color here
 		
 	}
 	
@@ -336,16 +339,10 @@ div#wprssmi_center_box {
 		font-size:.9em;
 	}
 	
-	div.wprssmi_teste3{
-		height: 165px;
-		overflow: hidden;
-		    position: relative;
-		}
 
 
 	/*  VERTICAL SCROLL  TEMPLATE - END */
 	
-	/* LOAD MORE CSS */	
 	
 	#pbd-alp-load-posts a:link, #pbd-alp-load-posts a:visited {
 		display: block;
@@ -402,5 +399,4 @@ div#wprssmi_center_box {
 
 		/* Opera 11.10+ */ background: -o-linear-gradient(#f5f5f5, #eaeaea);
 	}
-
 	

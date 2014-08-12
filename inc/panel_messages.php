@@ -1,6 +1,40 @@
 <?php
 
 
+//PLUGIN RATING MESSAGE
+
+function rssmi_ratePlugin() {
+	
+	$dismiss_link_joiner = ( count($_GET) > 0 ) ? '&amp;':'?';
+	if( current_user_can('activate_plugins') ){
+
+			if(rssmi_check_didUpgrade()==1){  //restrict this users you have upgraded and only to the plugin pages!!!
+				
+	//		if ((isset( $_GET['post_type'] )) && (strpos("rssmi_feed",$_GET['post_type'] ,0)!==false) || ( isset( $_GET['page'] )) && ((strpos("wprssmi",$_GET['page'] ,0)!==false) || (strpos('wprssmi',$_GET['page'] )!==false ) || (strpos('wprssmi_options',$_GET['page'] )!==false ) || (strpos('wprssmi_options2',$_GET['page'] )!==false ) || (strpos('wprssmi_options3',$_GET['page'] )!==false ) || (strpos('wprssmi_options4',$_GET['page'] )!==false ) || (strpos('wprssmi_options9',$_GET['page'] )!==false )  || (strpos('wprssmi_options5',$_GET['page'] )!==false ) || (strpos('wprssmi_options8',$_GET['page'] )!==false )|| (strpos('wprssmi_options7',$_GET['page'] )!==false ))) {
+		
+			if (rssmi_is_plugin_page()==1){
+				
+					if( !empty($_GET['rssmi_dismiss_rating']) ){
+						update_option('rssmi_dismiss_rating',1);
+					}else{
+					if (get_option('rssmi_dismiss_rating') == false){
+				?>
+				<div id="rating_message" class="updated">
+					<p><?php echo sprintf ( __( 'I hope you\'re enjoying this free Multi-Importer plugin.  Please consider <a href="%s" target="_blank">saying thanks with a good rating</a>.  You can dismiss this message forever by <a href="%s">clicking here</a>.'), 'http://wordpress.org/support/view/plugin-reviews/wp-rss-multi-importer',$_SERVER['REQUEST_URI'].$dismiss_link_joiner.'rssmi_dismiss_rating=1'  ); ?></p>
+				</div>
+				<?php
+										}
+				}		
+			}
+		}
+	}	
+		
+		
+}
+add_action ( 'admin_notices', 'rssmi_ratePlugin', 100 );
+
+
+
 
 function wp_section_text() {
 ?>
@@ -27,8 +61,10 @@ function wp_section_text() {
 
 function wp_rss_multi_importer_template_page(){
    ?>	
+			<div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div>
+	
 	   <div class="wrap">
-		<h2><label for="title"><?php _e("How to Use Templates", 'wp-rss-multi-importer')?></label></h2>
+		<h2><label for="title"><?php _e("Save Templates and CSS", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
 <div class="postbox">
 
@@ -60,7 +96,8 @@ save_template_function($thistemplate);
 
 
 function wp_rss_multi_importer_style_tags(){
-   ?>	
+   ?>				<div id="icon-themes" class="icon32 icon32-posts-rssmi_feed"></div>
+
 	   <div class="wrap">
 		<h2><label for="title"><?php _e("Shortcode Parameters", 'wp-rss-multi-importer')?></label></h2>
 	<div id="poststuff">
@@ -88,16 +125,16 @@ function wp_rss_multi_importer_style_tags(){
 <tr ><td ><?php _e("Use this if bringing in a Pinterest feed..to display correctly", 'wp-rss-multi-importer')?></td><td>pinterest</td><td>pinterest=0</td><td>[wp_rss_multi_importer pinterest="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the maximum items per page", 'wp-rss-multi-importer')?></td><td>maxperpage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer maxperpage="3"]</td></tr>
 <tr ><td ><?php _e("Use this to override the no follow option", 'wp-rss-multi-importer')?></td><td>nofollow</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer nofollow="1"]<br>(1=no follow, 0=follow)</td></tr>
-
+<tr ><td ><?php _e("Use this to override the feed source attribution label", 'wp-rss-multi-importer')?></td><td>sourcename</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer sourcename="Story Source"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show images option", 'wp-rss-multi-importer')?></td><td>noimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer noimage="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the show more option", 'wp-rss-multi-importer')?></td><td>showmore</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showmore="1"]</td></tr>
 <tr ><td ><?php _e("Use this to override the author preposition", 'wp-rss-multi-importer')?></td><td>authorprep</td><td>By</td><td>[wp_rss_multi_importer authorprep="from"]</td></tr>
 <tr ><td ><?php _e("Use this to override the sort order", 'wp-rss-multi-importer')?></td><td>sortorder</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer sortorder="1"]<br>(1=ascending, 2=descending, 3= none)</td></tr>
 <tr ><td ><?php _e("Use this to override the show excerpt setting", 'wp-rss-multi-importer')?></td><td>showdesc</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer showdesc="1"]<br>(1=show, 0=hide)</td></tr>
+
 <tr ><td ><?php _e("Use this to override the default excerpt length setting", 'wp-rss-multi-importer')?></td><td>excerptlength</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer excerptlength="100"]</td></tr>
-<tr ><td ><?php _e("Use this to override the default category image option", 'wp-rss-multi-importer')?></td><td>defaultimage</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer defaultimage="1"]<br>(0=process normally, 1=use default for category, 2=replace when no image available)</td></tr>
 <tr ><td ><?php _e("Use this to change the template", 'wp-rss-multi-importer')?></td><td>mytemplate</td><td>set in shortcode settings panel</td><td>[wp_rss_multi_importer mytemplate="boxes.php"]<br>
-	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
+	Included Template Choices:<br><span>default.php, boxes.php, clean_separated.php,<br>regular.php, simple_bullet_list.php, smooth_scroll.php, vertical_scroll.php, vertical_scroll_1.php, date_above.php</span>
 	
 	</td></tr>
 
@@ -131,8 +168,6 @@ function wp_rss_multi_importer_more_page(){
 <div class="postbox">
 	<h3><label for="title"><?php _e("Help Us Help You", 'wp-rss-multi-importer')?></label></h3>
 	<div class="inside">
-		
-		<p>In an attempt to increase the functionality of this plugin, let me know if you have any feature requests by <a href="http://www.allenweiss.com/wp_plugin" target="_blank">going here.</a> where you can also get support.</p>
 	
 <p>If you'd like to support the development and maintenance of this plugin, you can do so by <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL" target="_blank">donating here.</a></p>
 
