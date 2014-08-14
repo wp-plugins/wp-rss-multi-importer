@@ -57,6 +57,8 @@ These features are all available in the admin panel.
 
 [__Allen Weiss__](http://www.wprssimporter.com/)
 
+Some parts of the code in this plugin are based on code from [__Jean Galea__](https://wordpress.org/plugins/wp-rss-aggregator/)
+
 == Installation ==
 
 1. Upload the `wp-rss-multi-importer` folder to the `/wp-content/plugins/` directory
