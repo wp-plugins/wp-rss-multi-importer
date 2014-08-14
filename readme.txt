@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
 Tested up to: 3.9.2
-Stable tag: 3.00
+Stable tag: 3.01
 Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
@@ -24,7 +24,7 @@ All-In-One totally free solution for importing, merging and displaying RSS and A
 
 * Templates - choose from 13 different templates, create and style your own and save it
 * Pick up author's name in the RSS feed if it exists
-* Import feed items (like Google news) and creates blog posts so readers can comment on them..and put the posts into your own blog categories
+* Import feed items (like Google news) and create blog posts so readers can comment on them..and put the posts into your own blog categories
 * When posting to your blog, have the image be the Featured Image which you can use in the most current themes
 * Auto remove posts to your blog based on expiration time
 * Imports YouTube and Vimeo videos in iFrame format
@@ -112,6 +112,11 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 3.01 (2014-8-14) =
+* NEW: Option to not use Force-Feed for importing RSS feeds.
+* Fixed: Google News problem causing duplicate items.
+* Fixed: iFrame sizing problem and other bugs noted after release of 3.0.
 
 = Version 3.00 (2014-8-12) =
 * NEW: Assign a blog user to each feed.

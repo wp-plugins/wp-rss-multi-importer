@@ -10,10 +10,11 @@ function create_rssmi_feed()
            	'query_var'     => 'rssmifeed',
            	'menu_position' => 100,
         	'show_in_menu'  => false,
+			'exclude_from_search'   => true,
 			'show_in_nav_menus' => false,
            	'supports'      => array( 'title' ),
            	'rewrite'       => array(
-                               'slug'  => 'rssmifeeds',
+                               'slug'  => 'feeds',
                                'with_front' => false
                                ),            
            	'labels'        => array(
@@ -37,12 +38,13 @@ function create_rssmi_feed()
 
    
        $feed_item_args = array(
-           'public'         => true,
-           'query_var'      => 'feed_item',
-           'show_in_menu'   => false,
+           	'public'         => true,
+           	'query_var'      => 'feed_item',
+			'exclude_from_search'   => true,
+           	'show_in_menu'   => false,
 			'show_in_nav_menus'  => false,
-           'rewrite'        => array(
-                                'slug'  => 'rssmifeeds/items',
+           	'rewrite'        => array(
+                                'slug'  => 'feeds/items',
                                 'with_front' => false,
                                ),       
            'labels'         => array(
@@ -122,7 +124,7 @@ add_filter( 'manage_edit-rssmi_feed_columns', 'rssmi_set_custom_columns');
 			echo esc_html(get_userdata($bloguser)->display_name );
 	    	break;
 		case 'feeditems':
-			$post_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM (SELECT * from wp_postmeta as a inner join wp_posts as b on b.id=a.post_id where meta_key='rssmi_item_feed_id' and meta_value=%d order by post_id desc LIMIT 25) as c order by post_id ASC",$post_id)); 
+			$post_count = $wpdb->get_var($wpdb->prepare("SELECT count(*) FROM (SELECT * from $wpdb->postmeta as a inner join $wpdb->posts as b on b.id=a.post_id where meta_key='rssmi_item_feed_id' and meta_value=%d order by post_id desc LIMIT 25) as c order by post_id ASC",$post_id)); 
 			echo $post_count;
 			break; 
 		case 'lastupdate':
@@ -586,15 +588,22 @@ $sql="SELECT * FROM (SELECT post_id, post_title from $wpdb->postmeta as a inner 
 
 
 
-	function rssmi_preview_meta_box() {
-
-       global $post;
-       $feed_url = get_post_meta( $post->ID, 'rssmi_url', true );
+function rssmi_preview_meta_box() {
+       	global $post;
+       	$feed_url = get_post_meta( $post->ID, 'rssmi_url', true );
 		$content_image=WP_RSS_MULTI_IMAGES."content_image.png";
 	 	$media_image=WP_RSS_MULTI_IMAGES."media_image.png";
  		$imageExists=0;
-       if( ! empty( $feed_url ) ) {         
-           $feed = wp_rss_fetchFeed( $feed_url,20,true,0 ); 
+		$rssmi_global_options = get_option('rssmi_global_options'); 
+		$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
+
+       if( ! empty( $feed_url ) ) {  
+			if ($noDirectFetch==1){
+				$feed = fetch_feed($feed_url);
+			}else{
+				$feed = wp_rss_fetchFeed($feed_url,20,true,0);	
+			}
+
            if ( !$feed->error()) {
                	$items = $feed->get_items();    
 				$feedCount=count($items);

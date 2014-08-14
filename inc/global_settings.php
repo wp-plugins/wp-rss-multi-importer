@@ -54,6 +54,19 @@ return $title;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 function wp_rss_multi_importer_dateformat_page() {
 
        ?>
@@ -104,6 +117,12 @@ function wp_rss_multi_importer_dateformat_page() {
 	<OPTION VALUE="200" <?php if($rssmi_global_options['single_feed_max']=="200"){echo 'selected';} ?>>200</OPTION>
 	</SELECT></p>
 	
+	
+	
+	
+	
+	
+	
 
 	<p ><label class='o_textinput' for='expiration'><?php _e("Remove older feed item after how much time (number of days, weeks, etc.) <span class='vtip' title='Use this to delete older items automatically based on how old they are.'>?</span>", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rssmi_global_options[expiration]" id="expiration">
@@ -120,6 +139,24 @@ function wp_rss_multi_importer_dateformat_page() {
 	<OPTION VALUE="28" <?php if($rssmi_global_options['expiration']==28){echo 'selected';} ?>>4 Weeks</OPTION>
 	<OPTION VALUE="56" <?php if($rssmi_global_options['expiration']==56){echo 'selected';} ?>>2 Months</OPTION>
 	</SELECT></p>
+	
+	
+<!--
+	<p ><label class='o_textinput' for='item_freshness'><?php _e("Only bring in items newer than how many days old?", 'wp-rss-multi-importer')?></label>
+ <input  id='item_freshness' type="text" size='8'  Name="rssmi_global_options[item_freshness]" Value="<?php echo $rssmi_global_options['item_freshness'] ?>">days old (leave blank to place no restriction.)
+	</p>
+-->	
+	
+	
+<hr>
+<h2><?php _e("SimplePie Settings", 'wp-rss-multi-importer')?></h2>	
+	
+<p><label class='o_textinput' for='noForcedFeed'><?php _e("By default, the plugin uses a forced feed setting for SimplePie.  By checking here, you can turn this off.", 'wp-rss-multi-importer')?>
+	
+<input type="checkbox" Name="rssmi_global_options[noForcedFeed]" Value="1" <?php if (isset($rssmi_global_options['noForcedFeed']) && $rssmi_global_options['noForcedFeed']==1){echo 'checked="checked"';} ?>></p>	
+	
+	
+	
 	<hr>
 	<h2><?php _e("Eliminate Lightbox problem domains", 'wp-rss-multi-importer')?></h2>
 	

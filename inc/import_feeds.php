@@ -7,8 +7,7 @@ function rssmi_fetch_all_feed_items( ) {
 	
 	$rssmi_global_options = get_option('rssmi_global_options'); 
 	$single_feed_max=(isset($rssmi_global_options['single_feed_max']) ? $rssmi_global_options['single_feed_max'] : 20);
-       
-	$directFetch=1; 
+	$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
 	$timeout=20;
 	$forceFeed=true;
 	$showVideo=0;
@@ -36,10 +35,10 @@ function rssmi_fetch_all_feed_items( ) {
 					
 							$url = esc_url_raw(strip_tags($feed_url));
 	
-							if ($directFetch==1){
-								$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed,$showVideo);
-							}else{
+							if ($noDirectFetch==1){
 								$feed = fetch_feed($url);
+							}else{
+								$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed,$showVideo);	
 							}
 					
 					         
@@ -64,7 +63,9 @@ function rssmi_fetch_all_feed_items( ) {
                         // Check if newly fetched item already present in existing feed item item, 
                         // if not insert it into wp_posts and insert post meta.
 
-					$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_item_permalink' and meta_value like '%".$item->get_link()."%'");
+					$cleanLink = strip_qs_var_match('news.google.com',$item->get_permalink(),'url');  // clean all parameters except the url from links from Google News
+
+					$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_item_permalink' and meta_value like '%".$cleanLink."%'");
 
 				//	$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_type='rssmi_feed_item' and post_title like '%".mysql_real_escape_string(trim($item->get_title()))."%'");
 							
@@ -82,7 +83,7 @@ function rssmi_fetch_all_feed_items( ) {
 								
 							}
 							
-						
+					//	if (rssmi_is_not_fresh($unix_date)==1){continue;}  //filter for days old
 						
                             // Create post object
                             $feed_item = array(
@@ -147,7 +148,7 @@ function rssmi_fetch_all_feed_items( ) {
 						$myarray[]=array(
 							"mystrdate"=>strtotime($post_date),
 							"mytitle"=>html_entity_decode($item->get_title()),
-							"mylink"=>$item->get_link(),
+							"mylink"=>$item->get_permalink(),
 							"mydesc"=>$item->get_content(),
 							"myimage"=>$mediaImage,
 							"myAuthor"=>$itemAuthor,
@@ -165,12 +166,13 @@ function rssmi_fetch_all_feed_items( ) {
 									unset($rssmi_title);
 									unset($feed_cat);
 									
-                           	update_post_meta( $inserted_ID, 'rssmi_item_permalink', $item->get_permalink() );
+                           	update_post_meta( $inserted_ID, 'rssmi_item_permalink', $cleanLink );
                             update_post_meta( $inserted_ID, 'rssmi_item_description', $myarray );                        
                             update_post_meta( $inserted_ID, 'rssmi_item_date', $unix_date ); // Save as Unix timestamp format
                             update_post_meta( $inserted_ID, 'rssmi_item_feed_id', $feed_ID);
 							unset($myarray);
 							unset($unix_date);
+							unset($cleanLink);
 							
                        } //end if
                     } //end foreach
@@ -195,15 +197,15 @@ add_action('wp_insert_post', 'rssmi_fetch_feed_items');
  * Fetches feed items for a specific feed
  */
 function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) { 
-	
-  	$directFetch=1; 
+	$rssmi_global_options = get_option('rssmi_global_options'); 
+	$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
 	$timeout=20;
 	$forceFeed=true;
 	$showVideo=0;
  	global $wpdb;
     $didUpdate=0;
     $post = get_post( $post_id );
-     
+    
     if( ( $post->post_type == 'rssmi_feed' ) && ( $post->post_status == 'publish' ) ) { 
         // Get the feed source
 
@@ -211,6 +213,8 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 		$feed_source =$wpdb->get_results($query);
            
         if( !empty($feed_source)) {
+	
+
                  
                 $feed_ID = $post_id;
                 $feed_url = get_post_meta( $post_id, 'rssmi_url', true );
@@ -220,11 +224,13 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
  
                 if( !empty( $feed_url ) ) {             
                     
-                		if ($directFetch==1){
-							$feed = wp_rss_fetchFeed($feed_url,$timeout,$forceFeed,$showVideo);
-						}else{
-							$feed = fetch_feed($feed_url);
-						}
+                			$url = esc_url_raw(strip_tags($feed_url));
+	
+							if ($noDirectFetch==1){
+								$feed = fetch_feed($url);
+							}else{
+								$feed = wp_rss_fetchFeed($url,$timeout,$forceFeed,$showVideo);	
+							}
                     
                     if ( !is_wp_error( $feed ) ) {
                         // Limit  to 10 unless fetched from feed page. 
@@ -237,11 +243,17 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
                 }       
 
                 if ( ! empty( $items ) ) {
-                    
+                   
+					
 
                     foreach ( $items as $item ) {
+	
+	$cleanLink = strip_qs_var_match('news.google.com',$item->get_permalink(),'url');  // clean all parameters except the url from links from Google News
+	
+	 
+	
 
-                     	$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_item_permalink' and meta_value like '%".$item->get_link()."%'");
+                     	$mypostids = $wpdb->get_results("select post_id from $wpdb->postmeta where meta_key = 'rssmi_item_permalink' and meta_value like '%".$cleanLink."%'");
 
 						//	$myposttitle=$wpdb->get_results("select post_title from $wpdb->posts where post_type='rssmi_feed_item' and post_title like '%".mysql_real_escape_string(trim($item->get_title()))."%'");
 							
@@ -259,7 +271,7 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 								
 							}
 	
-
+							//	if (rssmi_is_not_fresh($unix_date)==1){continue;}  //filter for days old
 	
                             // Create post object
                             $feed_item = array(
@@ -320,7 +332,7 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 										$myarray[]=array(
 											"mystrdate"=>strtotime($post_date),
 											"mytitle"=>html_entity_decode($item->get_title()),
-											"mylink"=>$item->get_link(),
+											"mylink"=>$item->get_permalink(),
 											"mydesc"=>$item->get_content(),
 											"myimage"=>$mediaImage,
 											"myAuthor"=>$itemAuthor,
@@ -338,12 +350,13 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 													unset($rssmi_title);
 													unset($feed_cat);			
 
-	                            update_post_meta( $inserted_ID, 'rssmi_item_permalink', $item->get_permalink() );
+	                            update_post_meta( $inserted_ID, 'rssmi_item_permalink', $cleanLink );
 	                            update_post_meta( $inserted_ID, 'rssmi_item_description', $myarray );                        
 	                            update_post_meta( $inserted_ID, 'rssmi_item_date', $unix_date ); // Save as Unix timestamp format
 	                            update_post_meta( $inserted_ID, 'rssmi_item_feed_id', $post_id);
 								unset($myarray);
 								unset($unix_date);
+								unset($cleanLink);
 								
            
                        } //end if

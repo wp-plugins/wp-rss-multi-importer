@@ -2,6 +2,8 @@
 add_action('wp_ajax_checkfeeds_all', 'wp_rss_multi_importer_checkfeeds');
 
 function wp_rss_multi_importer_checkfeeds(){
+		$rssmi_global_options = get_option('rssmi_global_options'); 
+		$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
 		
 		 global $wpdb;
 
@@ -22,7 +24,14 @@ function wp_rss_multi_importer_checkfeeds(){
 
 						 if( ! empty( $rssURL ) ) {    
 
-					           $feed = wp_rss_fetchFeed( $rssURL,20,true,0 ); 
+							if ($noDirectFetch==1){
+								$feed = fetch_feed($rssURL);
+							}else{
+								 $feed = wp_rss_fetchFeed( $rssURL,20,true,0 ); 
+							}
+					
+					
+					
 					           if ( $feed->error()) {
 
 									if ($badURL==0){
@@ -58,6 +67,11 @@ function wp_rss_multi_importer_diagnostics(){
 		<h2><?php  _e("Multi-Importer", 'wp-rss-multi-importer')?></h2>
 		       <div class="wrap">
 		 <h2>Diagnostics</h2>
+		
+		
+		
+		
+		
 	<div id="poststuff">
 		<div class="postbox">
 		<div class="inside">
@@ -193,13 +207,14 @@ if (isset($post_options['active']) && $post_options['active']==1){
 	
 		</div></div></div>
 		
-		
 		<div id="poststuff">
 			<div class="postbox">
 			<div class="inside">
-		
+
 			<?php echo 		rssmi_show_last_feed_update();?>
 		</div></div></div>
+		
+		
 		
 		</div>
 		
