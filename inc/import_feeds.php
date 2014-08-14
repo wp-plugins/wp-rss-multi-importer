@@ -1,6 +1,7 @@
 <?php
 /*
 Feed Item Imports - The code on this page was adapted and expanded from an earlier version of WP RSS Aggregator by jeangalea
+Copyright 2012-2014 Jean Galea (email : info@jeangalea.com)
 */
 
 function rssmi_fetch_all_feed_items( ) {     
