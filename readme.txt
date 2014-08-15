@@ -56,7 +56,7 @@ These features are all available in the admin panel.
 = Credit = 
 
 [__Allen Weiss__](http://www.wprssimporter.com/)
-Some parts of the code in this plugin are based on code from [__Jean Galea__](https://wordpress.org/plugins/wp-rss-aggregator/)
+Some parts of the code in this plugin are based on code from [__WP RSS Aggregator__](https://wordpress.org/plugins/wp-rss-aggregator/)
 
 == Installation ==
 
