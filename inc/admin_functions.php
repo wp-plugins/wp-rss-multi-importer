@@ -32,7 +32,7 @@ function rssmi_show_last_feed_update(){
 	$last_db_update=$wprssmi_admin_options['last_db_update'];
 
 
-	return "<br><div style='font-size:14px':><strong>Last Update of the Feed Database on</strong> ".get_date_from_gmt(date('Y-m-d H:i:s',$last_db_update),'M j, Y @ g:i a  ').":          ".rssmi_long_ago($last_db_update)." ago<button type='button' name='getFeedsNow' id='getFeeds-Now' class='button-fetch-green' value=''>CLICK TO UPDATE THE FEED DATABASE NOW</button>&nbsp;&nbsp;&nbsp;&nbsp;(note: this could take several minutes)<div id='gfnote' style='margin-left:520px;'></div><div id='rssmi-ajax-loader-center'></div></div><p>Think there is a scheduling problem, <a href='http://www.wprssimporter.com/faqs/the-cron-scheduler-isnt-working-whats-happening/' target='_blank'>read this</a></p>";
+	return "<br><div style='font-size:14px;'><strong>Last Update of the Feed Database on</strong> ".get_date_from_gmt(date('Y-m-d H:i:s',$last_db_update),'M j, Y @ g:i a  ').":          ".rssmi_long_ago($last_db_update)." ago<button type='button' name='getFeedsNow' id='getFeeds-Now' class='button-fetch-green' value=''>CLICK TO UPDATE THE FEED DATABASE NOW</button>&nbsp;&nbsp;&nbsp;&nbsp;(note: this could take several minutes)<div id='gfnote' style='margin-left:520px;'></div><div id='rssmi-ajax-loader-center'></div></div><p>Think there is a scheduling problem, <a href='http://www.wprssimporter.com/faqs/the-cron-scheduler-isnt-working-whats-happening/' target='_blank'>read this</a></p>";
 	
 
 
@@ -60,6 +60,25 @@ function rssmi_long_ago ($time)
         return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
     }
 
+}
+
+
+
+function rssmi_is_not_fresh($date){
+	$rssmi_global_options = get_option( 'rssmi_global_options' ); 
+	$days= round(abs(strtotime($date)-strtotime('now'))/86400);
+	if (isset($rssmi_global_options['item_freshness'])){
+		$day_cutoff= $rssmi_global_options['item_freshness'];	
+		
+			if ($days>=$day_cutoff){
+				return 1;
+			}else{
+				return 0;
+			}
+	}else{
+		return 0;
+	}
+	
 }
 
 

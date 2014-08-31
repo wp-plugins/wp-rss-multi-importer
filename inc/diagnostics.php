@@ -42,7 +42,7 @@ function wp_rss_multi_importer_checkfeeds(){
 					               _e('<h3> ' . $rssURL . '</h3>','wp-rss-multi-importer'); 
 
 
-					           _e("<strong>Error: Invalid feed URL or feed is not being served at the time of this test.</strong> - Validate this feed source URL by <a href=\"http://feedvalidator.org/check?url=".$rssURL."\" target=\"_blank\">clicking here</a>.",'wp-rss-multi-importer');
+					           _e("<strong>Error: Invalid feed URL or feed is not being served at the time of this test.</strong> - Validate this feed source URL by <a href=\"http://validator.w3.org/feed/check.cgi?url=".$rssURL."\" target=\"_blank\">clicking here</a>.",'wp-rss-multi-importer');
 					       }
 					if($badURL==1){echo "</div>";}
 					}

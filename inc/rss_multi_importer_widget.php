@@ -84,7 +84,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$linktitle = $instance['linktitle'];
 		$showdesc = $instance['showdesc'];
 		$maxposts = $instance['maxposts'];
-		$targetwindow= $instance['targetwindow'];
+		$targetWindow= $instance['targetwindow'];
 		$simplelist= $instance['simplelist'];
 		$showimage= $instance['showimage'];
 		$showsource=$instance['showsource'];
@@ -100,7 +100,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 		global $isMobileDevice;
 		if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
-			$targetwindow=2;
+			$targetWindow=2;
 
 			}
 		
@@ -250,9 +250,9 @@ if (empty($feed_array)){
 				$targetWindow=2;
 				}
 
-		if($targetwindow==0){
+		if($targetWindow==0){
 			$openWindow='class="colorbox"';
-		}elseif ($targetwindow==1){
+		}elseif ($targetWindow==1){
 			$openWindow='target=_self';		
 		}else{
 			$openWindow='target=_blank';	
@@ -281,7 +281,7 @@ if ($simplelist==1){
 					$openWindow=$getVideoArray[1];
 					$items["mylink"]=$getVideoArray[0];
 				}
-$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
+		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
 		$total = $total +1;
 			
 		if ($count>0 && $total>=$count) break;
@@ -314,12 +314,12 @@ echo '	<div class="news-contents">';
 		foreach($myarray as $items) {
 
 				// VIDEO CHECK
-				if ($targetWindow==0){
-					$getVideoArray=rssmi_video($items["mylink"],$targetWindow);
+				if ($targetwindow==0){
+					$getVideoArray=rssmi_video($items["mylink"],$targetwindow);
 					$openWindow=$getVideoArray[1];
 					$items["mylink"]=$getVideoArray[0];
 				}
-		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
+		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetwindow); //Lightbox filter
 			$total = $total +1;
 			if ($count>0 && $total>=$count) break;
 

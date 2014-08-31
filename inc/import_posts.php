@@ -109,7 +109,7 @@ function fetch_rss_callback() {
 		$result=wp_rss_multi_importer_post();
 		
 			if ($result===3){
-					echo '<h3>There was a problem with fetching feeds.  This is likely due to a settings problem or invalid feeds.</h3>';
+					echo '<h3>There was a problem with fetching feeds.  This is likely due to a settings problem, invalid feeds, or no items in the feed database.  Update the database now by clicking the green button below.</h3>';
 			
 					
 			}elseif ($result===4){
@@ -300,6 +300,10 @@ add_filter( 'wp_feed_cache_transient_lifetime', 'wprssmi_hourly_feed' );
 	global $fopenIsSet;
 	$fopenIsSet = ini_get('allow_url_fopen');
 
+		if($post_options['active']!=1){
+			return;
+			exit;
+		}
 
 
 

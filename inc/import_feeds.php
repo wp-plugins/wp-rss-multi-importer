@@ -11,7 +11,7 @@ function rssmi_fetch_all_feed_items( ) {
 	$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
 	$timeout=20;
 	$forceFeed=true;
-	$showVideo=0;
+	$showVideo=1;
 	
         // Get all feed sources
         $feed_sources = new WP_Query( array(
@@ -84,7 +84,7 @@ function rssmi_fetch_all_feed_items( ) {
 								
 							}
 							
-					//	if (rssmi_is_not_fresh($unix_date)==1){continue;}  //filter for days old
+						if (rssmi_is_not_fresh($post_date)==1){continue;}  //filter for days old
 						
                             // Create post object
                             $feed_item = array(
@@ -138,19 +138,22 @@ function rssmi_fetch_all_feed_items( ) {
 									
 						
 						
-									if ($itemAuthor = $item->get_author())
-									{
-										$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
-									}else if (!IS_NULL($feedAuthor)){
-										$itemAuthor=$feedAuthor;
-							
-									}
+											if ($itemAuthor = $item->get_author())
+											{
+												$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+												$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
+											}else if (!IS_NULL($feedAuthor)){
+												$itemAuthor=$feedAuthor;
+												$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
+
+											}
+									
 						
 						$myarray[]=array(
 							"mystrdate"=>strtotime($post_date),
 							"mytitle"=>html_entity_decode($item->get_title()),
 							"mylink"=>$item->get_permalink(),
-							"mydesc"=>$item->get_content(),
+						    "mydesc"=>$item->get_content(),
 							"myimage"=>$mediaImage,
 							"myAuthor"=>$itemAuthor,
 							"itemcategory"=>$postCategories,
@@ -202,7 +205,7 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 	$noDirectFetch=(isset($rssmi_global_options['noForcedFeed']) ? $rssmi_global_options['noForcedFeed'] : 0);
 	$timeout=20;
 	$forceFeed=true;
-	$showVideo=0;
+	$showVideo=1;
  	global $wpdb;
     $didUpdate=0;
     $post = get_post( $post_id );
@@ -271,8 +274,9 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 								$unix_date=$item->get_date( 'U' );
 								
 							}
+
 	
-							//	if (rssmi_is_not_fresh($unix_date)==1){continue;}  //filter for days old
+								if (rssmi_is_not_fresh($post_date)==1){continue;}  //filter for days old
 	
                             // Create post object
                             $feed_item = array(
@@ -322,12 +326,16 @@ function rssmi_fetch_feed_items( $post_id , $feed_total_fetch=10) {
 												}	
 										
 
-										if ($itemAuthor = $item->get_author())
-										{
-			$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() :$item->get_author()->get_email());
-										}else if (!IS_NULL($feedAuthor)){
-											$itemAuthor=$feedAuthor;
-										}
+												if ($itemAuthor = $item->get_author())
+												{
+													$itemAuthor=(!IS_NULL($item->get_author()->get_name()) ? $item->get_author()->get_name() : $item->get_author()->get_email());
+													$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
+												}else if (!IS_NULL($feedAuthor)){
+													$itemAuthor=$feedAuthor;
+													$itemAuthor=html_entity_decode($itemAuthor,ENT_QUOTES,'UTF-8');		
+
+												}
+										
 
 										
 										$myarray[]=array(

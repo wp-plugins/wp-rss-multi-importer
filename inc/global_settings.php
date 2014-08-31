@@ -107,6 +107,8 @@ function wp_rss_multi_importer_dateformat_page() {
 	<p><label class='o_textinput' for='single_feed_max'><?php _e("Maximum number of items to import for each feed.", 'wp-rss-multi-importer')?></label>
 	<SELECT NAME="rssmi_global_options[single_feed_max]" id="single_feed_max">
 	<OPTION VALUE="0" <?php if($rssmi_global_options['single_feed_max']=="0"){echo 'selected';} ?>>No Limit</OPTION>
+	<OPTION VALUE="2" <?php if($rssmi_global_options['single_feed_max']=="2"){echo 'selected';} ?>>2</OPTION>
+	<OPTION VALUE="5" <?php if($rssmi_global_options['single_feed_max']=="5"){echo 'selected';} ?>>5</OPTION>
 	<OPTION VALUE="10" <?php if($rssmi_global_options['single_feed_max']=="10"){echo 'selected';} ?>>10</OPTION>
 	<OPTION VALUE="15" <?php if($rssmi_global_options['single_feed_max']=="15"){echo 'selected';} ?>>15</OPTION>
 	<OPTION VALUE="20" <?php if($rssmi_global_options['single_feed_max']=="20"){echo 'selected';} ?>>20</OPTION>
@@ -154,6 +156,15 @@ function wp_rss_multi_importer_dateformat_page() {
 <p><label class='o_textinput' for='noForcedFeed'><?php _e("By default, the plugin uses a forced feed setting for SimplePie.  By checking here, you can turn this off.", 'wp-rss-multi-importer')?>
 	
 <input type="checkbox" Name="rssmi_global_options[noForcedFeed]" Value="1" <?php if (isset($rssmi_global_options['noForcedFeed']) && $rssmi_global_options['noForcedFeed']==1){echo 'checked="checked"';} ?>></p>	
+	
+	
+<hr>
+<h2><?php _e("Get Image Size Settings", 'wp-rss-multi-importer')?></h2>	
+	
+<p><label class='o_textinput' for='noImageSize'><?php _e("By default, the plugin tries to get the image size remotely - but this can result timeouts and performance problems.  By checking here, you can turn this off.", 'wp-rss-multi-importer')?>
+	
+<input type="checkbox" Name="rssmi_global_options[noImageSize]" Value="1" <?php if (isset($rssmi_global_options['noImageSize']) && $rssmi_global_options['noImageSize']==1){echo 'checked="checked"';} ?>></p>	
+	
 	
 	
 	

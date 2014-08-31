@@ -180,6 +180,19 @@ this.value = jQuery.trim(this.value);
 	});
 	
 	
+	jQuery(document).on('change', '#item_freshness',function() {
+		var numberRegex = /^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$/;
+		if(!numberRegex.test(this.value)) {
+		   this.value = '';
+		alert("Please enter a number of days");
+		}
+				
+	});
+	
+	
+	
+	
+	
 	jQuery(document).on('change', '#wpcategory',function() {
 		var chkstr=add_remove_parms;
 		var intRegex = /^\d+$/;

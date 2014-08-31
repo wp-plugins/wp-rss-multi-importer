@@ -7,10 +7,10 @@ function create_rssmi_feed()
       
        $feed_args = array(
            	'public'        => true,
-           	'query_var'     => 'rssmifeed',
+           	'query_var'     => 'feed_source',
            	'menu_position' => 100,
-        	'show_in_menu'  => false,
 			'exclude_from_search'   => true,
+        	'show_in_menu'  => false,
 			'show_in_nav_menus' => false,
            	'supports'      => array( 'title' ),
            	'rewrite'       => array(
@@ -38,12 +38,12 @@ function create_rssmi_feed()
 
    
        $feed_item_args = array(
-           	'public'         => true,
-           	'query_var'      => 'feed_item',
-			'exclude_from_search'   => true,
-           	'show_in_menu'   => false,
+           'public'         => true,
+           'query_var'      => 'feed_item',
+           'show_in_menu'   => false,
+		'exclude_from_search'   => true,
 			'show_in_nav_menus'  => false,
-           	'rewrite'        => array(
+           'rewrite'        => array(
                                 'slug'  => 'feeds/items',
                                 'with_front' => false,
                                ),       
@@ -90,16 +90,26 @@ add_filter( 'manage_edit-rssmi_feed_columns', 'rssmi_set_custom_columns');
         'title'       => __( 'Name', 'rssmi' ),
         'url'         => __( 'URL', 'rssmi' ),
         'category' => __( 'Category', 'rssmi' ),
- 		'bloguser' => __( 'Blog User', 'rssmi' ),
+ 		'bloguser' => __( 'User', 'rssmi' ),
 		'feeditems' => __( 'Feed Items in DB', 'rssmi' ),
-		'lastupdate'=> __('Last New Items Entered on','rssmi'),
+		'lastupdate'=> __('Last DB Update on','rssmi'),
 		'ID' => __( 'ID', 'rssmi' ),
        );
        return $columns;
    }
 
 
+add_action('admin_head', 'rssmi_feed_column_width');
 
+function rssmi_feed_column_width() {
+    echo '<style type="text/css">';
+    echo '.column-title {width:280px !important;  }';
+ 	echo '.column-url {width:280px !important;  }';
+	echo '.column-bloguser {width:120px !important;  }';
+//	echo 'th.column-feeditems {font-size:12px !important;  }';
+	echo '.column-feeditems {text-align:center !important;  }';
+    echo '</style>';
+}
 
 
 	add_action( "manage_rssmi_feed_posts_custom_column", "rssmi_show_custom_columns", 10, 2 );
@@ -470,6 +480,7 @@ function rssmi_delete_view_link($actions, $page_object)
 	if  ( 'rssmi_feed_item' == $screen->post_type ) {
 		unset( $actions['view'] );
 		unset( $actions['edit'] );
+		unset( $actions['inline hide-if-no-js'] );  //  remove quick edit
 }
    return $actions;
 }
@@ -487,6 +498,7 @@ function rssmi_feed_list_view_link($actions, $post)
 		unset( $actions['inline hide-if-no-js'] );  //  remove quick edit
    	//	$actions['rssmi_fetch_items'] = '<a  href="javascript:;" pid="'.$post->ID.'" class="rssmi-fetch-items-now" >' . __('Delete Items') . '</a>';
 	$actions['rssmi_delete_items'] = '<a  href="'.$_SERVER['REQUEST_URI'].$dismiss_link_joiner.'rssmi_delete_items='.$post->ID.'" class="rssmi-fetch-items-now" >' . __('Delete Items') . '</a>';
+	$actions['rssmi_view_items'] = '<a  href="'.admin_url().'edit.php?post_type=rssmi_feed_item&rssmi_feed_id='.$post->ID.'" >' . __('View Items') . '</a>';
 }
    return $actions;
 }
@@ -567,7 +579,7 @@ function rssmi_most_current_posts_meta_box( $post ){
 	global $wpdb;
 
 	
-$sql="SELECT * FROM (SELECT post_id, post_title from $wpdb->postmeta as a inner join $wpdb->posts as b on b.id=a.post_id where meta_key='rssmi_item_feed_id' and meta_value=".$post->ID." order by post_id desc LIMIT 25) as c order by post_id ASC";
+$sql="SELECT * FROM (SELECT post_id, post_title from $wpdb->postmeta as a inner join $wpdb->posts as b on b.id=a.post_id where meta_key='rssmi_item_feed_id' and meta_value=".$post->ID." order by post_id desc LIMIT 10) as c order by post_id ASC";
 
 	$current_post_array=$wpdb->get_results($sql);
 
@@ -635,7 +647,7 @@ if ($imageExists==0){
 echo "<br><strong>IMPORTANT</strong> - THIS FEED HAS NO IMAGES (AT LEAST NOT IN THE MOST RECENT 5 POSTS) - SO YOU WILL SEE NO IMAGES IN YOUR POSTS UNLESS YOU USE A DEFAULT CATEGORY IMAGE.";	
 }
            }
-           else echo "<strong>Invalid feed URL</strong> - Validate the feed source URL by <a href=\"http://feedvalidator.org/check?url=".$feed_url."\" target=\"_blank\">clicking here</a> and if the feed is valid then  <a href=\"http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/\" target=\"_blank\">go here to learn more about what might be wrong</a>.";
+           else echo "<strong>Invalid feed URL</strong> - Validate the feed source URL by <a href=\"http://validator.w3.org/feed/check.cgi?url=".$feed_url."\" target=\"_blank\">clicking here</a> and if the feed is valid then  <a href=\"http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/\" target=\"_blank\">go here to learn more about what might be wrong</a>.";
        }
 
        else echo 'No feed URL defined yet';
@@ -968,7 +980,7 @@ function rssmi_trash_function($post_id){
 
 function rssmi_delete_prior_posts($post_id){
 	 global $wpdb;
-		$query = "SELECT post_id FROM $wpdb->postmeta WHERE meta_value = $post_id";
+		$query = "SELECT post_id FROM $wpdb->postmeta WHERE meta_key='rssmi_source_feed' AND meta_value = $post_id";
 		$prior_posts =$wpdb->get_results($query);
 		foreach ($prior_posts as $prior_post){
 			wp_delete_post($prior_post->post_id, true);	
@@ -981,6 +993,11 @@ add_action( 'save_post', 'rssmi_save_custom_fields' );
     function rssmi_save_custom_fields( $post_id ) {
 
 	    $meta_fields = rssmi_custom_fields();
+		$screen = get_current_screen();
+		
+		if  ( 'rssmi_feed' != $screen->post_type ) {
+			return;
+		}
 	
 	
 		$rssmi_nonce_var=(isset($_POST[ 'rssmi_meta_box_nonce' ]) ? $_POST[ 'rssmi_meta_box_nonce' ] :NULL);
@@ -1027,7 +1044,7 @@ add_action( 'before_delete_post', 'rssmi_delete_custom_fields');
 
 	function rssmi_delete_custom_fields($postid){
 		global $wpdb;
-		$delete_array = $wpdb->get_results("SELECT post_id FROM $wpdb->postmeta WHERE  meta_value =$postid");
+		$delete_array = $wpdb->get_results("SELECT post_id FROM $wpdb->postmeta WHERE meta_key='rssmi_source_feed' AND meta_value =$postid");
 		foreach($delete_array as $delete_item){
 			wp_delete_post($delete_item->post_id, true);
 		}
@@ -1104,5 +1121,109 @@ add_action( 'before_delete_post', 'rssmi_delete_custom_fields');
 		  }
 		  return $title;
 		}
+		
+		
+		
+		//**  Bulk edit of Feed Properties **/
+		
+		add_action( 'bulk_edit_custom_box', 'display_custom_quickedit_category', 10, 2 );
+
+		function display_custom_quickedit_category( $column_name, $post_type ) {
+		  /*  static $printNonce = TRUE;
+		    if ( $printNonce ) {
+		        $printNonce = FALSE;
+		        wp_nonce_field( plugin_basename( __FILE__ ), 'category_edit_nonce' );
+		    }
+*/
+		    ?>
+		    <fieldset class="inline-edit-col-right inline-edit-category">
+		      <div class="inline-edit-col column-<?php echo $column_name ?>">
+		        <label class="inline-edit-group">
+		        <?php 
+		         switch ( $column_name ) {
+		         case 'category':
+		             ?><span class="title">Category</span>
+		
+					<select style="width: 200px"
+					name="rssmi_cat">
+						<OPTION selected VALUE=''>-- No Change --</OPTION>
+					<?php
+					// Generate all items of drop-down list
+					$catOptions= get_option( 'rss_import_categories' ); 
+					if (!empty($catOptions)){
+					$catsize = count($catOptions);
+					for ( $k=1; $k<=$catsize; $k++) {  
+						if( $k % 2== 0 ) continue;
+						$catkey = key( $catOptions );
+					 	$nameValue=$catOptions[$catkey];
+						next( $catOptions );
+					 	$catkey = key( $catOptions );
+						$IDValue=$catOptions[$catkey]; 
+					?>
+					<option value="<?php echo $IDValue; ?>"
+					<?php echo selected( $IDValue,
+					$rssmi_cat ); ?>>
+					<?php echo $nameValue; ?> 
+					<?php
+					next( $catOptions );
+					}}?>
+					</select>		
+		
+		<?php
+		             break;
+		     //   case 'inprint':
+		            ?>
+		<?php
+		            // break;
+		         }
+		        ?>
+		        </label>
+		      </div>
+		    </fieldset>
+		    <?php
+		}
+		
+		
+		add_action( 'wp_ajax_save_bulk_edit_category', 'save_bulk_edit_category' );
+		function save_bulk_edit_category() {
+			// TODO perform nonce checking
+			// get our variables
+			
+			$post_ids           = ( ! empty( $_POST[ 'post_ids' ] ) ) ? $_POST[ 'post_ids' ] : array();
+			$category  = ( ! empty( $_POST[ 'category' ] ) ) ? $_POST[ 'category' ] : null;
+
+
+			// if everything is in order
+			if ( ! empty( $post_ids ) && is_array( $post_ids ) ) {
+				foreach( $post_ids as $post_id ) {
+					if (!is_null($category)){
+						update_post_meta( $post_id, 'rssmi_cat', $category );
+					}
+
+				}
+			}
+
+			die();
+		}
+		
+		
+		
+	add_filter('pre_get_posts', 'myfilter');
+	
+	
+	function myfilter($query) {
+			$feed_id  = ( ! empty( $_GET[ 'rssmi_feed_id' ] ) ) ? $_GET[ 'rssmi_feed_id' ] : null;
+		
+	        if (isset($_GET['post_type']) && ($_GET['post_type']=='rssmi_feed_item')) {
+	            if(is_admin() ) {
+					$query->set('meta_key', 'rssmi_item_feed_id');
+					$query->set('meta_value', $feed_id);
+
+	            }
+	        }
+	            return $query;
+	    }
+		
+		
 	
 ?>

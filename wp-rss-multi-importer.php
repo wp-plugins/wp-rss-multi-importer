@@ -1,8 +1,8 @@
 <?php
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.wprssimporter.com/
-  Description: All-in-one free solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, categorize, filter, and more. 
-  Version: 3.01
+  Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 13 templates, categorize and more. 
+  Version: 3.10
   Author: Allen Weiss
   Author URI: http://www.wprssimporter.com/
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -12,7 +12,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 3.01 );
+define( 'WP_RSS_MULTI_VERSION', 3.10 );
 
  /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );  
@@ -97,6 +97,7 @@ require_once ( WP_RSS_MULTI_INC . 'export.php' );
 /* Load the global settings files. */
 require_once ( WP_RSS_MULTI_INC . 'global_settings.php' );
 
+
 register_activation_hook( __FILE__, 'wp_rss_multi_importer_activate' );
 
 
@@ -132,6 +133,7 @@ function wp_rss_fetchFeed($url, $timeout = 10, $forceFeed=false,$showVideo=0)
 	$feed = new SimplePie_RSSMI();
 	$feed->set_feed_url($url);
 	$feed->force_feed($forceFeed);
+	$feed->set_autodiscovery_level( SIMPLEPIE_LOCATOR_ALL );
 	if ($showVideo==1){
 		$strip_htmltags = $feed->strip_htmltags;
 		array_splice($strip_htmltags, array_search('iframe', $strip_htmltags), 1);
@@ -325,6 +327,8 @@ if (is_null($cb) && $targetWindow==0){
 
 $template=$options['template'];
 if ($mytemplate!='') $template=$mytemplate;
+
+
 
 //	END PARAMETERS
 	

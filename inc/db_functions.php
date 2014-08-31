@@ -316,24 +316,29 @@ function rssmi_delete_all_posts_for_feed($id){  //  THIS DELETES AUTOPOSTS FOR A
 
 
 
-function rssmi_delete_posts_admin(){  //  USE FOR QUICK DELETE OF DATABASE ITEMS AND AUTOPOSTS
+
+function rssmi_delete_posts_admin(){  //  USE FOR QUICK DELETE OF ALL AUTOPOSTS
 	
 	global $wpdb;
-	$expiration=-1;
-	$query = "SELECT ID FROM $wpdb->posts WHERE post_status = 'publish'";
+	$query = "SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rssmi_source_link'";
 	$ids = $wpdb->get_results($query);
 
-		foreach ($ids as $id){
-
-			$mypostids = $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE (meta_key = 'rssmi_item_permalink' OR meta_key = 'rssmi_source_link') AND post_id = ".$id->ID);
-	
-				if (!empty($mypostids)){
+		if (!empty($ids)){
+				foreach ($ids as $id){
 					rssmi_delete_attachment($id->ID);
 					wp_delete_post($id->ID, true);
 				}
-		}
+			}
+	
 
 }
+
+
+
+
+
+
+
 
 
 function rssmi_restore_all(){  //  DELETES EVERYTHING CAUSED BY THIS PLUGIN IN THE POST AND POST META TABLES

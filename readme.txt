@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
 Tested up to: 3.9.2
-Stable tag: 3.01
+Stable tag: 3.10
 Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
@@ -57,7 +57,7 @@ These features are all available in the admin panel.
 
 [__Allen Weiss__](http://www.wprssimporter.com/)
 
-Some parts of the code in this plugin are based on code from [__Jean Galea__](https://wordpress.org/plugins/wp-rss-aggregator/)
+The code for some parts of this plugin is based on code from [__WP RSS Aggregator__](https://wordpress.org/plugins/wp-rss-aggregator/)
 
 == Installation ==
 
@@ -114,6 +114,13 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 3.10 (2014-8-31) =
+* NEW: Bulk editing of categories.
+* NEW: Add a time restriction on feed items (go to Global Settings).
+* NEW: View feed items from feed list.
+* NEW: Added option to get image size remotely (which can slow performance).
+* Fixed: Several bugs
 
 = Version 3.01 (2014-8-14) =
 * NEW: Option to not use Force-Feed for importing RSS feeds.

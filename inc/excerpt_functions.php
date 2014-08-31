@@ -1,14 +1,19 @@
 <?php
 
+
+
 function show_start(){
 	
-	$time_start = microtime(true);
+	$time_pre = microtime(true);
 }
 
 function show_end(){
-	$time_end = microtime(true);	//****
-	$time = $time_end - $time_start;	//****
-	return $time."<br>";	//****
+	$time_post = microtime(true);
+	$exec_time = $time_post - $time_pre;
+	//add_post_meta(1, 'exec_time', $exec_time);
+	echo $exec_time;
+	unset($time_post);
+	unset($time_pre);
 	
 }
 
@@ -226,7 +231,8 @@ function rssmi_strip_read_more($content){
 
 function showexcerpt($content, $maxchars,$openWindow,$stripAll,$thisLink,$adjustImageSize,$float,$noFollow,$mediaImage,$catID=0,$stripSome=0,$feedHomePage=Null,$noProcess=0,$useMediaImage=0)  //show excerpt function
 	{
-	
+
+
 	$content=	rssmi_strip_read_more($content);
 		
 	global $ftp;	
@@ -255,7 +261,7 @@ if ($noProcess==0){
 				
 				
 				
-		}
+			}
 	}
 	
 	$content=str_replace("<a ", "<a  ".$openWindow.' ' 	.($noFollow==1 ? 'rel="nofollow"  ' :'' ) , $content);  
@@ -270,10 +276,7 @@ if ($noProcess==0){
 			$content=dont_follow_links($content);
 		}
 	
-	
 
-	
-	
 	
 	
 	return $content;
@@ -481,24 +484,6 @@ function rssmi_lightbox_filter($link,$targetWindow){
 
 		$mediaImage=rssmi_facebook_fix($mediaImage);
 
-		/*
-			//facebook correction
-			preg_match('@src="([^"]+)"@', $mediaImage, $match);
-			if (strpos($match[1],"fbcdn")>0){
-				$fb_img=$match[1];
-
-				$fb_img = str_replace('/s130x130', '', $fb_img);
-				$fb_img = str_replace('_s.jpg', '_n.jpg', $fb_img);
-				
-				
-					if (rssmi_remoteFileExists($fb_img)){
-						$mediaImage = str_replace($match[1], $fb_img, $mediaImage);
-					}
-						
-			}
-		
-		*/
-		
 	
 		
 			if ($adjustImageSize==1  && $ftp==1){
@@ -507,8 +492,7 @@ function rssmi_lightbox_filter($link,$targetWindow){
 				$mediaImage=rssmi_resize_image_for_shortcode($mediaImage);	
 			}
 	
-		
-
+				
 		
 		if ($stripSome==1){
 			$tabledImage= "<div class=\"$imagefix\" style=\"float:".$float.";\">".$mediaImage."</div>";
@@ -601,7 +585,6 @@ function rssmi_lightbox_filter($link,$targetWindow){
 			$imagefix="imagefix";	
 		}
 		
-
 		
 		
 		$anchorLink='<a href="'.$thisLink.'" >';//construct hyperlink for image
@@ -621,7 +604,6 @@ function rssmi_lightbox_filter($link,$targetWindow){
 		$leadMatch=3;
 	}
 	
-//	if(isset($matches[2]) && verifyimage($matches[2])==False){$leadMatch=Null;}  ///maybe take out until verifyimage really works
 
 
 
@@ -630,6 +612,7 @@ function rssmi_lightbox_filter($link,$targetWindow){
 	$catImageArray= getDefaultCatImage($catID);
 	
 	//var_dump($catImageArray);
+
 
 
 	
@@ -654,11 +637,10 @@ function rssmi_lightbox_filter($link,$targetWindow){
 		
 	}else if ((isset($leadMatch) && $leadMatch==2) || (isset($leadMatch) && $leadMatch==3) && isbug($matches[2])==False){
 
-
 		$mediaImage = $matches[2];
 		$content=joinContent($content,$adjustImageSize,$imagefix,$float,$anchorLink,$maxchars,$mediaImage,$leadMatch,$stripSome);
 		$featuredImage = preg_replace('#.*src="([^\"]+)".*#', '\1', $matches[2]);
-	
+
 
 	}else if (!IS_Null($mediaImage) && verifyimage($mediaImage)==True){  //  match media enclosure image if it exists
 
@@ -692,7 +674,8 @@ function rssmi_lightbox_filter($link,$targetWindow){
 			}
 		
 		}
-		
+	
+	
 		
 		
 	return $content;
@@ -705,18 +688,11 @@ function rssmi_lightbox_filter($link,$targetWindow){
 	function verifyimage($imageURL) {
 		$imageURL = preg_replace('/\?.*/', '', $imageURL);
 		
-	//	$pattern='#^img.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i';
 	
 	$pattern='#^.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i';
 	
 	if( preg_match($pattern, $imageURL))
 		
-//if( preg_match('#^.*(http|https):\/\/(.*)\.(gif|png|jpg|jpeg).*$#i', $imageURL))
-
-
-
-
-	 //   if( preg_match('#^(http|https):\/\/(.*)\.(gif|png|jpg|jpeg)$#i', $imageURL))
 	    {
 	        $msg = TRUE; 
 
@@ -751,8 +727,8 @@ function rssmi_lightbox_filter($link,$targetWindow){
 	}
 	
 	function rssmi_resize_image($imghtml){
-		
-		
+		$rssmi_global_options = get_option( 'rssmi_global_options' ); 
+		$noImageSize= (isset($rssmi_global_options['noImageSize']) ? $rssmi_global_options['noImageSize'] : 0);	
 		
 		global $maximgwidth;
 		global $ftp;
@@ -761,18 +737,18 @@ function rssmi_lightbox_filter($link,$targetWindow){
 		if (preg_match('/< *img[^>]*src *= *["\']?([^"\']*)/i', $imghtml, $matches)) {
 			if (!empty($matches[1])  && verifyimage($matches[1])){	
 			
-				if ($fopenIsSet==1 && rssmi_remoteFileExists($matches[1])){  
+				if ($fopenIsSet==1 && rssmi_remoteFileExists($matches[1])){  ///just deleted this
 						
-					$imageArray=getimagesize($matches[1]);
+					if($noImageSize!=1) {$imageArray=getimagesize($matches[1]);}
 					
 					if (!empty($imageArray)){
 						$thisWidth=$imageArray[0];
 					}else{
 						$thisWidth="150";	
 					}
-				}else{
+				}else{  ///just deleted this
 					$thisWidth="150";	
-				}
+				}  ///just deleted this
 					if ($ftp==1 && $maximgwidth==999){
 							$returnImage= str_replace("<img", "<img", remove_img_hw($imghtml));
 						}else if ($thisWidth > $maximgwidth){
@@ -798,7 +774,7 @@ function rssmi_lightbox_filter($link,$targetWindow){
 
 	function rssmi_remoteFileExists($url) {
 	    $curl = curl_init($url);
-
+		curl_setopt($curl, CURLOPT_TIMEOUT, 10); //timeout in seconds
 	    //don't fetch the actual page, you only want to check the connection is ok
 	    curl_setopt($curl, CURLOPT_NOBODY, true);
 

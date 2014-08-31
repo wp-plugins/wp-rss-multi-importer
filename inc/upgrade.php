@@ -58,7 +58,7 @@ function upgrade_db() {  //beginning of upgrade function
 	
 	$post_settings = array(
 		'active'=> 0,
-		'post_status' => 'draft',
+		'post_status' => 'publish',
 		'maxperfetch' => 5,
 		'maxfeed' => 5,
 		'maximgwidth' =>150,

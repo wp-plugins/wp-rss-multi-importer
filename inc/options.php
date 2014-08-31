@@ -177,7 +177,11 @@ if($thisCatID[1]=="0") {
 	foreach($category_ids as $cat_id) {
 	  $cat_name = get_cat_name($cat_id);
 	
-	echo 	'<OPTION  '.selected(true, in_array($cat_id, $thisCatID), false).'  VALUE="'.$cat_id.'">'.$cat_name.'</OPTION>';
+		if (!empty($thisCatID)){
+			echo 	'<OPTION  '.selected(true, in_array($cat_id, $thisCatID), false).'  VALUE="'.$cat_id.'">'.$cat_name.'</OPTION>';
+		}else{
+			echo 	'<OPTION   VALUE="'.$cat_id.'">'.$cat_name.'</OPTION>';
+		}
  
 	}
 
@@ -372,8 +376,8 @@ function wp_rss_multi_importer_intro_page() {
 		<h2 class="MP_title">Need Plugin Help?</h2>
 	</div>
 	<p><a href="http://www.wprssimporter.com/faqs/" target="_blank" style="color:white">Go here to find FAQs.</a></p>
-	<p><a href="http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working.</a><p>	
-		<p><a href="http://www.wprssimporter.com/faqs/the-cron-scheduler-isnt-working-whats-happening/" target="_blank" style="color:white">Go here if the scheduler doesn't appear to be working.</a><p>			
+	<p><a href="http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/" target="_blank" style="color:white">Go here if you have a feed that isn't working</a><p>	
+<p><a href="http://www.wprssimporter.com/faqs/the-cron-scheduler-isnt-working-whats-happening/" target="_blank" style="color:white">Go here if the scheduler doesn't appear to be working.</a><p>			
 				<h2 class="MP_title">If you like this free plugin...</h2>				
 				<p><a href="http://wordpress.org/support/view/plugin-reviews/wp-rss-multi-importer#postform" target="_blank" style="color:white">Consider saying thank you with a good rating.</a></p>
 				</div>
@@ -641,7 +645,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 	<OPTION VALUE="2" <?php if($options['targetWindow']==2){echo 'selected';} ?>><?php _e("Open in New Window", 'wp-rss-multi-importer')?></OPTION>
 	</SELECT>	
 </p>
-<p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_options[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_import_options[noFollow]" Value="1" <?php if ($options['noFollow']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 
@@ -660,7 +664,7 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="" <?php if($options['sourcename']==''){echo 'selected';} ?>><?php _e("No Attribution", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
-<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[addAuthor]" Value="1" <?php if (isset($options['addAuthor']) && $options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[addAuthor]" Value="1" <?php if (isset($options['addAuthor']) && $options['addAuthor']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 
@@ -672,14 +676,14 @@ if ($options['maxperPage']=='' || $options['maxperPage']=='NULL') {
 <OPTION VALUE="0" <?php if($options['showdesc']==0){echo 'selected';} ?>><?php _e("No", 'wp-rss-multi-importer')?></OPTION>
 </SELECT></p>
 
-<p style="padding-left:15px"><label class='o_textinput' for='showcategory'><?php _e("Show Category Name", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[showcategory]" Value="1" <?php if (isset($options['showcategory']) && $options['showcategory']==1){echo 'checked="checked"';} ?></label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='showcategory'><?php _e("Show Category Name", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[showcategory]" Value="1" <?php if (isset($options['showcategory']) && $options['showcategory']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <span id="secret" <?php if($options['showdesc']==0){echo 'style="display:none"';}?>>
 	
-		<p style="padding-left:15px"><label class='o_textinput' for='stripSome'><?php _e("Keep limited html in the excerpt (&lt;a&gt;,&lt;br&gt;,&lt;p&gt;)  ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripSome]" Value="1" <?php if (isset($options['stripSome']) && $options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>
+		<p style="padding-left:15px"><label class='o_textinput' for='stripSome'><?php _e("Keep limited html in the excerpt (&lt;a&gt;,&lt;br&gt;,&lt;p&gt;)  ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripSome]" Value="1" <?php if (isset($options['stripSome']) && $options['stripSome']==1){echo 'checked="checked"';} ?>></label> </p>
 	
-	<p style="padding-left:15px"><label class='o_textinput' for='showmore'><?php _e("Let your readers determine if they want to see the excerpt with a show-hide option. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showmore]" Value="1" <?php if (isset($options['showmore']) && $options['showmore']==1){echo 'checked="checked"';} ?></label>
+	<p style="padding-left:15px"><label class='o_textinput' for='showmore'><?php _e("Let your readers determine if they want to see the excerpt with a show-hide option. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showmore]" Value="1" <?php if (isset($options['showmore']) && $options['showmore']==1){echo 'checked="checked"';} ?>></label>
 	</p>	
 	
 	
@@ -710,14 +714,14 @@ echo 'You server is not configured to accept images from outside sources.  Pleas
 ?>
 
 <p><?php _e("An attempt will be made to select an image for your post.  Usually this is the first image in the content or in a feed enclosure, but you have the option - if those are not available - to get the first image in the content.", 'wp-rss-multi-importer')?>
-<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripAll]" Value="1" <?php if (isset($options['stripAll']) && $options['stripAll']==1){echo 'checked="checked"';} ?></label>
+<p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all images in the excerpt.", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[stripAll]" Value="1" <?php if (isset($options['stripAll']) && $options['stripAll']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 
 <p><?php _e("You can adjust the image, if it exists.  The default image size is 150px width, but you can override this using the shortcode.  Note:  If the image in the RSS feed is small, this may result in rendering a fuzzy image.", 'wp-rss-multi-importer')?></p>
-<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'><?php _e("If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?></label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='adjustImageSize'><?php _e("If you want excerpt images, check to fix their width at 150 (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[adjustImageSize]" Value="1" <?php if ($options['adjustImageSize']==1){echo 'checked="checked"';} ?>></label></p>
 	
-<p style="padding-left:15px"><label class='o_textinput' for='floatType'><?php _e("Float images to the left (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+<p style="padding-left:15px"><label class='o_textinput' for='floatType'><?php _e("Float images to the left (can be over-written in shortcode).", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_import_options[floatType]" Value="1" <?php if ($options['floatType']==1){echo 'checked="checked"';} ?>></label></p>
 </span>
 
 
@@ -733,7 +737,7 @@ echo 'You server is not configured to accept images from outside sources.  Pleas
 
 
 <h3><?php _e("Get Social", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter, Facebook, and Google+) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showsocial]" Value="1" <?php if ($options['showsocial']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter, Facebook, and Google+) to each post. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_import_options[showsocial]" Value="1" <?php if ($options['showsocial']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 
@@ -741,12 +745,12 @@ echo 'You server is not configured to accept images from outside sources.  Pleas
 
 
 
-<p ><label class='o_textinput' for='cb'><?php _e("Check if you are having colorbox conflict problems.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if (isset($options['cb']) && $options['cb']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='cb'><?php _e("Check if you are having colorbox conflict problems.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[cb]" Value="1" <?php if (isset($options['cb']) && $options['cb']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <p ><label class='o_textinput' for='warnmsg'><?php _e("If you want to suppress warning messages, do this on the Global Settings Page.", 'wp-rss-multi-importer')?></label></p>
 
-<p ><label class='o_textinput' for='directFetch'><?php _e("Check if you are having simplepie conflict problems.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[directFetch]" Value="1" <?php if (isset($options['directFetch']) && $options['directFetch']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='directFetch'><?php _e("Check if you are having simplepie conflict problems.", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_import_options[directFetch]" Value="1" <?php if (isset($options['directFetch']) && $options['directFetch']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <input   size='10' name='rss_import_options[plugin_version]' type='hidden' value='<?php echo WP_RSS_MULTI_VERSION ?>' />
@@ -828,7 +832,7 @@ function wp_rss_multi_importer_post_page() {
 
 
 
-<p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if (isset($post_options['active']) && $post_options['active']==1){echo 'checked="checked"';} ?></label><?php if (isset($post_options['active']) && $post_options['active']!=1){echo "   <span style=\"color:red\">This feature is not active</span>";}?>
+<p><label class='o_textinput' for='active'><?php _e("Check to Activate this Feature", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[active]" Value="1" <?php if (isset($post_options['active']) && $post_options['active']==1){echo 'checked="checked"';} ?>></label><?php if (isset($post_options['active']) && $post_options['active']!=1){echo "   <span style=\"color:red\">This feature is not active</span>";}?>
 </p>
 <?php
 if (isset($post_options['active']) && $post_options['active']==1){
@@ -881,12 +885,12 @@ wp_rss_multi_deactivation(1);
 <p ><label class='o_textinput' for='custom_type_name'><?php _e("Post as a custom type", 'wp-rss-multi-importer')?>   <input  id='custom_type_name' type="text" size='20' Name="rss_post_options[custom_type_name]" Value="<?php echo $post_options['custom_type_name'] ?>">(provide the custom type name - if left blank, no custom type will be used)</label></p>
 
 
-<p ><label class='o_textinput' for='plugindelete'><span style="color:red"><?php _e("IMPORTANT: Check to delete all posts and featured images created by this plugin if this plugin is deleted (Note: this will not delete posts that have a custom type name you created above) ", 'wp-rss-multi-importer')?></span><input type="checkbox" Name="rss_post_options[plugindelete]" Value="1" <?php if (isset($post_options['plugindelete']) && $post_options['plugindelete']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='plugindelete'><span style="color:red"><?php _e("IMPORTANT: Check to delete all posts and featured images created by this plugin if this plugin is deleted (Note: this will not delete posts that have a custom type name you created above) ", 'wp-rss-multi-importer')?></span><input type="checkbox" Name="rss_post_options[plugindelete]" Value="1" <?php if (isset($post_options['plugindelete']) && $post_options['plugindelete']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 
 <h3><?php _e("Post Time Settings", 'wp-rss-multi-importer')?></h3>
-<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if (isset($post_options['overridedate']) && $post_options['overridedate']==1){echo 'checked="checked"';} ?></label>
+<p><label class='o_textinput' for='overridedate'><?php _e("Check to over-ride the posts date/time with the current date and time   ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[overridedate]" Value="1" <?php if (isset($post_options['overridedate']) && $post_options['overridedate']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 <p ><label class='o_textinput' for='timezone'><?php _e("Server Time Zone", 'wp-rss-multi-importer')?>   <input  id='timezone' type="text" size='40'  Name="rss_post_options[timezone]" Value="<?php echo $post_options['timezone'] ?>"> - <?php _e("Only fill this if your posts are showing up at the wrong time, even if the override box is checked - (<a href=\"http://www.wprssimporter.com/faqs/my-posts-are-showing-up-with-the-wrong-time//\" target=\"_blank\">Read this for what to do here</a>).", 'wp-rss-multi-importer')?> </label></p>
@@ -951,7 +955,7 @@ wp_rss_multi_deactivation(1);
 	<OPTION VALUE="2" <?php if($post_options['targetWindow']==2){echo 'selected';} ?>><?php _e("Open in New Window", 'wp-rss-multi-importer')?></OPTION>
 	</SELECT></p>
 	
-	<p ><label class='o_textinput' for='titleFilter'><?php _e("Make title clickable on listing page with same settings as above <span class='vtip' title='Checking this option may result in problems if you are using the  Wordpress Custom Menu Widget - see the FAQs if this happens.'>?</span>", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[titleFilter]" Value="1" <?php if (isset($post_options['titleFilter']) && $post_options['titleFilter']==1){echo 'checked="checked"';} ?></label></p>
+	<p ><label class='o_textinput' for='titleFilter'><?php _e("Make title clickable on listing page with same settings as above <span class='vtip' title='Checking this option may result in problems if you are using the  Wordpress Custom Menu Widget - see the FAQs if this happens.'>?</span>", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[titleFilter]" Value="1" <?php if (isset($post_options['titleFilter']) && $post_options['titleFilter']==1){echo 'checked="checked"';} ?>></label></p>
 	
 	
 	
@@ -978,10 +982,10 @@ wp_rss_multi_deactivation(1);
 </SELECT></p>
 
 <h3><?php _e("Author and Source Settings", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if (isset($post_options['addAuthor']) && $post_options['addAuthor']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='addAuthor'><?php _e("Show Feed or Author Name (if available)", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addAuthor]" Value="1" <?php if (isset($post_options['addAuthor']) && $post_options['addAuthor']==1){echo 'checked="checked"';} ?>></label></p>
 
 
-<p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if (isset($post_options['addSource']) && $post_options['addSource']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='addSource'><?php _e("Show Feed Source", 'wp-rss-multi-importer')?>   <input type="checkbox" Name="rss_post_options[addSource]" Value="1" <?php if (isset($post_options['addSource']) && $post_options['addSource']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <p style="padding-left:15px"><label class='o_textinput' for='sourceWords'><?php _e("Feed Source Attribution Label", 'wp-rss-multi-importer')?></label>
@@ -1008,11 +1012,11 @@ wp_rss_multi_deactivation(1);
 
 
 <p><label class='o_textinput' for='showVideo'><?php _e("Place video into the post when available", 'wp-rss-multi-importer')?></label>
-	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if ($post_options['showVideo']==1){echo 'checked="checked"';} ?></label>
+	<input type="checkbox" Name="rss_post_options[showVideo]" Value="1" <?php if ($post_options['showVideo']==1){echo 'checked="checked"';} ?>></label>
 		<?php _e("(<a href=\"http://www.wprssimporter.com/faqs/the-videos-are-not-working-on-my-site//\" target=\"_blank\">GO HERE TO READ MORE ABOUT THIS</a>", 'wp-rss-multi-importer')?>
 	</p>
 
-	<p ><label class='o_textinput' for='noProcess'><?php _e("Bring in all images without processing (this will bypass all of the images settings below - i.e., no excerpt or featured image)", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[noProcess]" Value="1" <?php if (isset($post_options['noProcess']) && $post_options['noProcess']==1){echo 'checked="checked"';} ?></label></p>
+	<p ><label class='o_textinput' for='noProcess'><?php _e("Bring in all images without processing (this will bypass all of the images settings below - i.e., no excerpt or featured image)", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[noProcess]" Value="1" <?php if (isset($post_options['noProcess']) && $post_options['noProcess']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <p><label class='o_textinput' for='stripAll'><?php _e("Check to get rid of all html and images in the excerpt", 'wp-rss-multi-importer')?>
@@ -1030,9 +1034,9 @@ wp_rss_multi_deactivation(1);
 
 <span id="stripAllsecret" <?php if($post_options['stripAll']==1){echo 'style="display:none"';}?>>
 	
-		<p ><label class='o_textinput' for='floatType'><?php _e("Float images to the left.", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[floatType]" Value="1" <?php if (IS_NULL($post_options['floatType']) || $post_options['floatType']==1){echo 'checked="checked"';} ?></label></p>
+		<p ><label class='o_textinput' for='floatType'><?php _e("Float images to the left.", 'wp-rss-multi-importer')?>  <input type="checkbox" Name="rss_post_options[floatType]" Value="1" <?php if ($post_options['floatType']==1){echo 'checked="checked"';} ?>></label></p>
 		
-	<p><label class='o_textinput' for='stripSome'><?php _e("Keep limited html in the excerpt (&lt;a&gt;,&lt;br&gt;,&lt;p&gt;)  ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if (isset($post_options['stripSome']) && $post_options['stripSome']==1){echo 'checked="checked"';} ?></label> </p>
+	<p><label class='o_textinput' for='stripSome'><?php _e("Keep limited html in the excerpt (&lt;a&gt;,&lt;br&gt;,&lt;p&gt;)  ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[stripSome]" Value="1" <?php if (isset($post_options['stripSome']) && $post_options['stripSome']==1){echo 'checked="checked"';} ?>></label> </p>
 
 <p><label class='o_textinput' for='maximgwidth'><?php _e("Maximum width size of images", 'wp-rss-multi-importer')?></label>
 <SELECT NAME="rss_post_options[maximgwidth]">
@@ -1069,29 +1073,29 @@ wp_rss_multi_deactivation(1);
 
 
 <h3><?php _e("Get Social", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter, Facebook, and Google+) to each post ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if (isset($post_options['showsocial']) && $post_options['showsocial']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='showsocial'><?php _e("Add social icons (Twitter, Facebook, and Google+) to each post ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[showsocial]" Value="1" <?php if (isset($post_options['showsocial']) && $post_options['showsocial']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 <h3><?php _e("Comment Status", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='showsocial'><?php _e("Turn off comments on posts made by this plugin ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[commentstatus]" Value="1" <?php if (isset($post_options['commentstatus']) && $post_options['commentstatus']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='showsocial'><?php _e("Turn off comments on posts made by this plugin ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[commentstatus]" Value="1" <?php if (isset($post_options['commentstatus']) && $post_options['commentstatus']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 <h3><?php _e("Excerpt Handling", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='includeExcerpt'><?php _e("Put the contents also in the excerpts field. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[includeExcerpt]" Value="1" <?php if (isset($post_options['includeExcerpt']) && $post_options['includeExcerpt']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='includeExcerpt'><?php _e("Put the contents also in the excerpts field. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[includeExcerpt]" Value="1" <?php if (isset($post_options['includeExcerpt']) && $post_options['includeExcerpt']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 <h3><?php _e("No Index, No Follow, Canonical ", 'wp-rss-multi-importer')?></h3>
-<p ><label class='o_textinput' for='noindex'><?php _e("Make the AutoPost items not search engine visible (It is up to search engines to honor this request.). ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[noindex]" Value="1" <?php if ($post_options['noindex']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='noindex'><?php _e("Make the AutoPost items not search engine visible (It is up to search engines to honor this request.). ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[noindex]" Value="1" <?php if ($post_options['noindex']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
-<p ><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_post_options[noFollow]" Value="1" <?php if (isset($post_options['noFollow']) && $post_options['noFollow']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='noFollow'>Set links as No Follow.  <input type="checkbox" Name="rss_post_options[noFollow]" Value="1" <?php if (isset($post_options['noFollow']) && $post_options['noFollow']==1){echo 'checked="checked"';} ?>></label></p>
 
-<p ><label class='o_textinput' for='addcanonical'>Add canonical URL to page linking back to original article.  <input type="checkbox" Name="rss_post_options[addcanonical]" Value="1" <?php if (isset($post_options['addcanonical']) && $post_options['addcanonical']==1){echo 'checked="checked"';} ?></label></p>
+<p ><label class='o_textinput' for='addcanonical'>Add canonical URL to page linking back to original article.  <input type="checkbox" Name="rss_post_options[addcanonical]" Value="1" <?php if (isset($post_options['addcanonical']) && $post_options['addcanonical']==1){echo 'checked="checked"';} ?>></label></p>
 
 
 <h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 
-<p ><label class='o_textinput' for='autoDelete'><?php _e("Check to Auto Remove Posts Created by this Plugin", 'wp-rss-multi-importer')?>   <input type="checkbox" id="autoRemoveCB" Name="rss_post_options[autoDelete]" Value="1" <?php if (isset($post_options['autoDelete']) && $post_options['autoDelete']==1){echo 'checked="checked"';} ?></label>   (<a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=posts_list">Manage what posts to keep here.</a>)</p>
+<p ><label class='o_textinput' for='autoDelete'><?php _e("Check to Auto Remove Posts Created by this Plugin", 'wp-rss-multi-importer')?>   <input type="checkbox" id="autoRemoveCB" Name="rss_post_options[autoDelete]" Value="1" <?php if (isset($post_options['autoDelete']) && $post_options['autoDelete']==1){echo 'checked="checked"';} ?>></label>   (<a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=posts_list">Manage what posts to keep here.</a>)</p>
 
 <span id="autoremoveposts" <?php if(isset($post_options['autoDelete']) && $post_options['autoDelete']!=1){echo 'style="display:none"';}?>>
 
@@ -1118,7 +1122,7 @@ wp_rss_multi_deactivation(1);
 <OPTION VALUE="2" <?php if($post_options['oldPostStatus']==2){echo 'selected';} ?>>Pending</OPTION>
 </SELECT><?php _e("  NOTE: Choosing Permanently Delete may result in posts being imported again", 'wp-rss-multi-importer')?></p>
 
-<p ><label class='o_textinput' for='keepcomments'><?php _e("Only delete posts with no comments. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[keepcomments]" Value="1" <?php if (isset($post_options['keepcomments']) && $post_options['keepcomments']==1){echo 'checked="checked"';} ?></label>
+<p ><label class='o_textinput' for='keepcomments'><?php _e("Only delete posts with no comments. ", 'wp-rss-multi-importer')?><input type="checkbox" Name="rss_post_options[keepcomments]" Value="1" <?php if (isset($post_options['keepcomments']) && $post_options['keepcomments']==1){echo 'checked="checked"';} ?>></label>
 </p>
 
 </span>
@@ -1243,7 +1247,7 @@ echo "<a href='javascript:void(0)' class='add_cat_id'>Add another plugin to blog
        </form>
 
 <button type="button" name="fetchnow" id="fetch-now" value=""><?php _e("CLICK TO FETCH FEED ITEMS NOW", 'wp-rss-multi-importer')?></button>	
-<div id="note"></div>
+<div id="note"></div><div id="rssmi-ajax-loader-center"></div>
 <?php
 echo rssmi_show_last_feed_update();
 ?>
