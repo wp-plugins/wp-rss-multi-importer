@@ -90,6 +90,12 @@ function rssmi_schedule_import_feeds(){
 		}	
 		
 
+			$current_schedule=wp_get_schedule('wp_rss_multi_event_importfeeds');
+
+			if ($current_schedule!=$feed_display_period){wp_clear_scheduled_hook('wp_rss_multi_event_importfeeds');}
+
+
+
 	
 	if( !wp_next_scheduled( 'wp_rss_multi_event_importfeeds' ) ){
 	     wp_schedule_event( time(), $feed_display_period, 'wp_rss_multi_event_importfeeds' );

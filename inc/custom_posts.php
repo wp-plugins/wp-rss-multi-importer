@@ -993,11 +993,11 @@ add_action( 'save_post', 'rssmi_save_custom_fields' );
     function rssmi_save_custom_fields( $post_id ) {
 
 	    $meta_fields = rssmi_custom_fields();
-		$screen = get_current_screen();
+
 		
-		if  ( 'rssmi_feed' != $screen->post_type ) {
-			return;
-		}
+		if ($_POST['post_type'] !='rssmi_feed') {
+				return;
+			}
 	
 	
 		$rssmi_nonce_var=(isset($_POST[ 'rssmi_meta_box_nonce' ]) ? $_POST[ 'rssmi_meta_box_nonce' ] :NULL);

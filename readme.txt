@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
 Tested up to: 3.9.2
-Stable tag: 3.10
+Stable tag: 3.11
 Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
@@ -114,6 +114,9 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 3.11 (2014-9-1) =
+* Fixed: Bugs due to plugin conflicts and clearing the cron scheduler.
 
 = Version 3.10 (2014-8-31) =
 * NEW: Bulk editing of categories.
