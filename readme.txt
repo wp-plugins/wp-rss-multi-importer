@@ -3,7 +3,7 @@ Contributors: amweiss98
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
-Tested up to: 3.9.2
+Tested up to: 4.0
 Stable tag: 3.11
 Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
