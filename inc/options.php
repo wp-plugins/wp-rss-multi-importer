@@ -878,6 +878,7 @@ wp_rss_multi_deactivation(1);
 <OPTION VALUE="image" <?php if($post_options['post_format']=="image"){echo 'selected';} ?>>Image</OPTION>
 <OPTION VALUE="quote" <?php if($post_options['post_format']=="quote"){echo 'selected';} ?>>Quote</OPTION>
 <OPTION VALUE="status" <?php if($post_options['post_format']=="status"){echo 'selected';} ?>>Status</OPTION>
+<OPTION VALUE="video" <?php if($post_options['post_format']=="video"){echo 'selected';} ?>>Video</OPTION>
 </SELECT></p>
 
 
@@ -1095,7 +1096,7 @@ wp_rss_multi_deactivation(1);
 
 <h3><?php _e("Auto Remove Posts", 'wp-rss-multi-importer')?></h3>
 
-<p ><label class='o_textinput' for='autoDelete'><?php _e("Check to Auto Remove Posts Created by this Plugin", 'wp-rss-multi-importer')?>   <input type="checkbox" id="autoRemoveCB" Name="rss_post_options[autoDelete]" Value="1" <?php if (isset($post_options['autoDelete']) && $post_options['autoDelete']==1){echo 'checked="checked"';} ?>></label>   (<a href="/wp-admin/options-general.php?page=wp_rss_multi_importer_admin&tab=posts_list">Manage what posts to keep here.</a>)</p>
+<p ><label class='o_textinput' for='autoDelete'><?php _e("Check to Auto Remove Posts Created by this Plugin", 'wp-rss-multi-importer')?>   <input type="checkbox" id="autoRemoveCB" Name="rss_post_options[autoDelete]" Value="1" <?php if (isset($post_options['autoDelete']) && $post_options['autoDelete']==1){echo 'checked="checked"';} ?>></label>   (<a href="/wp-admin/admin.php?page=wprssmi_options3&tab=manage_autoposts">Manage what posts to keep here.</a>)</p>
 
 <span id="autoremoveposts" <?php if(isset($post_options['autoDelete']) && $post_options['autoDelete']!=1){echo 'style="display:none"';}?>>
 

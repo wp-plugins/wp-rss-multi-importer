@@ -83,7 +83,7 @@ function rssmi_fetch_all_feed_items( ) {
 								$unix_date=$item->get_date( 'U' );
 								
 							}
-							
+
 						if (rssmi_is_not_fresh($post_date)==1){continue;}  //filter for days old
 						
                             // Create post object

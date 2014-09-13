@@ -26,7 +26,7 @@ function wp_rss_multi_importer_feed_page() {
 <div class="inside">
 
 
-<h2><?php _e("Export Your Feeds as an RSS Feed", 'wp-rss-multi-importer')?></h3>
+<h2><?php _e("Export Your Feeds as an RSS Feed", 'wp-rss-multi-importer')?></h2>
 <h3><?php _e("Export Feed Options Settings", 'wp-rss-multi-importer')?></h3>
 <p><?php _e("You can re-export your feeds as an RSS feed for your readers.  You configure some options for this feed here.", 'wp-rss-multi-importer')?></p>
 

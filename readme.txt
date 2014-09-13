@@ -1,15 +1,15 @@
 === WP RSS Multi Importer ===
-Contributors: amweiss98
+Contributors: amweiss98, properwp
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
-Tested up to: 3.9.2
-Stable tag: 3.11
+Tested up to: 4.0
+Stable tag: 3.12
 Aggregate RSS feeds. AutoPost or use shortcode, excerpts w/ images, 13 templates, categorize and more.
 
 == Description ==
 
-All-In-One totally free solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Highly rated (in Top 25 of Wordpress plugins). Using this plugin you can do 4 things (separately or at the same time):
+All-In-One totally free solution for importing, merging and displaying RSS and Atom feeds on your Wordpress site. Using this plugin you can do 4 things (separately or at the same time):
 
 * Display the aggregated feed items on a page in one of __13 different templates that you can customize__ 
 * __Create blog posts (AutoPost)__ from the feed items so readers can comment on them
@@ -114,6 +114,12 @@ Go here to find [__all FAQs__](http://www.wprssimporter.com/faqs/)
 4. User view - with excerpts and images.
 
 == Changelog ==
+
+= Version 3.12 (2014-9-13) =
+* Fixed: Various issues reported during the last few weeks.
+* Enhanced: Manually deleting posts caused by the plugin will now also delete its associated featured image.
+* Enhanced: Share on LinkedIn now added to social sharing option for AutoPost and default shortcode template.
+* NEW: Only bring in items newer than n number of days old.
 
 = Version 3.11 (2014-9-1) =
 * Fixed: Bugs due to plugin conflicts and clearing the cron scheduler.

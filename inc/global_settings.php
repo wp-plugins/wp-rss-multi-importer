@@ -143,11 +143,11 @@ function wp_rss_multi_importer_dateformat_page() {
 	</SELECT></p>
 	
 	
-<!--
+
 	<p ><label class='o_textinput' for='item_freshness'><?php _e("Only bring in items newer than how many days old?", 'wp-rss-multi-importer')?></label>
  <input  id='item_freshness' type="text" size='8'  Name="rssmi_global_options[item_freshness]" Value="<?php echo $rssmi_global_options['item_freshness'] ?>">days old (leave blank to place no restriction.)
 	</p>
--->	
+
 	
 	
 <hr>

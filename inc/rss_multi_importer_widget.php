@@ -84,7 +84,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$linktitle = $instance['linktitle'];
 		$showdesc = $instance['showdesc'];
 		$maxposts = $instance['maxposts'];
-		$targetWindow= $instance['targetwindow'];
+		$targetwindow= $instance['targetwindow'];
 		$simplelist= $instance['simplelist'];
 		$showimage= $instance['showimage'];
 		$showsource=$instance['showsource'];
@@ -100,7 +100,7 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 
 		global $isMobileDevice;
 		if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
-			$targetWindow=2;
+			$targetwindow=2;
 
 			}
 		
@@ -142,12 +142,12 @@ class WP_Multi_Importer_Widget extends WP_Widget {
 		$readable = '';
 	   	$options = get_option('rss_import_items','option not found');
 		if (!empty($options)) {
-			$targetWindow=(isset($options['targetWindow']) ? $options['targetWindow'] : null);
+		//	$targetwindow=(isset($options['targetWindow']) ? $options['targetWindow'] : null);
 		}else{
-			$targetWindow=2;	
+		//	$targetwindow=2;	
 		}
 		
-	
+
 
 		global $wpdb;
 		$myarray = array();
@@ -184,7 +184,19 @@ if (empty($feed_array)){
 		
 			
 				
-		$rssmi_sql = "SELECT a.post_id,b.meta_key,b.meta_value FROM $wpdb->postmeta as a inner join $wpdb->postmeta as b on a.post_id=b.post_id WHERE a.meta_value =$feed->ID and b.meta_key='rssmi_item_date' order by b.meta_value desc"; 
+	
+			$rssmi_sql = "SELECT a.post_id,b.meta_key,b.meta_value FROM $wpdb->postmeta as a inner join $wpdb->postmeta as b on a.post_id=b.post_id WHERE a.meta_value =$feed->ID and b.meta_key='rssmi_item_date' order by b.meta_value "; 
+
+			if ($sortDir==0){
+				$rssmi_sql .="desc";
+			}elseif ($sortDir==1){
+				$rssmi_sql .="asc";	
+			}
+
+		
+		
+		
+		
 				$desc_array = $wpdb->get_results($rssmi_sql);			
 				
 				
@@ -219,7 +231,7 @@ if (empty($feed_array)){
 
 		global $isMobileDevice;
 		if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
-			$targetWindow=2;
+			$targetwindow=2;
 			}
 
 
@@ -247,12 +259,12 @@ if (empty($feed_array)){
 		
 		global $isMobileDevice;
 			if (isset($isMobileDevice) && $isMobileDevice==1){  //open mobile device windows in new tab
-				$targetWindow=2;
+			$targetwindow=2;
 				}
 
-		if($targetWindow==0){
+		if($targetwindow==0){
 			$openWindow='class="colorbox"';
-		}elseif ($targetWindow==1){
+		}elseif ($targetwindow==1){
 			$openWindow='target=_self';		
 		}else{
 			$openWindow='target=_blank';	
@@ -275,13 +287,19 @@ if ($simplelist==1){
 	
 		foreach($myarray as $items) {
 			
+			
+			
 				// VIDEO CHECK
-				if ($targetWindow==0){
+				if ($targetwindow==0){
 					$getVideoArray=rssmi_video($items["mylink"]);
 					$openWindow=$getVideoArray[1];
 					$items["mylink"]=$getVideoArray[0];
 				}
-		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetWindow); //Lightbox filter
+				
+				
+		$openWindow=rssmi_lightbox_filter($items["mylink"],$targetwindow); //Lightbox filter
+		
+	
 		$total = $total +1;
 			
 		if ($count>0 && $total>=$count) break;
@@ -314,7 +332,7 @@ echo '	<div class="news-contents">';
 		foreach($myarray as $items) {
 
 				// VIDEO CHECK
-				if ($targetwindow==0){
+				if ($targetWindow==0){
 					$getVideoArray=rssmi_video($items["mylink"],$targetwindow);
 					$openWindow=$getVideoArray[1];
 					$items["mylink"]=$getVideoArray[0];
@@ -327,7 +345,7 @@ echo '	<div class="news-contents">';
 
 
 			echo '<div style="top: 101px;margin-left:5px;" class="news">';
-		//	echo '<p class="widget-rss-output" style="margin-right:5px">';
+
 			
 			
 			
