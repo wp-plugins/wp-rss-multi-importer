@@ -1,5 +1,5 @@
 === WP RSS Multi Importer ===
-Contributors: amweiss98, properwp
+Contributors: amweiss98
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6GC7V8BARAJL
 Tags: rss, atom, feeds, aggregation, aggregator, import, syndication, autoblog, widget
 Requires at least: 3.3
