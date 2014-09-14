@@ -1007,7 +1007,7 @@ function rssmi_delete_custom_fields( $postid ) {
 }
 
 
-add_action( 'before_delete_post', 'rssmi_delete_posts_admin_attachment' ); //this function in db_functions.php file
+//add_action( 'before_delete_post', 'rssmi_delete_posts_admin_attachment' ); //this function in db_functions.php file
 
 
 add_filter( "manage_edit-rssmi_feed_item_sortable_columns", 'rssmi_shortcode_sortable_columns' );
