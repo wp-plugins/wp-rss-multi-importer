@@ -468,7 +468,10 @@ function rssmi_feed_list_view_link( $actions, $post ) {
 		unset( $actions['view'] );
 		unset( $actions['inline hide-if-no-js'] ); //  remove quick edit
 		//	$actions['rssmi_fetch_items'] = '<a  href="javascript:;" pid="'.$post->ID.'" class="rssmi-fetch-items-now" >' . __('Delete Items') . '</a>';
-		$actions['rssmi_delete_items'] = '<a  href="' . $_SERVER['REQUEST_URI'] . $dismiss_link_joiner . 'rssmi_delete_items=' . $post->ID . '" class="rssmi-fetch-items-now" >' . __( 'Delete Items' ) . '</a>';
+		// $actions['rssmi_delete_items'] = '<a  href="' . $_SERVER['REQUEST_URI'] . $dismiss_link_joiner . 'rssmi_delete_items=' . $post->ID . '" class="rssmi-fetch-items-now" >' . __( 'Delete Items' ) . '</a>';
+		$delete_items_url_bare = $_SERVER['REQUEST_URI'] . $dismiss_link_joiner . 'rssmi_delete_items=' . $post->ID;
+		$delete_items_url_nonce = wp_nonce_url($delete_items_url_bare, 'rssmi-delete-items_'.$post->ID);
+		$actions['rssmi_delete_items'] = '<a  href="' . $delete_items_url_nonce . '" class="rssmi-fetch-items-now">' . __( 'Delete Items' ) . '</a>';
 		$actions['rssmi_view_items']   = '<a  href="' . admin_url() . 'edit.php?post_type=rssmi_feed_item&rssmi_feed_id=' . $post->ID . '" >' . __( 'View Items' ) . '</a>';
 	}
 	return $actions;
@@ -479,6 +482,7 @@ add_action( 'admin_init', 'rssmi_check_delete_items' );
 function rssmi_check_delete_items() {
 	if ( isset( $_GET['rssmi_delete_items'] ) && ! empty( $_GET['rssmi_delete_items'] ) ) {
 		$feed_id = $_GET['rssmi_delete_items'];
+		check_admin_referer( 'rssmi-delete-items_'.$feed_id );
 		rssmi_on_delete( $feed_id );
 		$page = isset( $_GET['paged'] ) ? '&paged=' . $_GET['paged'] : '';
 		header( 'Location: ' . admin_url( 'edit.php?post_type=rssmi_feed' . $page ) );
@@ -586,7 +590,8 @@ function rssmi_preview_meta_box() {
 			$feed = wp_rss_fetchFeed( $feed_url, 20, true, 0 );
 		}
 
-		if ( ! $feed->error() ) {
+
+		if ( ! is_wp_error( $feed ) && ( method_exists( $feed, 'error' ) && ! $feed->error() ) ) {
 			$items     = $feed->get_items();
 			$feedCount = count( $items );
 
@@ -617,10 +622,14 @@ function rssmi_preview_meta_box() {
 				echo "<br><strong>IMPORTANT</strong> - THIS FEED HAS NO IMAGES (AT LEAST NOT IN THE MOST RECENT 5 POSTS) - SO YOU WILL SEE NO IMAGES IN YOUR POSTS UNLESS YOU USE A DEFAULT CATEGORY IMAGE.";
 			}
 		}
-		else echo "<strong>Invalid feed URL</strong> - Validate the feed source URL by <a href=\"http://validator.w3.org/feed/check.cgi?url=" . $feed_url . "\" target=\"_blank\">clicking here</a> and if the feed is valid then  <a href=\"http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/\" target=\"_blank\">go here to learn more about what might be wrong</a>.";
+		else {
+			echo "<strong>Invalid feed URL</strong> - Validate the feed source URL by <a href=\"http://validator.w3.org/feed/check.cgi?url=" . $feed_url . "\" target=\"_blank\">clicking here</a> and if the feed is valid then  <a href=\"http://www.wprssimporter.com/faqs/im-told-the-feed-isnt-valid-or-working/\" target=\"_blank\">go here to learn more about what might be wrong</a>.";
+		}
 	}
-
-	else echo 'No feed URL defined yet';
+	// Empty feed_url
+	else {
+		echo 'No feed URL defined yet';
+	}
 }
 
 
@@ -1005,9 +1014,6 @@ function rssmi_delete_custom_fields( $postid ) {
 		wp_delete_post( $delete_item->post_id, true );
 	}
 }
-
-
-//add_action( 'before_delete_post', 'rssmi_delete_posts_admin_attachment' ); //this function in db_functions.php file
 
 
 add_filter( "manage_edit-rssmi_feed_item_sortable_columns", 'rssmi_shortcode_sortable_columns' );
