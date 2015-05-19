@@ -2,7 +2,7 @@
 /*  Plugin Name: RSS Multi Importer
   Plugin URI: http://www.wprssimporter.com/
   Description: All-in-one solution for importing & merging multiple feeds. Make blog posts or display on a page, excerpts w/ images, 13 templates, categorize and more. 
-  Version: 3.14
+  Version: 3.15
   Author: Allen Weiss
   Author URI: http://www.wprssimporter.com/
   License: GPL2  - most WordPress plugins are released under GPL2 license terms
@@ -10,7 +10,7 @@
 
 
 /* Set the version number of the plugin. */
-define( 'WP_RSS_MULTI_VERSION', 3.14 );
+define( 'WP_RSS_MULTI_VERSION', 3.15 );
 
 /* Set constant path to the plugin directory. */
 define( 'WP_RSS_MULTI_PATH', plugin_dir_path( __FILE__ ) );
@@ -108,14 +108,7 @@ function wp_rss_multi_deactivation_event(){
 }
 
 
-function rssmi_plugin_update_info() {
-	if ( rssmi_remoteFileExists( "http://www.wprssimporter.com/a/plugin-updates.txt" ) === True ) {
-		$info = wp_remote_fopen( "http://www.wprssimporter.com/a/plugin-updates.txt" );
-		echo '<br />' . strip_tags( $info, "<br><a><b><i><span>" );
-	}
-}
 
-add_action( 'in_plugin_update_message-' . plugin_basename( __FILE__ ), 'rssmi_plugin_update_info' );
 
 
 /**
