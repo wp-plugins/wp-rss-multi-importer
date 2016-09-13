@@ -567,7 +567,7 @@ function rssmi_lightbox_filter($link,$targetWindow){
 	
 	
 	
-	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink,$stripSome,$useMediaImage){
+	function findalignImage($maxchars,$content,$adjustImageSize,$float,$openWindow,$mediaImage,$thisLink,$noFollow,$catID,$thisLink2,$stripSome,$useMediaImage){
 		
 		
 		
